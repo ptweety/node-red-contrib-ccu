@@ -65,7 +65,7 @@
     "description": "Node-RED Nodes for the Homematic CCU",
     "devDependencies": {
         "camo-purge": "^1.0.2",
-        "coveralls": "^3.1.0",
+        "coveralls": "^3.1.1",
         "eslint-plugin-html": "^6.0.2",
         "eslint-plugin-promise": "^4.3.1",
         "hm-simulator": "^0.1.1",
