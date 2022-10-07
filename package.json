@@ -19,7 +19,7 @@
     "bugs": {
         "url": "https://github.com/rdmtc/node-red-contrib-ccu/issues"
     },
-    "bundleDependencies": false,
+    "bundleDependencies": [],
     "contributors": [
         {
             "name": "Hypnos3",
@@ -59,7 +59,7 @@
         "nextport": "^1.0.0",
         "obj-ease": "^1.0.1",
         "promise.prototype.finally": "^3.1.2",
-        "string-similarity": "^4.0.2"
+        "string-similarity": "^4.0.4"
     },
     "deprecated": false,
     "description": "Node-RED Nodes for the Homematic CCU",
