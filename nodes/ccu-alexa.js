@@ -36,12 +36,12 @@ module.exports = function (RED) {
                 change: true,
                 stable: true,
                 iface: config.iface,
-                channel: String(config.channel).split(' ')[0]
+                channel: String(config.channel).split(' ')[0],
             };
 
             const payload = {
                 acknowledge: true,
-                state: {}
+                state: {},
             };
 
             this.idSubscription = this.ccu.subscribe(filter, message => {
@@ -154,7 +154,7 @@ module.exports = function (RED) {
                         keys.forEach(key => {
                             const distinctPayload = {
                                 acknowledge: true,
-                                state: {}
+                                state: {},
                             };
                             distinctPayload.state[key] = payload.state[key];
                             this.send({payload: distinctPayload});

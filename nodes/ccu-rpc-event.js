@@ -18,7 +18,7 @@ module.exports = function (RED) {
                 cache: config.cache,
                 change: config.change,
                 stable: config.working,
-                iface: config.iface
+                iface: config.iface,
             };
 
             this.ccu.register(this);
@@ -33,7 +33,7 @@ module.exports = function (RED) {
                 'channelName',
                 'channelType',
                 'channelIndex',
-                'datapoint'
+                'datapoint',
 
             ].forEach(attr => {
                 if (!config[attr]) {

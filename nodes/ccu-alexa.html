@@ -6,7 +6,7 @@
             name: {value: ''},
             iface: {value: ''},
             channel: {value: ''},
-            ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true}
+            ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true},
         },
         inputs: 1,
         outputs: 1,
@@ -87,11 +87,11 @@
 
             $nodeInputChannel.autocomplete({
                 source: [],
-                close: () => {
+                close() {
                     // autocompleteDatapoint();
                 },
                 delay: 0,
-                minLength: 0
+                minLength: 0,
             });
 
             $nodeInputChannel.on('focus', () => {
@@ -103,18 +103,18 @@
                     return;
                 }
 
-                const arr = [];
+                const channels = [];
                 Object.keys(data).forEach(addr => {
-                    if (addr.match(/:\d+$/)) {
+                    if (/:\d+$/.test(addr)) {
                         if (data[addr].name) {
                             addr += ' ' + data[addr].name;
                         }
 
-                        arr.push(addr);
+                        channels.push(addr);
                     }
                 });
-                arr.sort((a, b) => a.localeCompare(b));
-                $nodeInputChannel.autocomplete('option', 'source', arr);
+                channels.sort((a, b) => a.localeCompare(b));
+                $nodeInputChannel.autocomplete('option', 'source', channels);
 
                 if (!data[$nodeInputChannel.val().split(' ')[0]]) {
                     $nodeInputChannel.val('');
@@ -127,9 +127,7 @@
             });
         },
 
-        oneditsave() {
-
-        }
+        oneditsave() {},
     });
 </script>
 

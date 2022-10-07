@@ -7,14 +7,14 @@
             ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true},
             iface: {value: 'BidCos-RF'},
             method: {value: ''},
-            params: {value: '[]', validate: params => {
+            params: {value: '[]', validate(p) {
                 try {
-                    return $.trim(params) === '' || Array.isArray(JSON.parse(params));
-                } catch (_) {
+                    return $.trim(p) === '' || Array.isArray(JSON.parse(p));
+                } catch {
                     return false;
                 }
             }},
-            topic: {value: '${CCU}/${Interface}/${Method}'} // eslint-disable-line no-template-curly-in-string
+            topic: {value: '${CCU}/${Interface}/${Method}'}, // eslint-disable-line no-template-curly-in-string
         },
         inputs: 1,
         outputs: 1,
@@ -74,11 +74,9 @@
 
             $('#node-input-method').autocomplete({
                 source: [],
-                close: () => {
-
-                },
+                close() {},
                 delay: 0,
-                minLength: 0
+                minLength: 0,
             });
 
             $('#node-input-iface').change(() => {
@@ -119,7 +117,7 @@
                 console.log('autocompleteMethods', iface, methods.length);
                 $('#node-input-method').autocomplete('option', 'source', methods);
             }
-        }
+        },
     });
 </script>
 

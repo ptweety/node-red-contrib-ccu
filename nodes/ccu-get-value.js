@@ -21,9 +21,9 @@ module.exports = function (RED) {
                 if (iface === 'ReGaHSS') {
                     value = this.ccu.sysvar[sysvar];
                     if (!value) {
-                        const err = new Error('unknown variable ' + sysvar);
+                        const error = new Error('unknown variable ' + sysvar);
                         this.status({fill: 'red', shape: 'ring', text: 'error: unknown variable'});
-                        done(err);
+                        done(error);
 
                         return;
                     }
@@ -31,9 +31,9 @@ module.exports = function (RED) {
                     const address = iface + '.' + channel + '.' + datapoint;
                     value = this.ccu.values[address];
                     if (!value) {
-                        const err = new Error('unknown datapoint ' + address);
+                        const error = new Error('unknown datapoint ' + address);
                         this.status({fill: 'red', shape: 'ring', text: 'error: unknown datapoint'});
-                        done(err);
+                        done(error);
 
                         return;
                     }
@@ -69,9 +69,9 @@ module.exports = function (RED) {
                     } else if ((this.setPropType === 'flow') || (this.setPropType === 'global')) {
                         const context = RED.util.parseContextStore(this.setProp);
                         const target = this.context()[this.setPropType];
-                        target.set(context.key, value, context.store, err => {
-                            if (err) {
-                                done(err);
+                        target.set(context.key, value, context.store, error => {
+                            if (error) {
+                                done(error);
                             } else {
                                 send(message);
 

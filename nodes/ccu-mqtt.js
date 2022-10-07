@@ -57,11 +57,11 @@ module.exports = function (RED) {
                         this.send({topic: this.ccu.topicReplace(this.topicCounters, {iface, rxtx: 'rx'}), payload: '0', retain: true});
                         this.send({topic: this.ccu.topicReplace(this.topicCounters, {iface, rxtx: 'tx'}), payload: '0', retain: true});
                     });
-                }, 25000);
+                }, 25_000);
                 setInterval(() => {
                     this.checkCounters('rxCounters');
                     this.checkCounters('txCounters');
-                }, 30000);
+                }, 30_000);
             }
         }
 
@@ -119,7 +119,7 @@ module.exports = function (RED) {
                     return {
                         val: message.payload,
                         ts: message.ts,
-                        lc: message.lc
+                        lc: message.lc,
                     };
                 }
 
@@ -128,7 +128,7 @@ module.exports = function (RED) {
                         val: message.payload,
                         ts: message.ts,
                         lc: message.lc,
-                        hm: message
+                        hm: message,
                     };
                     delete payload.hm.topic;
                     delete payload.hm.payload;
@@ -156,7 +156,7 @@ module.exports = function (RED) {
                 sysvar: this.topicInputSysvar,
                 putParam: this.topicInputPutParam,
                 putParamset: this.topicInputPutParamset,
-                rpc: this.topicInputRpc
+                rpc: this.topicInputRpc,
             };
 
             let command;
@@ -192,11 +192,7 @@ module.exports = function (RED) {
 
         setValue(filter, payload) {
             if (filter.channelNameOrAddress) {
-                if (this.ccu.channelNames[filter.channelNameOrAddress]) {
-                    filter.channel = filter.channelNameOrAddress;
-                } else {
-                    filter.channel = this.ccu.findChannel(filter.channelNameOrAddress, true);
-                }
+                filter.channel = this.ccu.channelNames[filter.channelNameOrAddress] ? filter.channelNameOrAddress : this.ccu.findChannel(filter.channelNameOrAddress, true);
 
                 if (!filter.channel) {
                     this.error('channel ' + filter.channelNameOrAddress + ' not found');
@@ -240,11 +236,7 @@ module.exports = function (RED) {
 
         putParam(filter, payload) {
             if (filter.channelNameOrAddress) {
-                if (this.ccu.channelNames[filter.channelNameOrAddress]) {
-                    filter.channel = filter.channelNameOrAddress;
-                } else {
-                    filter.channel = this.ccu.findChannel(filter.channelNameOrAddress);
-                }
+                filter.channel = this.ccu.channelNames[filter.channelNameOrAddress] ? filter.channelNameOrAddress : this.ccu.findChannel(filter.channelNameOrAddress);
 
                 if (!filter.channel) {
                     this.error('channel ' + filter.channelNameOrAddress + ' not found');
@@ -290,11 +282,7 @@ module.exports = function (RED) {
             }
 
             if (filter.channelNameOrAddress) {
-                if (this.ccu.channelNames[filter.channelNameOrAddress]) {
-                    filter.channel = filter.channelNameOrAddress;
-                } else {
-                    filter.channel = this.ccu.findChannel(filter.channelNameOrAddress);
-                }
+                filter.channel = this.ccu.channelNames[filter.channelNameOrAddress] ? filter.channelNameOrAddress : this.ccu.findChannel(filter.channelNameOrAddress);
 
                 if (!filter.channel) {
                     this.error('channel ' + filter.channelNameOrAddress + ' not found');
@@ -344,7 +332,7 @@ module.exports = function (RED) {
                     // OMG this is so ugly...
                     if (value === 'false') {
                         value = false;
-                    } else if (!isNaN(value)) { // Make sure that the string "0" gets casted to boolean false
+                    } else if (!Number.isNaN(value)) { // Make sure that the string "0" gets casted to boolean false
                         value = Number(value);
                     }
 
@@ -361,10 +349,8 @@ module.exports = function (RED) {
                     value = {explicitDouble: value};
                     break;
                 case 'ENUM':
-                    if (typeof value === 'string') {
-                        if (paramset.ENUM && (paramset.ENUM.includes(value))) {
-                            value = paramset.ENUM.indexOf(value);
-                        }
+                    if (typeof value === 'string' && paramset.ENUM && paramset.ENUM.includes(value)) {
+                        value = paramset.ENUM.indexOf(value);
                     }
 
                     // Fallthrough by intention

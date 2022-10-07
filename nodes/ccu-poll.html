@@ -5,7 +5,7 @@
         defaults: {
             name: {value: ''},
             script: {value: ''},
-            ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true}
+            ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true},
         },
         inputs: 1,
         outputs: 0,
@@ -18,7 +18,7 @@
         },
         labelStyle() {
             return this.name ? 'node_label_italic' : '';
-        }
+        },
     });
 </script>
 

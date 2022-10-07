@@ -25,7 +25,7 @@ module.exports = function (RED) {
                     stable: config.working,
                     iface: config.iface,
                     channel: String(config.channel).split(' ')[0],
-                    datapoint: config.datapoint
+                    datapoint: config.datapoint,
                 };
 
                 this.idSubscription = this.ccu.subscribe(filter, message => {

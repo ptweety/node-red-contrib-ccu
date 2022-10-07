@@ -22,7 +22,7 @@
             rampType: {value: 'undefined'},
             working: {value: false},
             ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true},
-            topic: {value: '${CCU}/${Interface}/${channel}/${datapoint}'} // eslint-disable-line no-template-curly-in-string
+            topic: {value: '${CCU}/${Interface}/${channel}/${datapoint}'}, // eslint-disable-line no-template-curly-in-string
         },
         inputs: 1,
         outputs: 1,
@@ -129,11 +129,11 @@
             });
             $nodeInputChannel.autocomplete({
                 source: [],
-                close: () => {
+                close() {
                     autocompleteDatapoint();
                 },
                 delay: 0,
-                minLength: 0
+                minLength: 0,
             });
 
             $nodeInputChannel.on('focus', () => {
@@ -143,7 +143,7 @@
             $nodeInputDatapoint.autocomplete({
                 source: [],
                 delay: 0,
-                minLength: 0
+                minLength: 0,
             });
 
             $nodeInputDatapoint.on('focus', () => {
@@ -157,18 +157,18 @@
                     return;
                 }
 
-                const arr = [];
+                const channels = [];
                 Object.keys(data).forEach(addr => {
-                    if (addr.match(/:\d+$/)) {
+                    if (/:\d+$/.test(addr)) {
                         if (data[addr].name) {
                             addr += ' ' + data[addr].name;
                         }
 
-                        arr.push(addr);
+                        channels.push(addr);
                     }
                 });
-                arr.sort((a, b) => a.localeCompare(b));
-                $nodeInputChannel.autocomplete('option', 'source', arr);
+                channels.sort((a, b) => a.localeCompare(b));
+                $nodeInputChannel.autocomplete('option', 'source', channels);
 
                 if (!data[$nodeInputChannel.val().split(' ')[0]]) {
                     $nodeInputChannel.val('');
@@ -219,7 +219,7 @@
             const typeUndefined = {
                 value: 'undefined',
                 label: 'undefined',
-                hasValue: false
+                hasValue: false,
             };
 
             $('#node-input-on').typedInput({
@@ -230,8 +230,8 @@
                     'flow',
                     'global',
                     'num',
-                    typeUndefined
-                ]
+                    typeUndefined,
+                ],
             });
 
             // $('#node-input-on').val(this.on);
@@ -244,15 +244,15 @@
                     'flow',
                     'global',
                     'num',
-                    typeUndefined
-                ]
+                    typeUndefined,
+                ],
             });
 
             const $dialog = $('#dialog-select-datapoint').dialog({
                 autoOpen: false,
                 height: 400,
                 width: 600,
-                modal: true
+                modal: true,
             });
 
             if (typeof $().treeList === 'undefined') {
@@ -264,36 +264,36 @@
                         id: 'rooms',
                         label: this._('node-red-contrib-ccu/ccu-connection:common.label.rooms'),
                         icon: 'fa fa-home fa-fw',
-                        children: (done, item) => loadTreeData('rooms', done, item)
+                        children: (done, item) => loadTreeData('rooms', done, item),
                     }, {
                         id: 'functions',
                         label: this._('node-red-contrib-ccu/ccu-connection:common.label.functions'),
                         icon: 'fa fa-cogs fa-fw',
-                        children: (done, item) => loadTreeData('functions', done, item)
+                        children: (done, item) => loadTreeData('functions', done, item),
                     }, {
                         id: 'all',
                         label: this._('node-red-contrib-ccu/ccu-connection:common.label.allDevices'),
                         icon: 'fa fa-slack fa-fw',
-                        children: done => {
+                        children(done) {
                             const nodeId = $nodeInputCcuConfig.val();
                             const url = 'ccu?config=' + nodeId + '&type=ifaces';
                             $.getJSON(url, d => {
-                                const arrIface = [];
+                                const enabledInterfaces = [];
                                 Object.keys(d).forEach(ifId => {
                                     const iface = d[ifId];
                                     if (ifId !== 'ReGaHSS' && iface.enabled) {
-                                        arrIface.push({
+                                        enabledInterfaces.push({
                                             id: ifId,
                                             label: ifId,
                                             icon: 'fa fa-empire fa-fw',
-                                            children: (done, item) => loadTreeData('tree', done, item, ifId)
+                                            children: (done, item) => loadTreeData('tree', done, item, ifId),
                                         });
                                     }
                                 });
-                                done(arrIface);
+                                done(enabledInterfaces);
                             });
-                        }
-                    }]
+                        },
+                    }],
                 });
             }
 
@@ -327,45 +327,45 @@
                 if (type === 'tree') {
                     url += '&iface=' + ifId + '&classCh=tree-channel&classDp=tree-dp';
                     $.getJSON(url, devices => {
-                        const arr = [];
+                        const deviceIDs = [];
                         Object.keys(devices).forEach(id => {
-                            arr.push(devices[id]);
+                            deviceIDs.push(devices[id]);
                         });
-                        arr.sort((a, b) => a.label.localeCompare(b.label));
-                        arr.forEach(ch => {
+                        deviceIDs.sort((a, b) => a.label.localeCompare(b.label));
+                        deviceIDs.forEach(ch => {
                             if (ch.children) {
                                 ch.children.sort((a, b) => a.label.localeCompare(b.label));
                             }
                         });
-                        done(arr);
+                        done(deviceIDs);
                     });
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=' + type;
                     $.getJSON(url, r => {
-                        const arr = [];
+                        const types = [];
                         if (r && r[type]) {
                             for (let index = 0; index < r[type].length; index++) {
                                 const lbl = r[type][index];
-                                arr.push({
+                                types.push({
                                     label: lbl,
-                                    children: done => {
-                                        const arrCh = [];
+                                    children(done) {
+                                        const channels = [];
                                         if (channelList) {
                                             Object.keys(channelList).forEach(addr => {
                                                 if (channelList[addr][type] && channelList[addr][type].includes(lbl)) {
-                                                    arrCh.push(channelList[addr]);
+                                                    channels.push(channelList[addr]);
                                                 }
                                             });
                                         }
 
-                                        arrCh.sort((a, b) => a.label.localeCompare(b.label));
-                                        done(arrCh);
-                                    }
+                                        channels.sort((a, b) => a.label.localeCompare(b.label));
+                                        done(channels);
+                                    },
                                 });
                             }
                         }
 
-                        done(arr);
+                        done(types);
                     });
                 }
             }
@@ -387,7 +387,7 @@
             if (this.rampType === 'undefined') {
                 this.ramp = 0;
             }
-        }
+        },
     });
 </script>
 

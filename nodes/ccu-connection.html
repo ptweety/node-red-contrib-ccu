@@ -20,17 +20,17 @@
             rpcServerHost: {value: '', required: true},
             rpcBinPort: {value: '', required: true},
             rpcXmlPort: {value: '', required: true},
-            
+
             tls: {value: false},
             inSecure: {value: false},
-            authentication: {value: false},            
+            authentication: {value: false},
             username: {value: ''},
             password: {value: ''},
 
             queueTimeout: {value: 5000, required: true},
             queuePause: {value: 250, required: true},
 
-            contextStore: {value: ''}
+            contextStore: {value: ''},
         },
         label() {
             return this.name || this.host;
@@ -64,7 +64,7 @@
 
                 $nodeConfigInputHost.autocomplete({
                     source: discovered,
-                    select: (_, ui) => {
+                    select(_, ui) {
                         const name = ui.item.label;
                         const address = name.split(' ').shift();
                         const serial = name.split(' ').pop();
@@ -84,7 +84,7 @@
                         });
                     },
                     delay: 0,
-                    minLength: 0
+                    minLength: 0,
                 });
 
                 $nodeConfigInputHost.on('change', () => {
@@ -113,15 +113,15 @@
                     $nodeConfigInputHost.focus();
                 }
             }, 250);
-        }
+        },
     });
 
-    function TLSSSL(){        
-        if (document.getElementById('node-config-input-authentication').checked && !document.getElementById('node-config-input-tls').checked){
-            document.getElementById('node-config-input-tls').checked = true
-            alert('TLS/SSL activated. \nWithout TLS/SSL your credentials would be sent unencrypted!')
-        }
-    }
+    // function TLSSSL() {
+    //     if (document.getElementById('node-config-input-authentication').checked && !document.getElementById('node-config-input-tls').checked) {
+    //         document.getElementById('node-config-input-tls').checked = true;
+    //         alert('TLS/SSL activated. \nWithout TLS/SSL your credentials would be sent unencrypted!');
+    //     }
+    // }
 
 </script>
 

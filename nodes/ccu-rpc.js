@@ -44,14 +44,14 @@ module.exports = function (RED) {
                 }
 
                 this.ccu.methodCall(iface, method, parameters)
-                    .then(res => {
+                    .then(result => {
                         const message = {
                             ccu: this.ccu.host,
                             iface,
                             topic: config.topic,
-                            payload: res,
-                            ts: (new Date()).getTime(),
-                            method
+                            payload: result,
+                            ts: Date.now(),
+                            method,
                         };
                         message.topic = this.ccu.topicReplace(config.topic, message);
                         send(message);

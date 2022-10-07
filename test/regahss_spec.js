@@ -1,5 +1,5 @@
 /* global describe, it, after, before, afterEach */
-/* eslint-disable no-template-curly-in-string, no-unused-vars, unicorn/filename-case */
+/* eslint-disable no-template-curly-in-string, no-unused-vars */
 
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +12,7 @@ const nodePoll = require('../nodes/ccu-poll.js');
 const nodeScript = require('../nodes/ccu-script.js');
 const nodeProgram = require('../nodes/ccu-program.js');
 const nodeConnection = require('../nodes/ccu-connection.js');
-const {removeFiles, hmSimOptions} = require('./utils');
+const {removeFiles, hmSimOptions} = require('./utils.js');
 
 helper.init(require.resolve('node-red'));
 
@@ -27,12 +27,12 @@ const flow1 = [
         cache: true,
 
         wires: [
-            ['nh']
-        ]
+            ['nh'],
+        ],
     },
     {
         id: 'nh',
-        type: 'helper'
+        type: 'helper',
     },
     {
         id: 'nc',
@@ -51,13 +51,13 @@ const flow1 = [
         rpcInitAddress: '127.0.0.1',
         rpcServerHost: '127.0.0.1',
         rpcBinPort: '2047',
-        rpcXmlPort: '2048'
+        rpcXmlPort: '2048',
     },
     {
         id: 'np',
         type: 'ccu-poll',
-        ccuConfig: 'nc'
-    }
+        ccuConfig: 'nc',
+    },
 ];
 const flow2 = [
     {
@@ -70,12 +70,12 @@ const flow2 = [
         cache: false,
 
         wires: [
-            ['nh']
-        ]
+            ['nh'],
+        ],
     },
     {
         id: 'nh',
-        type: 'helper'
+        type: 'helper',
     },
     {
         id: 'nc',
@@ -94,13 +94,13 @@ const flow2 = [
         rpcInitAddress: '127.0.0.1',
         rpcServerHost: '127.0.0.1',
         rpcBinPort: '2047',
-        rpcXmlPort: '2048'
+        rpcXmlPort: '2048',
     },
     {
         id: 'np',
         type: 'ccu-poll',
-        ccuConfig: 'nc'
-    }
+        ccuConfig: 'nc',
+    },
 ];
 const flow3 = [
     {
@@ -113,12 +113,12 @@ const flow3 = [
         cache: true,
 
         wires: [
-            ['nh']
-        ]
+            ['nh'],
+        ],
     },
     {
         id: 'nh',
-        type: 'helper'
+        type: 'helper',
     },
     {
         id: 'ns',
@@ -128,8 +128,8 @@ const flow3 = [
         ccuConfig: 'nc',
         topic: '${CCU}/${Interface}',
         wires: [
-            []
-        ]
+            [],
+        ],
     },
     {
         id: 'npr',
@@ -138,8 +138,8 @@ const flow3 = [
         ccuConfig: 'nc',
         topic: 'ReGaHSS/${Name}',
         wires: [
-            ['nh']
-        ]
+            ['nh'],
+        ],
     },
     {
         id: 'nc',
@@ -158,13 +158,13 @@ const flow3 = [
         rpcInitAddress: '127.0.0.1',
         rpcServerHost: '127.0.0.1',
         rpcBinPort: '2047',
-        rpcXmlPort: '2048'
+        rpcXmlPort: '2048',
     },
     {
         id: 'np',
         type: 'ccu-poll',
-        ccuConfig: 'nc'
-    }
+        ccuConfig: 'nc',
+    },
 ];
 
 describe('regahss flow1', () => {
@@ -182,7 +182,7 @@ describe('regahss flow1', () => {
     });
 
     before(function (done) {
-        this.timeout(12000);
+        this.timeout(12_000);
         hmSim = new HmSim(hmSimOptions());
         helper.startServer(() => {
             helper.load([nodeConnection, nodeSysvar, nodePoll], flow1, () => {
@@ -207,7 +207,7 @@ describe('regahss flow1', () => {
 
     describe('node ccu-sysvar', () => {
         it('should send message on start', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             nh.once('input', message => {
                 message.should.have.properties({topic: 'ReGaHSS/Anwesenheit',
                     payload: false,
@@ -223,14 +223,14 @@ describe('regahss flow1', () => {
                     enum: ['nicht anwesend', 'anwesend'],
                     id: 950,
                     cache: true,
-                    change: false
+                    change: false,
                 });
                 done();
             });
         });
 
         it('should send message after receive with change', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: true,
@@ -239,7 +239,7 @@ describe('regahss flow1', () => {
                     valueEnum: 'anwesend',
                     valueEnumPrevious: 'nicht anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
@@ -249,7 +249,7 @@ describe('regahss flow1', () => {
 
     describe('node ccu-sysvar and ccu-poll', () => {
         it('should send message after poll with change', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: false,
@@ -258,7 +258,7 @@ describe('regahss flow1', () => {
                     valueEnum: 'nicht anwesend',
                     valueEnumPrevious: 'anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
@@ -272,7 +272,7 @@ describe('regahss flow1', () => {
         });
 
         it('should send message after poll with unchanged', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: false,
@@ -281,7 +281,7 @@ describe('regahss flow1', () => {
                     valueEnum: 'nicht anwesend',
                     valueEnumPrevious: 'nicht anwesend',
                     cache: false,
-                    change: false
+                    change: false,
                 });
                 done();
             });
@@ -333,7 +333,7 @@ describe('regahss flow2', () => {
 
     describe('node ccu-sysvar', () => {
         it('should not send message on start', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             function unexcpectedMessage(message) {
                 nh.removeListener('input', unexcpectedMessage);
                 done(new Error('unexpected msg received'));
@@ -347,7 +347,7 @@ describe('regahss flow2', () => {
         });
 
         it('should send message after receive with change', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: true,
@@ -356,7 +356,7 @@ describe('regahss flow2', () => {
                     valueEnum: 'anwesend',
                     valueEnumPrevious: 'nicht anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
@@ -366,7 +366,7 @@ describe('regahss flow2', () => {
 
     describe('node ccu-sysvar and ccu-poll', () => {
         it('should send message after poll with change', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: false,
@@ -375,7 +375,7 @@ describe('regahss flow2', () => {
                     valueEnum: 'nicht anwesend',
                     valueEnumPrevious: 'anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
@@ -389,7 +389,7 @@ describe('regahss flow2', () => {
         });
 
         it('should not send message after poll with unchanged', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             function unexcpectedMessage() {
                 done(new Error('unexpected msg received'));
             }
@@ -451,7 +451,7 @@ describe('regahss flow3', () => {
 
     describe('node ccu-sysvar', () => {
         it('should send message on start', function (done) {
-            this.timeout(30000);
+            this.timeout(30_000);
             nh.once('input', message => {
                 message.should.have.properties({topic: 'ReGaHSS/Anwesenheit',
                     payload: false,
@@ -467,13 +467,13 @@ describe('regahss flow3', () => {
                     enum: ['nicht anwesend', 'anwesend'],
                     id: 950,
                     cache: true,
-                    change: false
+                    change: false,
                 });
                 done();
             });
         });
         it('should send message with change', function (done) {
-            this.timeout(10000);
+            this.timeout(10_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: true,
@@ -482,7 +482,7 @@ describe('regahss flow3', () => {
                     valueEnum: 'anwesend',
                     valueEnumPrevious: 'nicht anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
@@ -494,7 +494,7 @@ describe('regahss flow3', () => {
             });
         });
         it('should send message with change', function (done) {
-            this.timeout(10000);
+            this.timeout(10_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: false,
@@ -503,7 +503,7 @@ describe('regahss flow3', () => {
                     valueEnum: 'nicht anwesend',
                     valueEnumPrevious: 'anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
@@ -518,7 +518,7 @@ describe('regahss flow3', () => {
 
     describe('node ccu-sysvar and ccu-script', () => {
         it('should send message with change', function (done) {
-            this.timeout(10000);
+            this.timeout(10_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: true,
@@ -527,14 +527,14 @@ describe('regahss flow3', () => {
                     valueEnum: 'anwesend',
                     valueEnumPrevious: 'nicht anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
             ns.receive({payload: 'dom.GetObject(950).State(true);'});
         });
         it('should send message with change', function (done) {
-            this.timeout(10000);
+            this.timeout(10_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     payload: false,
@@ -543,7 +543,7 @@ describe('regahss flow3', () => {
                     valueEnum: 'nicht anwesend',
                     valueEnumPrevious: 'anwesend',
                     cache: false,
-                    change: true
+                    change: true,
                 });
                 done();
             });
@@ -552,7 +552,7 @@ describe('regahss flow3', () => {
     });
     describe('node ccu-program', () => {
         it('should execute on incoming msg', function (done) {
-            this.timeout(10000);
+            this.timeout(10_000);
             nh.once('input', message => {
                 message.should.have.properties({
                     id: 2329,
@@ -563,7 +563,7 @@ describe('regahss flow3', () => {
                     payload: true,
                     value: true,
                     active: true,
-                    topic: 'ReGaHSS/Anwesend'
+                    topic: 'ReGaHSS/Anwesend',
                 });
                 done();
             });

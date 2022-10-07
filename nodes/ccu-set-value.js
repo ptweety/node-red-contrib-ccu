@@ -37,7 +37,7 @@ module.exports = function (RED) {
                 channelIndexRx: config.channelIndexRx,
                 channelNameRx: config.channelNameRx,
                 datapointRx: config.datapointRx,
-                force: config.force
+                force: config.force,
             };
 
             this.blacklist = new Set();
@@ -67,11 +67,9 @@ module.exports = function (RED) {
             const {config} = this;
             let dynamicConfig = false;
             Object.keys(config).forEach(key => {
-                if (!config[key]) {
-                    if (key in message) {
-                        dynamicConfig = true;
-                        config[key] = message[key];
-                    }
+                if (!config[key] && key in message) {
+                    dynamicConfig = true;
+                    config[key] = message[key];
                 }
             });
 
@@ -86,6 +84,7 @@ module.exports = function (RED) {
                     return;
                 }
 
+                // eslint-disable-next-line complexity
                 Object.keys(this.ccu.metadata.devices[iface]).forEach(address => {
                     if (this.blacklist.has(address)) {
                         return;
@@ -106,7 +105,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.deviceRx === 're' && !channel.PARENT.match(new RegExp(config.device))) {
+                            if (config.deviceRx === 're' && !(new RegExp(config.device).test(channel.PARENT))) {
                                 this.blacklist.add(address);
                                 return;
                             }
@@ -118,7 +117,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.deviceTypeRx === 're' && !device.TYPE.match(new RegExp(config.deviceType))) {
+                            if (config.deviceTypeRx === 're' && !(new RegExp(config.deviceType).test(device.TYPE))) {
                                 this.blacklist.add(address);
                                 return;
                             }
@@ -135,7 +134,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.deviceNameRx === 're' && !this.ccu.channelNames[channel.PARENT].match(new RegExp(config.deviceName))) {
+                            if (config.deviceNameRx === 're' && !(new RegExp(config.deviceName).test(this.ccu.channelNames[channel.PARENT]))) {
                                 this.blacklist.add(address);
                                 return;
                             }
@@ -147,7 +146,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.channelRx === 're' && !address.match(new RegExp(config.channel))) {
+                            if (config.channelRx === 're' && !(new RegExp(config.channel).test(address))) {
                                 this.blacklist.add(address);
                                 return;
                             }
@@ -159,7 +158,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.channelTypeRx === 're' && !channel.TYPE.match(new RegExp(config.channelType))) {
+                            if (config.channelTypeRx === 're' && !(new RegExp(config.channelType).test(channel.TYPE))) {
                                 this.blacklist.add(address);
                                 return;
                             }
@@ -171,7 +170,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.channelIndexRx === 're' && !address.split(':')[1].match(new RegExp(String(config.channelIndex)))) {
+                            if (config.channelIndexRx === 're' && !(new RegExp(String(config.channelIndex)).test(address.split(':')[1]))) {
                                 this.blacklist.add(address);
                                 return;
                             }
@@ -188,7 +187,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.channelNameRx === 're' && !this.ccu.channelNames[address].match(new RegExp(config.channelName))) {
+                            if (config.channelNameRx === 're' && !(new RegExp(config.channelName).test(this.ccu.channelNames[address]))) {
                                 this.blacklist.add(address);
                                 return;
                             }
@@ -208,7 +207,7 @@ module.exports = function (RED) {
                             if (config.roomsRx === 're') {
                                 let match = false;
                                 this.ccu.channelRooms[address].forEach(room => {
-                                    if (room.match(new RegExp(config.rooms))) {
+                                    if (new RegExp(config.rooms).test(room)) {
                                         match = true;
                                     }
                                 });
@@ -233,7 +232,7 @@ module.exports = function (RED) {
                             if (config.functionsRx === 're') {
                                 let match = false;
                                 this.ccu.channelFunctions[address].forEach(func => {
-                                    if (func.match(new RegExp(config.functions))) {
+                                    if (new RegExp(config.functions).test(func)) {
                                         match = true;
                                     }
                                 });
@@ -255,7 +254,7 @@ module.exports = function (RED) {
                                 return;
                             }
 
-                            if (config.datapointRx === 're' && !dp.match(rx)) {
+                            if (config.datapointRx === 're' && !rx.test(dp)) {
                                 return;
                             }
 

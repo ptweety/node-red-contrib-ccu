@@ -12,7 +12,7 @@
                 datapoint: {value: ''},
                 datapointProperty: {value: 'value'},
                 setProp: {value: 'payload'},
-                setPropType: {value: 'msg'}
+                setPropType: {value: 'msg'},
             },
             inputs: 1,
             outputs: 1,
@@ -61,9 +61,9 @@
                     types: [{
                         value: 'cmsg',
                         label: 'msg',
-                        hasValue: false
+                        hasValue: false,
                     }, 'msg', 'flow', 'global'],
-                    typeField: $nodeSetPropType
+                    typeField: $nodeSetPropType,
                 });
 
                 $('.form-row.datapoint').hide();
@@ -72,11 +72,11 @@
                 const sysvarProperties = ['value', 'valueEnum', 'ts', 'lc'];
                 const datapointProperties = ['value', 'ts', 'lc', 'working', 'direction', 'all'];
 
-                sysvarProperties.forEach(val => $nodeInputSysvarProperty.append(
-                    $('<option></option>').val(val).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + val))
+                sysvarProperties.forEach(value => $nodeInputSysvarProperty.append(
+                    $('<option></option>').val(value).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + value)),
                 ));
-                datapointProperties.forEach(val => $nodeInputDatapointProperty.append(
-                    $('<option></option>').val(val).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + val))
+                datapointProperties.forEach(value => $nodeInputDatapointProperty.append(
+                    $('<option></option>').val(value).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + value)),
                 ));
                 $nodeInputSysvarProperty.val(node.sysvarProperty || sysvarProperties[0]);
                 $nodeInputDatapointProperty.val(node.datapointProperty || datapointProperties[0]);
@@ -145,11 +145,11 @@
 
                 $nodeInputChannel.autocomplete({
                     source: [],
-                    close: () => {
+                    close() {
                         autocompleteDatapoint();
                     },
                     delay: 0,
-                    minLength: 0
+                    minLength: 0,
                 });
 
                 $nodeInputChannel.on('focus', () => {
@@ -158,7 +158,7 @@
                 $nodeInputDatapoint.autocomplete({
                     source: [],
                     delay: 0,
-                    minLength: 0
+                    minLength: 0,
                 });
 
                 $nodeInputDatapoint.on('focus', () => {
@@ -172,18 +172,18 @@
                         return;
                     }
 
-                    const arr = [];
+                    const channels = [];
                     Object.keys(data).forEach(addr => {
-                        if (addr.match(/:\d+$/)) {
+                        if (/:\d+$/.test(addr)) {
                             if (data[addr].name) {
                                 addr += ' ' + data[addr].name;
                             }
 
-                            arr.push(addr);
+                            channels.push(addr);
                         }
                     });
-                    arr.sort((a, b) => a.localeCompare(b));
-                    $nodeInputChannel.autocomplete('option', 'source', arr);
+                    channels.sort((a, b) => a.localeCompare(b));
+                    $nodeInputChannel.autocomplete('option', 'source', channels);
 
                     if (!data[$nodeInputChannel.val().split(' ')[0]]) {
                         $nodeInputChannel.val('');
@@ -219,7 +219,7 @@
                     autoOpen: false,
                     height: 400,
                     width: 600,
-                    modal: true
+                    modal: true,
                 });
 
                 if (typeof $().treeList === 'undefined') {
@@ -231,41 +231,41 @@
                             id: 'rooms',
                             label: node._('node-red-contrib-ccu/ccu-connection:common.label.rooms'),
                             icon: 'fa fa-home fa-fw',
-                            children: (done, item) => loadTreeData('rooms', done, item)
+                            children: (done, item) => loadTreeData('rooms', done, item),
                         }, {
                             id: 'functions',
                             label: node._('node-red-contrib-ccu/ccu-connection:common.label.functions'),
                             icon: 'fa fa-cogs fa-fw',
-                            children: (done, item) => loadTreeData('functions', done, item)
+                            children: (done, item) => loadTreeData('functions', done, item),
                         }, {
                             id: 'all',
                             label: node._('node-red-contrib-ccu/ccu-connection:common.label.allDevices'),
                             icon: 'fa fa-slack fa-fw',
-                            children: done => {
+                            children(done) {
                                 const nodeId = $nodeInputCcuConfig.val();
                                 const url = 'ccu?config=' + nodeId + '&type=ifaces';
                                 $.getJSON(url, d => {
-                                    const arrIface = [];
+                                    const enabledInterfaces = [];
                                     Object.keys(d).forEach(ifId => {
                                         const iface = d[ifId];
                                         if (ifId !== 'ReGaHSS' && iface.enabled) {
-                                            arrIface.push({
+                                            enabledInterfaces.push({
                                                 id: ifId,
                                                 label: ifId,
                                                 icon: 'fa fa-empire fa-fw',
-                                                children: (done, item) => loadTreeData('tree', done, item, ifId)
+                                                children: (done, item) => loadTreeData('tree', done, item, ifId),
                                             });
                                         }
                                     });
-                                    done(arrIface);
+                                    done(enabledInterfaces);
                                 });
-                            }
+                            },
                         }, {
                             id: 'sysVars',
                             label: node._('node-red-contrib-ccu/ccu-connection:common.label.sysVars'),
                             icon: 'fa fa-cog fa-fw',
-                            children: (done, item) => loadTreeData('sysvar', done, item)
-                        }]
+                            children: (done, item) => loadTreeData('sysvar', done, item),
+                        }],
                     });
                 }
 
@@ -311,21 +311,21 @@
                 });
 
                 function getDPProp(dp) {
-                    const retVal = [];
+                    const result = [];
 
-                    datapointProperties.forEach(val => {
-                        retVal.push({
-                            id: dp.id + '.' + val,
-                            label: node._('node-red-contrib-ccu/ccu-connection:common.label.' + val),
+                    datapointProperties.forEach(property => {
+                        result.push({
+                            id: dp.id + '.' + property,
+                            label: node._('node-red-contrib-ccu/ccu-connection:common.label.' + property),
                             icon: 'fa fa-tasks fa-fw',
                             iface: dp.iface,
                             channel: dp.channel,
                             datapoint: dp.label,
-                            property: val
+                            property,
                         });
                     });
 
-                    return retVal;
+                    return result;
                 }
 
                 function loadTreeData(type, done, item, ifId) {
@@ -339,7 +339,7 @@
                     if (type === 'tree') {
                         url += '&iface=' + ifId;
                         $.getJSON(url, devices => {
-                            const arrDev = [];
+                            const deviceIDs = [];
                             Object.keys(devices).forEach(id => {
                                 const dev = devices[id];
                                 dev.children.forEach(ch => {
@@ -352,66 +352,66 @@
                                         });
                                     }
                                 });
-                                arrDev.push(dev);
+                                deviceIDs.push(dev);
                             });
-                            arrDev.sort((a, b) => a.label.localeCompare(b.label));
-                            done(arrDev);
+                            deviceIDs.sort((a, b) => a.label.localeCompare(b.label));
+                            done(deviceIDs);
                         });
                     } else if (type === 'sysvar') {
                         $.getJSON(url, d => {
-                            const arrSysVar = [];
+                            const sysVars = [];
                             Object.keys(d).forEach(id => {
-                                arrSysVar.push({
+                                sysVars.push({
                                     id,
                                     label: id,
                                     icon: 'fa fa-tags fa-fw',
-                                    children: done => {
-                                        const retVal = [];
-                                        sysvarProperties.forEach(val => {
-                                            retVal.push({
-                                                label: node._('node-red-contrib-ccu/ccu-connection:common.label.' + val),
+                                    children(done) {
+                                        const result = [];
+                                        sysvarProperties.forEach(property => {
+                                            result.push({
+                                                label: node._('node-red-contrib-ccu/ccu-connection:common.label.' + property),
                                                 icon: 'fa fa-tag fa-fw',
                                                 sysvar: id,
-                                                property: val
+                                                property,
                                             });
                                         });
-                                        done(retVal);
-                                    }
+                                        done(result);
+                                    },
                                 });
                             });
-                            done(arrSysVar);
+                            done(sysVars);
                         });
                     } else {
                         const url = 'ccu?config=' + nodeId + '&type=' + type;
                         $.getJSON(url, r => {
-                            const arr = [];
+                            const types = [];
                             if (r && r[type]) {
                                 for (let index = 0; index < r[type].length; index++) {
                                     const lbl = r[type][index];
-                                    arr.push({
+                                    types.push({
                                         label: lbl,
-                                        children: done => {
-                                            const arrCh = [];
+                                        children(done) {
+                                            const channels = [];
                                             if (channelArray) {
                                                 channelArray.forEach(ch => {
                                                     if (ch[type] && ch[type].includes(lbl)) {
-                                                        arrCh.push(ch);
+                                                        channels.push(ch);
                                                     }
                                                 });
                                             }
 
-                                            arrCh.sort((a, b) => a.label.localeCompare(b.label));
-                                            done(arrCh);
-                                        }
+                                            channels.sort((a, b) => a.label.localeCompare(b.label));
+                                            done(channels);
+                                        },
                                     });
                                 }
                             }
 
-                            done(arr);
+                            done(types);
                         });
                     }
                 }
-            }
+            },
         });
 </script>
 

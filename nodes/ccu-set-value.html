@@ -26,7 +26,7 @@
             channelIndexRx: {value: 'str'},
             datapoint: {value: ''},
             datapointRx: {value: 'str'},
-            force: {value: false}
+            force: {value: false},
         },
         inputs: 1,
         outputs: 0,
@@ -62,19 +62,19 @@
 
                 $this.typedInput({
                     typeField: $type,
-                    types: ['str', 're']
+                    types: ['str', 're'],
                 }).typedInput('width', '70%');
 
                 const $input = $this.parent().find('.red-ui-typedInput-input');
 
                 $input.autocomplete({
                     source: [],
-                    close: () => {
+                    close() {
                         $input.trigger('change');
                         autocomplete();
                     },
                     delay: 0,
-                    minLength: 0
+                    minLength: 0,
                 });
 
                 $input.on('focus', () => {
@@ -184,7 +184,7 @@
                 });
                 Object.keys(data.channelNames).forEach(channel => {
                     const name = data.channelNames[channel];
-                    if (channel.match(/:\d+$/)) {
+                    if (/:\d+$/.test(channel)) {
                         data.nameChannels[name] = channel;
                     } else {
                         data.nameDevices[name] = channel;
@@ -246,7 +246,7 @@
                     channelName: [],
                     channelType: [],
                     channelIndex: [],
-                    datapoint: []
+                    datapoint: [],
                 };
 
                 function composeLists(iface) {
@@ -394,8 +394,8 @@
                                     roomCheck = true;
                                 }
 
-                                roomCheck = roomCheck ||
-                                    data.metadata.devices[iface][device].CHILDREN
+                                roomCheck = roomCheck
+                                    || data.metadata.devices[iface][device].CHILDREN
                                         .some(v => data.roomDevices[room].includes(v));
                             });
                         } else {
@@ -408,8 +408,8 @@
                                     functionCheck = true;
                                 }
 
-                                functionCheck = functionCheck ||
-                                    data.metadata.devices[iface][device].CHILDREN
+                                functionCheck = functionCheck
+                                    || data.metadata.devices[iface][device].CHILDREN
                                         .some(v => data.functionDevices[func].includes(v));
                             });
                         } else {
@@ -420,7 +420,7 @@
                     }
 
                     Object.keys(data.metadata.devices[iface]).forEach(dev => {
-                        if (dev.match(/:\d+$/)) {
+                        if (/:\d+$/.test(dev)) {
                             if (!checkChannel(dev)) {
                                 return;
                             }
@@ -504,7 +504,7 @@
 
         oneditsave() {
             this.force = $('#node-input-force-dropdown').val() === 'true';
-        }
+        },
     });
 </script>
 

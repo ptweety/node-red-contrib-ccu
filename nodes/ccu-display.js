@@ -31,7 +31,7 @@ module.exports = function (RED) {
                     gruen: '0x84',
                     grün: '0x84',
                     green: '0x84',
-                    blue: '0x85'
+                    blue: '0x85',
                 };
 
                 if (map[col]) {
@@ -87,7 +87,7 @@ module.exports = function (RED) {
                     'signal rot': '0x8B',
                     red: '0x8B',
                     signalred: '0x8B',
-                    'signal red': '0x8B'
+                    'signal red': '0x8B',
                 };
 
                 if (map[ico]) {
@@ -117,14 +117,14 @@ module.exports = function (RED) {
                     ä: '0x7B',
                     ö: '0x7C',
                     ü: '0x7D',
-                    ß: '0x5F'
+                    ß: '0x5F',
                 };
-                const res = [];
+                const result = [];
                 string.split('').forEach(c => {
-                    res.push(charcodes[c] || ('0x' + c.charCodeAt(0).toString(16).toUpperCase()));
+                    result.push(charcodes[c] || ('0x' + c.codePointAt(0).toString(16).toUpperCase()));
                 });
 
-                return ',0x12,' + res.slice(0, 12).join(',');
+                return ',0x12,' + result.slice(0, 12).join(',');
             }
 
             this.on('input', (message, send, done) => {

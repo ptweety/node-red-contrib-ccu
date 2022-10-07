@@ -14,7 +14,7 @@
         Cyan: 97,
         'Cyan lang': 98,
         Weiss: 113,
-        'Weiss lang': 114
+        'Weiss lang': 114,
     };
 
     const ccuDimmerColors = {
@@ -25,7 +25,7 @@
         Rot: 4,
         Violett: 5,
         Gelb: 6,
-        Weiss: 7
+        Weiss: 7,
     };
 
     const ccuOnTime = {
@@ -44,11 +44,11 @@
         '20s': 12,
         '40s': 13,
         '60s': 14,
-        Permanent: 15
+        Permanent: 15,
     };
 
     const ccuSound = {
-        'Interner Sound': 0
+        'Interner Sound': 0,
     };
 
     for (let i = 1; i < 253; i++) {
@@ -67,7 +67,7 @@
             iface: {value: 'BidCos-RF', required: true},
             channel: {value: '', required: true},
             chime: {value: ''},
-            length: {value: 108000},
+            length: {value: 108_000},
             repeat: {value: 1},
             repeatType: {value: 'num'},
             volume: {value: 100},
@@ -96,7 +96,7 @@
             soundLevelType: {value: 'num'},
             soundList: {value: []},
             opticalAlarmSelection: {value: 'DISABLE_OPTICAL_SIGNAL'},
-            ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true}
+            ccuConfig: {value: 'localhost', type: 'ccu-connection', required: true},
         },
         inputs: 1,
         outputs: 0,
@@ -120,31 +120,31 @@
             $('#node-input-repeat').typedInput({
                 default: 'num',
                 types: ['num', 'msg', 'flow', 'global', 'env'],
-                typeField: '#node-input-repeatType'
+                typeField: '#node-input-repeatType',
             });
 
             $('#node-input-volume').typedInput({
                 default: 'num',
                 types: ['num', 'msg', 'flow', 'global', 'env'],
-                typeField: '#node-input-volumeType'
+                typeField: '#node-input-volumeType',
             });
 
             $('#node-input-durationValue').typedInput({
                 default: 'num',
                 types: ['num', 'msg', 'flow', 'global', 'env'],
-                typeField: '#node-input-durationValueType'
+                typeField: '#node-input-durationValueType',
             });
 
             $('#node-input-rampTimeValue').typedInput({
                 default: 'num',
                 types: ['num', 'msg', 'flow', 'global', 'env'],
-                typeField: '#node-input-rampTimeValueType'
+                typeField: '#node-input-rampTimeValueType',
             });
 
             $('#node-input-soundLevel').typedInput({
                 default: 'num',
                 types: ['num', 'msg', 'flow', 'global', 'env'],
-                typeField: '#node-input-soundLevelType'
+                typeField: '#node-input-soundLevelType',
             });
 
             let data;
@@ -219,7 +219,7 @@
 
             $nodeInputChannel.autocomplete({
                 source: [],
-                close: () => {
+                close() {
                     const n = $nodeInputChannel.val().split(' ');
                     const channel = n.shift();
                     $nodeInputChannel.val(channel);
@@ -237,7 +237,7 @@
                     }
                 },
                 delay: 0,
-                minLength: 0
+                minLength: 0,
             });
 
             $nodeInputChannel.on('focus', () => {
@@ -245,21 +245,21 @@
             });
 
             function autoCompleteChannel() {
-                const arr = [];
+                const channels = [];
                 if (data) {
                     Object.keys(data).forEach(addr => {
-                        if (addr.match(/:\d+$/)) {
+                        if (/:\d+$/.test(addr)) {
                             if (data[addr].name) {
                                 addr += ' ' + data[addr].name;
                             }
 
-                            arr.push(addr);
+                            channels.push(addr);
                         }
                     });
                 }
 
-                console.log('autoCompleteChannel()', arr.length);
-                $nodeInputChannel.autocomplete('option', 'source', arr);
+                console.log('autoCompleteChannel()', channels.length);
+                $nodeInputChannel.autocomplete('option', 'source', channels);
 
                 if (!data[$nodeInputChannel.val().split(' ')[0]]) {
                     $nodeInputChannel.val('');
@@ -276,7 +276,7 @@
             $('#node-input-chime-container').css('min-height', '300px').css('min-width', '450px').editableList({
                 sortable: true,
                 removable: true,
-                addItem: (container, i, data) => {
+                addItem(container, i, data) {
                     if ($('#node-input-chime-container').editableList('length') > 10) {
                         $('#node-input-chime-container').editableList('removeItem', data);
                     } else {
@@ -289,13 +289,13 @@
                         $(html).appendTo(container);
                         container.find('input:last').focus();
                     }
-                }
+                },
             });
 
             $('#node-input-led-container').css('min-height', '300px').css('min-width', '450px').editableList({
                 sortable: true,
                 removable: true,
-                addItem: (container, i, data) => {
+                addItem(container, i, data) {
                     if ($('#node-input-led-container').editableList('length') > 10) {
                         $('#node-input-led-container').editableList('removeItem', data);
                         return false;
@@ -303,16 +303,16 @@
 
                     const select = $('<select class="number led" value="' + data.cmd + '"/>').appendTo(container);
                     Object.keys(ccuSignalColors).forEach(name => {
-                        $('<option value="' + ccuSignalColors[name] + '"' + (ccuSignalColors[name] === parseInt(data.cmd, 10) ? ' selected' : '') +
-                            '>' + name + '</option>').appendTo(select);
+                        $('<option value="' + ccuSignalColors[name] + '"' + (ccuSignalColors[name] === Number.parseInt(data.cmd, 10) ? ' selected' : '')
+                            + '>' + name + '</option>').appendTo(select);
                     });
-                }
+                },
             });
 
             $('#node-input-dimmer-container').css('min-height', '300px').css('min-width', '450px').editableList({
                 sortable: true,
                 removable: true,
-                addItem: (container, i, data) => {
+                addItem(container, i, data) {
                     if ($('#node-input-dimmer-container').editableList('length') > 12) {
                         $('#node-input-dimmer-container').editableList('removeItem', data);
                         return false;
@@ -320,21 +320,21 @@
 
                     const select = $('<select class="number color" style="width: calc(50% - 8px);" value="' + data.color + '"/>').appendTo(container);
                     Object.keys(ccuDimmerColors).forEach(name => {
-                        $('<option value="' + ccuDimmerColors[name] + '"' + (ccuDimmerColors[name] === parseInt(data.color, 10) ? ' selected' : '') +
-                            '>' + name + '</option>').appendTo(select);
+                        $('<option value="' + ccuDimmerColors[name] + '"' + (ccuDimmerColors[name] === Number.parseInt(data.color, 10) ? ' selected' : '')
+                            + '>' + name + '</option>').appendTo(select);
                     });
                     const ontime = $(`<select class="number ontime" style="width: calc(50% - 8px); margin-left: 6px;" value="${data.ontime}"></select>`).appendTo(container);
                     Object.keys(ccuOnTime).forEach(name => {
-                        $('<option value="' + ccuOnTime[name] + '"' + (ccuOnTime[name] === parseInt(data.ontime, 10) ? ' selected' : '') +
-                            '>' + name + '</option>').appendTo(ontime);
+                        $('<option value="' + ccuOnTime[name] + '"' + (ccuOnTime[name] === Number.parseInt(data.ontime, 10) ? ' selected' : '')
+                            + '>' + name + '</option>').appendTo(ontime);
                     });
-                }
+                },
             });
 
             $('#node-input-acoustic-container').css('min-height', '300px').css('min-width', '450px').editableList({
                 sortable: true,
                 removable: true,
-                addItem: (container, i, data) => {
+                addItem(container, i, data) {
                     if ($('#node-input-acoustic-container').editableList('length') > 12) {
                         $('#node-input-acoustic-container').editableList('removeItem', data);
                         return false;
@@ -342,10 +342,10 @@
 
                     const select = $('<select class="number sound" value="' + data.sound + '"/>').appendTo(container);
                     Object.keys(ccuSound).forEach(name => {
-                        $('<option value="' + ccuSound[name] + '"' + (ccuSound[name] === parseInt(data.sound, 10) ? ' selected' : '') +
-                            '>' + name + '</option>').appendTo(select);
+                        $('<option value="' + ccuSound[name] + '"' + (ccuSound[name] === Number.parseInt(data.sound, 10) ? ' selected' : '')
+                            + '>' + name + '</option>').appendTo(select);
                     });
-                }
+                },
             });
 
             $('#node-input-key-container').css('min-height', '300px').css('min-width', '450px').editableList({});
@@ -441,8 +441,8 @@
             this.icon2 = $('#node-input-icon2').val();
             this.icon3 = $('#node-input-icon3').val();
 
-            this.repetitions = parseInt(this.repetitions, 10);
-        }
+            this.repetitions = Number.parseInt(this.repetitions, 10);
+        },
     });
 </script>
 
