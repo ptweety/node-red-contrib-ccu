@@ -81,12 +81,6 @@
         "node": ">= 10.0.0"
     },
     "homepage": "https://github.com/rdmtc/node-red-contrib-ccu#readme",
-    "husky": {
-        "hooks": {
-            "pre-commit": "npm run lintonly",
-            "pre-push": "npm run lintonly && npm run testonly"
-        }
-    },
     "node-red": {
         "nodes": {
             "ccu-connection": "nodes/ccu-connection.js",
@@ -118,7 +112,8 @@
         "prepublishOnly": "npm run checkgit --silent",
         "test": "camo-purge; xo && nyc mocha \"test/**/*_spec.js\" --exit && nyc report --reporter=text-lcov | coveralls --force",
         "testcov": "nyc mocha \"test/**/*_spec.js\" --exit",
-        "testonly": "mocha \"test/**/*_spec.js\" --exit"
+        "testonly": "mocha \"test/**/*_spec.js\" --exit",
+        "prepare": "husky install"
     },
     "xo": {
         "space": 4,
@@ -136,7 +131,7 @@
         ],
         "rules": {
             "promise/catch-or-return": [
-                "warn",
+                "off",
                 {
                     "allowThen": true,
                     "allowFinally": true
@@ -150,50 +145,24 @@
             "unicorn/prefer-string-slice": "warn",
             "valid-jsdoc": 0,
             "eslint-comments/no-unused-disable": 0,
-            "promise/prefer-await-to-then": "warn",
+            "promise/prefer-await-to-then": 0,
             "prefer-object-spread": "warn",
-            "unicorn/prevent-abbreviations": "warn",
             "unicorn/prefer-number-properties": "warn",
             "unicorn/no-reduce": "warn",
-            "arrow-body-style": "warn",
-            "comma-spacing": "warn",
-            "curly": "warn",
-            "import/extensions": "warn",
-            "no-alert": "warn",
+            "complexity": ["warn", 40],
             "no-bitwise": "warn",
-            "no-mixed-operators": "warn",
-            "no-self-compare": "warn",
-            "no-trailing-spaces": "error",
-            "no-undef": "warn",
-            "no-unsafe-negation": "warn",
-            "no-unused-vars": "warn",
-            "object-shorthand": "warn",
-            "operator-linebreak": "warn",
+            "no-warning-comments": "warn",
             "prefer-arrow-callback": "warn",
-            "prefer-const": "warn",
-            "quotes": "warn",
-            "semi": "error",
-            "space-before-blocks": "warn",
-            "space-before-function-paren": "warn",
-            "space-infix-ops": "warn",
             "unicorn/better-regex": "warn",
-            "unicorn/empty-brace-spaces": "warn",
-            "unicorn/explicit-length-check": "warn",
             "unicorn/filename-case": "warn",
             "unicorn/no-array-for-each": "warn",
             "unicorn/no-array-reduce": "warn",
             "unicorn/no-lonely-if": "warn",
             "unicorn/no-this-assignment": "warn",
-            "unicorn/numeric-separators-style": "warn",
-            "unicorn/prefer-code-point": "warn",
-            "unicorn/prefer-date-now": "warn",
             "unicorn/prefer-query-selector": "warn",
-            "unicorn/prefer-module": "warn",
-            "unicorn/prefer-optional-catch-binding": "warn",
-            "unicorn/prefer-regexp-test": "warn",
+            "unicorn/prefer-module": 0,
             "unicorn/prefer-spread": "warn",
-            "unicorn/prefer-switch": "warn",
-            "unicorn/prefer-ternary": "warn"
+            "unicorn/prefer-switch": "warn"
         },
         "ignore": [
             "nodes/ccu-switch.js",
