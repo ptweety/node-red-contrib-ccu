@@ -13,13 +13,17 @@
         "eq-3"
     ],
     "author": {
-        "name": "Sebastian Raff",
-        "email": "hobbyquaker@gmail.com"
+        "name": "ptweety (Matthias)",
+        "email": "me@ptweety.net"
     },
     "bugs": {
         "url": "https://github.com/ptweety/node-red-contrib-ccu/issues"
     },
     "contributors": [
+        {
+            "name": "Sebastian Raff",
+            "email": "hobbyquaker@gmail.com"
+        },
         {
             "name": "Hypnos3",
             "email": "hypnos3@online.de"
@@ -110,7 +114,10 @@
         "test": "xo && nyc mocha \"test/**/*_spec.js\" --exit",
         "testcov": "nyc mocha \"test/**/*_spec.js\" --exit",
         "testonly": "mocha \"test/**/*_spec.js\" --exit",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "debug": "node --nolazy --inspect ./node_modules/node-red/red.js -s ../.node-red/settings.js -u ../.node-red",
+        "start": "node ./node_modules/node-red/red.js -s ../.node-red/settings.js -u ../.node-red",
+        "update": "npx npm-check-updates -u && npm install"
     },
     "xo": {
         "space": 4,
@@ -165,6 +172,7 @@
             "unicorn/prefer-switch": "warn"
         },
         "ignore": [
+            ".node-red/**/*",
             "nodes/ccu-switch.js",
             "nodes/ccu-switch.html",
             "paramsets-join.js"

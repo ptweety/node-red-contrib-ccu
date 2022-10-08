@@ -1,6 +1,55 @@
-node_modules
-.idea
+
 .huskyrc
-.vscode
 .nyc_output
 ccu_*.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+
+# Output of 'npm pack'
+*.tgz
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Temp and Cache directory
+.temp
+.cache
+
+# General macOS files
+.DS_Store
+*.icloud
+._*
+
+# Visual Studio Code files
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+.history/
+
+# node-red runtime
+.node-red/*
+!.node-red/settings.js
