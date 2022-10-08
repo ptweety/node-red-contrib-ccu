@@ -1,5 +1,6 @@
 node_modules
 .idea
+.huskyrc
 .vscode
 .nyc_output
 ccu_*.json
