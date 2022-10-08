@@ -1,4 +1,3 @@
-
 .huskyrc
 .nyc_output
 ccu_*.json
@@ -48,8 +47,3 @@ node_modules/
 !.vscode/launch.json
 !.vscode/tasks.json
 !.vscode/settings.json
-.history/
-
-# node-red runtime
-.node-red/*
-!.node-red/settings.js
