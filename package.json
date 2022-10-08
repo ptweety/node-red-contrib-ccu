@@ -19,7 +19,6 @@
     "bugs": {
         "url": "https://github.com/ptweety/node-red-contrib-ccu/issues"
     },
-    "bundleDependencies": [],
     "contributors": [
         {
             "name": "Hypnos3",
@@ -64,8 +63,6 @@
     "deprecated": false,
     "description": "Node-RED Nodes for the Homematic CCU",
     "devDependencies": {
-        "camo-purge": "^1.0.2",
-        "coveralls": "^3.1.1",
         "eslint-plugin-html": "^7.1.0",
         "eslint-plugin-promise": "^6.0.1",
         "hm-simulator": "^0.1.1",
@@ -78,7 +75,7 @@
         "xo": "^0.52.4"
     },
     "engines": {
-        "node": ">= 10.0.0"
+        "node": ">= 14.0.0"
     },
     "homepage": "https://github.com/ptweety/node-red-contrib-ccu#readme",
     "node-red": {
@@ -110,7 +107,7 @@
         "lintonly": "xo",
         "postpublish": "git tag v$(jq -r '.version' package.json) && git push --no-verify --tags",
         "prepublishOnly": "npm run checkgit --silent",
-        "test": "camo-purge; xo && nyc mocha \"test/**/*_spec.js\" --exit && nyc report --reporter=text-lcov | coveralls --force",
+        "test": "xo && nyc mocha \"test/**/*_spec.js\" --exit",
         "testcov": "nyc mocha \"test/**/*_spec.js\" --exit",
         "testonly": "mocha \"test/**/*_spec.js\" --exit",
         "prepare": "husky install"
@@ -149,7 +146,10 @@
             "prefer-object-spread": "warn",
             "unicorn/prefer-number-properties": "warn",
             "unicorn/no-reduce": "warn",
-            "complexity": ["warn", 40],
+            "complexity": [
+                "warn",
+                40
+            ],
             "no-bitwise": "warn",
             "no-warning-comments": "warn",
             "prefer-arrow-callback": "warn",

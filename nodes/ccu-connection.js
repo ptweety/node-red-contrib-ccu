@@ -1,8 +1,8 @@
-const os = require('os');
-const dns = require('dns');
-const path = require('path');
-const fs = require('fs');
-const crypto = require('crypto');
+const os = require('node:os');
+const {promises: dns} = require('node:dns');
+const path = require('node:path');
+const fs = require('node:fs');
+const crypto = require('node:crypto');
 
 const promiseFinally = require('promise.prototype.finally');
 
@@ -317,13 +317,14 @@ module.exports = function (RED) {
             } else if (/^([\dA-Fa-f]{1,4})((?::[\dA-Fa-f]{1,4}))*::([\dA-Fa-f]{1,4})((?::[\dA-Fa-f]{1,4}))*|([\dA-Fa-f]{1,4})((?::[\dA-Fa-f]{1,4})){7}$/g.test(host)) {
                 resolve(host);
             } else {
-                dns.lookup(host, (error, addr) => {
-                    if (error) {
+                (async () => {
+                    try {
+                        const {address} = await dns.lookup(host);
+                        resolve(unifyLoopback(address));
+                    } catch {
                         resolve(host);
-                    } else {
-                        resolve(unifyLoopback(addr));
                     }
-                });
+                })();
             }
         });
     }
