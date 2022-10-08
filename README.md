@@ -1,9 +1,7 @@
 # node-red-contrib-ccu
 
-[![NPM version](https://badge.fury.io/js/node-red-contrib-ccu.svg)](http://badge.fury.io/js/node-red-contrib-ccu)
-[![Dependencies Status](https://david-dm.org/rdmtc/node-red-contrib-ccu/status.svg)](https://david-dm.org/rdmtc/node-red-contrib-ccu)
-[![Build Status](https://travis-ci.org/rdmtc/node-red-contrib-ccu.svg?branch=master)](https://travis-ci.org/rdmtc/node-red-contrib-ccu)
-[![Coverage Status](https://coveralls.io/repos/github/rdmtc/node-red-contrib-ccu/badge.svg?branch=master)](https://coveralls.io/github/rdmtc/node-red-contrib-ccu?branch=master)
+This is a fork of the awesome [node-red-contrib-ccu](https://github.com/rdmtc/node-red-contrib-ccu) by Sebastian Raff.
+
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 [![License][mit-badge]][mit-url]
 
@@ -13,8 +11,7 @@ With these Nodes you can connect [Homematic](https://github.com/hobbyquaker/awes
 [Node-RED](https://nodered.org/). Homematic is a series of smart home automation hardware from the manufacturer 
 [eQ-3](http://www.eq-3.de/), popular especially in Germany.
 
-**⚠️ node-red-contrib-ccu >= 3.0 needs Node-RED >= 1.0.** If you're still on Node-RED 0.20 or lower you should use the 
-latest 2.x version of node-red-contrib-ccu.
+**⚠️ @ptweety/node-red-contrib-ccu >= 3.5.0 needs Node-RED >= 1.0 and Node.js >= 14.0.**
 
 For the communication with the CCU both RPC and ReGaHSS remote script are used. It's possible to connect to multiple 
 CCUs from one Node-RED instance. RPC setValue calls can be comfortably complemented with ON_TIME and RAMP_TIME values
@@ -22,15 +19,12 @@ and special nodes ease the control of displays and mp3 actuators. RPC events can
 through regular expressions and also by rooms and functions). It's possible to start rega-programs and set 
 rega-variables and last but not least there are nodes to execute arbitrary rega-scripts and RPC calls.
 
-These nodes are included in [RedMatic](https://github.com/rdmtc/RedMatic) which ships Node-RED as an addon package 
-for installation on a Homematic CCU3 or RaspberryMatic.
+These nodes can be used with [RedMatic](https://github.com/rdmtc/RedMatic) which ships Node-RED as an addon package 
+for installation on a Homematic CCU3 or RaspberryMatic. But you may prefer any regular Node-RED installation.
 
 Some example flows can be found in the [RedMatic Wiki](https://github.com/rdmtc/RedMatic/wiki) (German language).
 
 __A modern Browser is required, Internet Explorer won't work.__
-
-__Starting with Version 3.x these Nodes need Node-RED >= 1.0 to work correctly__
-
 ## Configuration Examples
 
 The communication with the Homematic CCU needs independent connections in two directions. Node-red-contrib-ccu connects to the CCU's interface listeners (e.g. 2001/TCP for BidCos-RF) while the CCU connects to node-red-contrib-ccu's BINRPC/XMLRPC listeners (2048/tcp and 2049/tcp in examples below).
@@ -75,7 +69,7 @@ This will require two individual configuration nodes, in which the respective co
 
 ## License
 
-MIT (c) Sebastian Raff and node-red-contrib-ccu contributors
+MIT (c) 2018, 2019 Sebastian Raff and node-red-contrib-ccu contributors
 
 [mit-badge]: https://img.shields.io/badge/License-MIT-blue.svg?style=flat
 [mit-url]: LICENSE
