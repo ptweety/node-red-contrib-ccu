@@ -116,12 +116,14 @@
         },
     });
 
-    // function TLSSSL() {
-    //     if (document.getElementById('node-config-input-authentication').checked && !document.getElementById('node-config-input-tls').checked) {
-    //         document.getElementById('node-config-input-tls').checked = true;
-    //         alert('TLS/SSL activated. \nWithout TLS/SSL your credentials would be sent unencrypted!');
-    //     }
-    // }
+    /* eslint-disable no-unused-vars, no-undef, no-alert */
+    function TLSSSL() {
+        if (document.getElementById('node-config-input-authentication').checked && !document.getElementById('node-config-input-tls').checked) {
+            document.getElementById('node-config-input-tls').checked = true;
+            alert('Authentication activated. \nWithout TLS/SSL your credentials would be sent unencrypted!');
+        }
+    }
+    /* eslint-enable no-unused-vars, no-undef, no-alert */
 
 </script>
 
