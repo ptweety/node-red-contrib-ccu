@@ -1,6 +1,6 @@
 {
     "name": "@ptweety/node-red-contrib-ccu",
-    "version": "3.5.0",
+    "version": "3.5.1",
     "license": "MIT",
     "main": "none",
     "keywords": [
