@@ -54,14 +54,12 @@
     ],
     "dependencies": {
         "binrpc": "^3.3.1",
-        "buffer-base62": "^0.1.2",
         "hm-discover": "^1.1.3",
         "homematic-rega": "^1.5.2",
         "homematic-xmlrpc": "^1.0.2",
         "mqtt-wildcard": "^3.0.9",
         "nextport": "^1.0.0",
         "obj-ease": "^1.0.1",
-        "promise.prototype.finally": "^3.1.3",
         "string-similarity": "^4.0.4"
     },
     "deprecated": false,
