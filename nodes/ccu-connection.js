@@ -4,11 +4,6 @@ const path = require('node:path');
 const fs = require('node:fs');
 const crypto = require('node:crypto');
 
-const promiseFinally = require('promise.prototype.finally');
-
-promiseFinally.shim();
-
-const base62 = require('buffer-base62').toBase62;
 const stringSimilarity = require('string-similarity');
 const nextport = require('nextport');
 const hmDiscover = require('hm-discover');
@@ -1482,7 +1477,7 @@ module.exports = function (RED) {
         rpcInit(iface) {
             return new Promise((resolve, reject) => {
                 const initUrl = this.rpcServer(iface);
-                const hash = base62(crypto.createHash('sha1').update(initUrl).digest()).slice(0, 6);
+                const hash = crypto.createHash('sha1').update(initUrl).digest('hex').slice(0, 6);
                 const initId = 'nr_' + hash + '_' + iface;
                 this.lastEvent[iface] = now();
 
