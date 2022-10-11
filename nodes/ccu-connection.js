@@ -5,11 +5,11 @@ const fs = require('node:fs');
 const crypto = require('node:crypto');
 
 const stringSimilarity = require('string-similarity');
-const nextport = require('nextport');
-const hmDiscover = require('hm-discover');
 const Rega = require('homematic-rega');
 const xmlrpc = require('homematic-xmlrpc');
 const binrpc = require('binrpc');
+const discover = require('./lib/discover.js');
+const nextport = require('./lib/nextport.js');
 
 const pkg = require(path.join(__dirname, '..', 'package.json'));
 
@@ -47,7 +47,7 @@ module.exports = function (RED) {
         });
     }
 
-    hmDiscover(result => {
+    discover(result => {
         ccu.network.discover = result;
     });
 
