@@ -69,7 +69,6 @@
         "mocha": "^10.0.0",
         "node-red": "^3.0.2",
         "node-red-node-test-helper": "^0.3.0",
-        "nyc": "^15.1.0",
         "should": "^13.2.3",
         "xo": "^0.52.4"
     },
@@ -107,8 +106,8 @@
         "lintonly": "xo",
         "postpublish": "git push origin --all && git push origin --no-verify --tags",
         "prepublishOnly": "npm run checkgit --silent",
-        "test": "xo && nyc mocha \"test/**/*_spec.js\" --exit",
-        "testcov": "nyc mocha \"test/**/*_spec.js\" --exit",
+        "test": "xo && npx c8 --check-coverage --lines 50 npm run testonly",
+        "testcov": "npx c8 --check-coverage --lines 50 npm run testonly",
         "testonly": "mocha \"test/**/*_spec.js\" --exit",
         "prepare": "husky install",
         "debug": "node --nolazy --inspect ./node_modules/node-red/red.js -s ../.node-red/settings.js -u ../.node-red",
