@@ -58,7 +58,7 @@ const discover = (options, callback) => {
                     {id: 'HmIP-RF', port: 2010},
                     {id: 'VirtualDevices', port: 9292},
                     {id: 'CUxD', port: 8701},
-                    // {id: 'CCU-Jack (VEAP)', port: 2121},
+                    {id: 'CCU-Jack', port: 2121},
                     // {id: 'CCU-Jack (secure VEAP)', port: 2122},
                     // {id: 'CCU-Jack (MQTT)', port: 1883},
                     // {id: 'CCU-Jack (secure MQTT)', port: 8883},
