@@ -118,7 +118,7 @@
     },
     "auto-changelog": {
         "template": "compact",
-        "startingVersion": "v3.5.1",
+        "startingVersion": "v3.5.0",
         "hideCredit": true,
         "unreleased": true,
         "commitLimit": false
