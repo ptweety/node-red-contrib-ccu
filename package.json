@@ -106,7 +106,7 @@
         "lintfix": "xo --fix",
         "lintonly": "xo",
         "postpublish": "git push origin --all && git push origin --no-verify --tags",
-        "version": "auto-changelog && git add CHANGELOG.md",
+        "version": "auto-changelog -p && git add CHANGELOG.md",
         "prepublishOnly": "npm run checkgit --silent",
         "test": "xo && npx c8 --check-coverage --lines 50 npm run testonly",
         "testcov": "npx c8 --check-coverage --lines 50 npm run testonly",
@@ -120,7 +120,7 @@
         "template": "compact",
         "startingVersion": "v3.5.0",
         "hideCredit": true,
-        "unreleased": true,
+        "sortCommits": "date-desc",
         "commitLimit": false
     },
     "xo": {
