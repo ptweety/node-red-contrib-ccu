@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file. Dates are d
 
 - fix: remove nyc and replace by c8 [`850b43b`](https://github.com/ptweety/node-red-contrib-ccu/commit/850b43b15e82c46cab3b4c5035efd6689980cc4d)
 - build: add auto-changelog [`c1ef6ca`](https://github.com/ptweety/node-red-contrib-ccu/commit/c1ef6ca96c9b84b3418b5b830aa53aede1192ddf)
+- fix: update auto-changelog [`5a26a58`](https://github.com/ptweety/node-red-contrib-ccu/commit/5a26a584561779588e1d93916c3183de0ad1df3f)
 - feat: add CCU-Jack to interfaces [`718ff65`](https://github.com/ptweety/node-red-contrib-ccu/commit/718ff65264463e0a18552536bb0ce7bc3b6c50eb)
 - fix: update qa.yml workflow [`ff7ceb5`](https://github.com/ptweety/node-red-contrib-ccu/commit/ff7ceb53ecc3b9b4a9fd81587e8d7f1e1ee8e252)
 - fix: update postpublish script [`1cf7ab9`](https://github.com/ptweety/node-red-contrib-ccu/commit/1cf7ab9451d81cfd3976cdc474ccb3c1d527bc18)
