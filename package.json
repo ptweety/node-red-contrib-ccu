@@ -105,7 +105,7 @@
         "checkgit": "([[ $(git rev-parse --abbrev-ref HEAD) == \"main\" ]] && git diff --exit-code && git diff --cached --exit-code && git diff --exit-code origin/main..main)",
         "lintfix": "xo --fix",
         "lintonly": "xo",
-        "postpublish": "git tag v$(jq -r '.version' package.json) && git push --no-verify --tags",
+        "postpublish": "git push origin --all && git push origin --no-verify --tags",
         "prepublishOnly": "npm run checkgit --silent",
         "test": "xo && nyc mocha \"test/**/*_spec.js\" --exit",
         "testcov": "nyc mocha \"test/**/*_spec.js\" --exit",
