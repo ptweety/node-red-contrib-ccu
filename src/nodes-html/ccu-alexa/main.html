@@ -1,0 +1,46 @@
+<script type="text/html" data-template-name="ccu-alexa">
+    <style>
+        label.ccu-checkbox {
+            display: block !important;
+            width: auto !important;
+        }
+        label.ccu-checkbox input {
+            width: auto !important;
+            margin-top: -3px !important;
+        }
+    </style>
+
+    <div class="form-row">
+        <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
+        <input type="text" id="node-input-ccuConfig">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-iface"><i class="fa fa-empire"></i> Interface</label>
+        <div style="display: inline-block; position: relative; width: 70%;">
+            <select id="node-input-iface" style="width:calc(100% - 40px);" disabled>
+                <option></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-channel"><i class="icon-tags"></i> channel</label>
+        <input type="text" id="node-input-channel">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>
+
+<script type="text/html" data-template-name="ccu-alexa">
+    <p>Homematic Geräte mit node-red-contrib-alexa-smart-home verbinden. Am Eingang den Node "alexa smart home v3"
+    anschließen, am Ausgang "alexa smart home v3 state".</p>
+</script>
+
+<script type="text/html" data-help-name="ccu-alexa" lang="en-US">
+    <p>Connect Homematic Devices with node-red-contrib-alexa-smart-home. Connect a Node "alexa smart home v3" to the
+    input and "alexa smart home v3 state" to the output.</p>
+</script>

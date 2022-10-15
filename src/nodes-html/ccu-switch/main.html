@@ -1,0 +1,79 @@
+<script type="text/html" data-template-name="ccu-switch" lang="en-US">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="ccu-switch.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]ccu-switch.label.name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
+        <input type="text" id="node-input-ccuConfig">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-iface"><i class="fa fa-empire"></i> Interface</label>
+        <div style="display: inline-block; position: relative; width: 70%;">
+            <select id="node-input-iface" style="width:calc(100% - 40px);" disabled>
+                <option></option>
+            </select>
+            <a id="config-lookup-btn" class="editor-button red-ui-button" style="width: 35px; position: absolute; right: 0px;"><i id="config-lookup-icon" class="fa fa-search" disabled></i></a>
+        </div>
+    </div>
+
+    <div class="form-row sysvar">
+        <label for="node-input-sysvar"><i class="icon-tags"></i> Sysvar</label>
+        <select id="node-input-sysvar" style="width:70%;">
+        </select>
+    </div>
+
+    <div class="form-row sysvar">
+        <label for="node-input-sysvarProperty"><i class="icon-tags"></i> Property</label>
+        <select id="node-input-sysvarProperty" style="width:70%;">
+        </select>
+    </div>
+
+    <div class="form-row datapoint">
+        <label for="node-input-channel"><i class="icon-tags"></i> Channel</label>
+        <input type="text" id="node-input-channel">
+    </div>
+
+    <div class="form-row datapoint">
+        <label for="node-input-datapoint"><i class="icon-tag"></i> Datapoint</label>
+        <input type="text" id="node-input-datapoint">
+    </div>
+
+    <div class="form-row datapoint">
+        <label for="node-input-datapointProperty"><i class="icon-tags"></i> Property</label>
+        <select id="node-input-datapointProperty" style="width:70%;">
+        </select>
+    </div>
+
+    <input type="hidden" id="node-input-outputs"/>
+
+    <div class="form-row node-input-rule-container-row">
+        <ol id="node-input-rule-container"></ol>
+    </div>
+
+    <div class="form-row">
+        <select id="node-input-checkall" style="width:100%; margin-right:5px;">
+            <option value="true" data-i18n="ccu-switch.checkall"></option>
+            <option value="false" data-i18n="ccu-switch.stopfirst"></option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <input type="checkbox" id="node-input-repair" style="display: inline-block; width: auto; vertical-align: top;">
+        <label style="width: auto;" for="node-input-repair"><span data-i18n="ccu-switch.label.repair"></span></label></input>
+    </div>
+
+    <div id="dialog-select-datapoint" title="Select Channel, Datapoint and Property">
+        <div id="config-lookup-tree"></div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="ccu-switch" lang="de-DE">
+    <p>Nachricht abhängig von einem Zustand eines Aktors oder einer Systemvariablen weiterleiten.</p>
+    <h3>Details</h3>
+    <p>Der ccu switch Node verhält sich ähnlich wie der switch Node von Node-RED. Er leitet eine Nachricht abhängig von einem Zustand eines Aktors oder einer Systemvariablen weiter, wahlweise auch je nach Zustand an unterschiedliche Ausgänge.</p>
+    <h4>Dokumentation</h4>
+    <a target="_blank" href="https://github.com/rdmtc/RedMatic/wiki/CCU-Nodes#ccu-switch-node">ccu switch node im RedMatic Wiki</a>
+</script>

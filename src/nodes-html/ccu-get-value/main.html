@@ -1,0 +1,71 @@
+<script type="text/html" data-template-name="ccu-get-value">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
+        <input type="text" id="node-input-ccuConfig">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-iface"><i class="fa fa-empire"></i> Interface</label>
+        <div style="display: inline-block; position: relative; width: 70%;">
+            <select id="node-input-iface" style="width:calc(100% - 40px);" disabled>
+                <option></option>
+            </select>
+            <a id="config-lookup-btn" class="editor-button red-ui-button" style="width: 35px; position: absolute; right: 0px;" disabled><i id="config-lookup-icon" class="fa fa-search"></i></a>
+        </div>
+    </div>
+
+    <div class="form-row sysvar">
+        <label for="node-input-sysvar"><i class="icon-tags"></i> Sysvar</label>
+        <select id="node-input-sysvar" style="width:70%;">
+        </select>
+    </div>
+
+    <div class="form-row sysvar property">
+        <label for="node-input-sysvarProperty"><i class="icon-tags"></i> Property</label>
+        <select id="node-input-sysvarProperty" style="width:70%;">
+        </select>
+    </div>
+
+    <div class="form-row datapoint">
+        <label for="node-input-channel"><i class="icon-tags"></i> Channel</label>
+        <input type="text" id="node-input-channel">
+    </div>
+
+    <div class="form-row datapoint">
+        <label for="node-input-datapoint"><i class="icon-tag"></i> Datapoint</label>
+        <input type="text" id="node-input-datapoint">
+    </div>
+
+    <div class="form-row datapoint property">
+        <label for="node-input-datapointProperty"><i class="icon-tags"></i> Property</label>
+        <select id="node-input-datapointProperty" style="width:70%;">
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-setProp"><i class="fa fa-edit"></i> <span>Set Property</span></label>
+        <input type="text" id="node-input-setProp" placeholder="payload" style="width:250px;">
+        <input type="hidden" id="node-input-setPropType">
+    </div>
+
+    <div id="dialog-select-datapoint" title="Select Channel, Datapoint and Property">
+        <div id="config-lookup-tree"></div>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="ccu-get-value" lang="en-US">
+    <p>This Node outputs the current state of a datapoint or a ccu variable on any incoming message.</p>
+</script>
+
+<script type="text/html" data-help-name="ccu-get-value" lang="de-DE">
+    <p>Dieser Node gibt bei jeder eingehenden Message den aktuellen zwischengespeicherten Zustand eines Datenpunktes oder einer CCU Systemvariable aus.</p>
+        <h3>Konfiguration</h3>
+        Um über die eingehende Message die Attribute <code>iface</code>, <code>channel</code>, <code>datapoint</code> und <code>sysvar</code> setzen zu können müssen die entsprechenden Konfigurationsoptionen leer gelassen werden.
+    <h3>Input</h3>
+    <h3>Output</h3>
+</script>

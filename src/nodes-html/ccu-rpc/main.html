@@ -1,0 +1,114 @@
+<script type="text/html" data-template-name="ccu-rpc">
+    <style>
+        select.ccu-dropdown {
+            width: 70%;
+        }
+    </style>
+
+    <div class="form-row">
+        <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
+        <input type="text" id="node-input-ccuConfig">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-topic"><i class="icon-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-iface"><i class="fa fa-empire"></i> Interface</label>
+        <select id="node-input-iface" class="ccu-dropdown" disabled>
+            <option></option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-method"><i class="icon-tag"></i> Method</label>
+        <input type="text" id="node-input-method">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-params"><i class="icon-envelope"></i> Params</label>
+        <input type="text" id="node-input-params">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+
+    <div class="form-tips">
+        <span data-i18n="ccu-rpc.tip1"></span>
+        <code>method</code>
+        <span data-i18n="ccu-rpc.tip2"></span>
+        <code>payload</code>
+        <span data-i18n="ccu-rpc.tip3"></span>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="ccu-rpc" lang="de-DE">
+    <p>Führt eine RPC Methode aus und gibt das Ergebnis zurück.</p>
+    <h3>Inputs</h3>
+
+    <dl class="message-properties">
+        <dt>topic
+            <span class="property-type">String</span>
+        </dt>
+        <dd>
+            Die Methode die aufgerufen werden soll. Siehe <a href="https://www.eq-3.de/Downloads/eq3/download%20bereich/hm_web_ui_doku/HM_XmlRpc_API.pdf">XMLRPC API Dokumentation</a>
+        </dd>
+        <dt>payload
+            <span class="property-type">Array|String</span>
+        </dt>
+        <dd>
+            Ein Array oder ein in einem JSON-string enthaltenes Array von Parametern die für den RPC Methodenaufruf
+            genutzt werden.
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+
+    <ol class="node-ports">
+        <li>Output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">array</span></dt>
+                <dd>
+                    Die Rückgabe des RPC Methodenaufrufs.
+                </dd>
+            </dl>
+        </li>
+    </ol>
+</script>
+
+<script type="text/html" data-help-name="ccu-rpc" lang="en-US">
+    <p>Executes a RPC method and outputs the return value.</p>
+    <h3>Inputs</h3>
+
+    <dl class="message-properties">
+        <dt>topic
+            <span class="property-type">String</span>
+        </dt>
+        <dd>
+            The method that should be called
+        </dd>
+        <dt>payload
+            <span class="property-type">Array|String</span>
+        </dt>
+        <dd>
+            An array or an JSON string containing an array of parameters for the rpc call.
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+
+    <ol class="node-ports">
+        <li>Output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">array</span></dt>
+                <dd>
+                    The return value of the rpc call.
+                </dd>
+            </dl>
+        </li>
+    </ol>
+</script>

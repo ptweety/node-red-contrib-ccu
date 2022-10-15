@@ -1,0 +1,151 @@
+<script type="text/html" data-template-name="ccu-display">
+    <style>
+        label.ccu-checkbox {
+            display: block !important;
+            width: auto !important;
+        }
+        label.ccu-checkbox input {
+            width: auto !important;
+            margin-top: -3px !important;
+        }
+        select.ccu-dropdown {
+            width: 70%;
+        }
+    </style>
+
+    <div class="form-row">
+        <label for="node-input-ccuConfig"><i class="icon-globe"></i>CCU</label>
+        <input type="text" id="node-input-ccuConfig">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-iface"><i class="fa fa-empire"></i>Interface</label>
+        <select id="node-input-iface" class="ccu-dropdown" disabled></select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-channel"><i class="icon-tags"></i><span data-i18n="ccu-display.channel"></span></label>
+        <input type="text" id="node-input-channel">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-channelType"><i class="icon-tags"></i> Typ</label>
+        <select id="node-input-channelType" class="ccu-dropdown">
+            <option value="HM-Dis-WM55">HM-Dis-WM55</option>
+            <option value="HM-Dis-EP-WM55">HM-Dis-EP-WM55</option>
+        </select>
+    </div>
+
+    <div id="node-disable-X" class="form-row SUBMIT HM-Dis-WM55">
+        <input type="checkbox" id="node-input-disableX" style="margin-top:-3px;width: 20px; height: 30px;">
+        <label for="node-input-disableX" style="margin-left: 10px; height:20px; width: 300px;"><span data-i18n="ccu-display.disable"></span></label>
+    </div>
+
+    <div id="node-line-X" class="form-row SUBMIT HM-Dis-WM55">
+        <label for="node-input-lineX"><i class="icon-envelope"></i><span data-i18n="ccu-display.line"></span> X</label>
+        <input type="text" id="node-input-lineX">
+    </div>
+
+    <div id="node-color-X" class="form-row SUBMIT HM-Dis-WM55">
+        <label for="node-input-colorX"><i class="icon-envelope"></i><span data-i18n="ccu-display.color"></span> X</label>
+        <select id="node-input-colorX" class="ccu-dropdown">
+            <option value="0x80" data-i18n="ccu-display.white"></option>
+            <option value="0x81" data-i18n="ccu-display.red"></option>
+            <option value="0x82" data-i18n="ccu-display.orange"></option>
+            <option value="0x83" data-i18n="ccu-display.yellow"></option>
+            <option value="0x84" data-i18n="ccu-display.green"></option>
+            <option value="0x85" data-i18n="ccu-display.blue"></option>
+        </select>
+    </div>
+
+    <div id="node-icon-X" class="form-row SUBMIT HM-Dis-WM55">
+        <label for="node-input-iconX"><i class="icon-envelope"></i><span data-i18n="ccu-display.icon"></span> X</label>
+        <select id="node-input-iconX" class="ccu-dropdown">
+            <option value=""></option>
+            <option value="0x80" data-i18n="ccu-display.off"></option>
+            <option value="0x81" data-i18n="ccu-display.on"></option>
+            <option value="0x82" data-i18n="ccu-display.open"></option>
+            <option value="0x83" data-i18n="ccu-display.close"></option>
+            <option value="0x84" data-i18n="ccu-display.error"></option>
+            <option value="0x85" data-i18n="ccu-display.ok"></option>
+            <option value="0x86" data-i18n="ccu-display.information"></option>
+            <option value="0x87" data-i18n="ccu-display.new_message"></option>
+            <option value="0x88" data-i18n="ccu-display.service_message"></option>
+            <option value="0x89" data-i18n="ccu-display.signal_green"  class="SUBMIT HM-Dis-WM55"></option>
+            <option value="0x8A" data-i18n="ccu-display.signal_yellow" class="SUBMIT HM-Dis-WM55"></option>
+            <option value="0x8B" data-i18n="ccu-display.signal_red"    class="SUBMIT HM-Dis-WM55"></option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT HM-Dis-EP-WM55">
+        <label for="node-input-signal"><i class="icon-envelope"></i>LED</label>
+        <select id="node-input-signal" class="ccu-dropdown">
+            <option value="0xF0" data-i18n="ccu-display.off"></option>
+            <option value="0xF1" data-i18n="ccu-display.red"></option>
+            <option value="0xF2" data-i18n="ccu-display.green"></option>
+            <option value="0xF3" data-i18n="ccu-display.orange"></option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT HM-Dis-EP-WM55">
+        <label for="node-input-sound"><i class="icon-envelope"></i><span data-i18n="ccu-display.sound"></span></label>
+        <select id="node-input-sound" class="ccu-dropdown">
+            <option value="0xC0" data-i18n="ccu-display.off"></option>
+            <option value="0xC1" data-i18n="ccu-display.long_long"></option>
+            <option value="0xC2" data-i18n="ccu-display.long_short"></option>
+            <option value="0xC3" data-i18n="ccu-display.long_short_short"></option>
+            <option value="0xC4" data-i18n="ccu-display.short"></option>
+            <option value="0xC5" data-i18n="ccu-display.short_short"></option>
+            <option value="0xC6" data-i18n="ccu-display.long">Lang</option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT HM-Dis-EP-WM55">
+        <label for="node-input-repeat"><i class="icon-bookmark"></i><span data-i18n="ccu-display.repeat"></span></label>
+        <select id="node-input-repeat" class="ccu-dropdown">
+            <option value="0xD0">1</option>
+            <option value="0xD1">2</option>
+            <option value="0xD2">3</option>
+            <option value="0xD3">4</option>
+            <option value="0xD4">5</option>
+            <option value="0xD5">6</option>
+            <option value="0xD6">7</option>
+            <option value="0xD7">8</option>
+            <option value="0xD8">9</option>
+            <option value="0xD9">10</option>
+            <option value="0xDA">11</option>
+            <option value="0xDB">12</option>
+            <option value="0xDC">13</option>
+            <option value="0xDD">14</option>
+            <option value="0xDE">15</option>
+            <option value="0xDF" data-i18n="ccu-display.infinity"></option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT HM-Dis-EP-WM55">
+        <label for="node-input-pause"><i class="icon-bookmark"></i> Pause <span data-i18n="ccu-display.seconds"></span></label>
+        <select id="node-input-pause" class="ccu-dropdown">
+            <option value="0xE0">10 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE1">20 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE2">30 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE3">40 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE4">50 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE5">60 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE6">70 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE7">80 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE8">90 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xE9">100 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xEA">110 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xEB">120 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xEC">130 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xED">140 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xEE">150 <span data-i18n="ccu-display.seconds"></span></option>
+            <option value="0xEF">160 <span data-i18n="ccu-display.seconds"></span></option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>

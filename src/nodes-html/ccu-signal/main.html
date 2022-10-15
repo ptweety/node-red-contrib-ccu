@@ -1,0 +1,195 @@
+<script type="text/html" data-template-name="ccu-signal">
+    <style>
+        label.ccu-checkbox {
+            display: block !important;
+            width: auto !important;
+        }
+        label.ccu-checkbox input {
+            width: auto !important;
+            margin-top: -3px !important;
+        }
+        select.ccu-dropdown {
+            width: 70%;
+        }
+    </style>
+
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-globe"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
+        <input type="text" id="node-input-ccuConfig">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-iface"><i class="fa fa-empire"></i> Interface</label>
+        <select id="node-input-iface" class="ccu-dropdown" disabled></select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-channel"><i class="icon-tags"></i> Kanal</label>
+        <input type="text" id="node-input-channel">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-channelType"><i class="icon-tags"></i> Typ</label>
+        <select id="node-input-channelType" class="ccu-dropdown">
+            <option value="SIGNAL_CHIME">SIGNAL_CHIME (HM-OU-*)</option>
+            <option value="SIGNAL_LED">SIGNAL_LED (HM-OU-*)</option>
+            <option value="ALARM_SWITCH_VIRTUAL_RECEIVER">ALARM (HmIP-ASIR)</option>
+            <option value="ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER">ACOUSTIC_SIGNAL (HmIP-MP3P)</option>
+            <option value="DIMMER_VIRTUAL_RECEIVER">DIMMER (HmIP-MP3P)</option>
+            <option value="BSL_DIMMER_VIRTUAL_RECEIVER">DIMMER (HmIP-BSL)</option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT SIGNAL_CHIME">
+        <label for="node-input-volume"><i class="fa fa-volume-up"></i> Lautstärke</label>
+        <input type="text" id="node-input-volume">
+        <input type="hidden" id="node-input-volumeType">
+    </div>
+
+    <div class="form-row SUBMIT SIGNAL_CHIME SIGNAL_LED">
+        <label for="node-input-repeat"><i class="icon-repeat"></i> Wiederholungen</label>
+        <input type="text" id="node-input-repeat">
+        <input type="hidden" id="node-input-repeatType">
+    </div>
+
+    <div class="form-row SUBMIT SIGNAL_CHIME">
+        <label for="node-input-chime"><i class="icon-envelope"></i> Kommandos</label>
+        <ol id="node-input-chime-container"></ol>
+    </div>
+
+    <div class="form-row SUBMIT SIGNAL_LED">
+        <label for="node-input-led"><i class="icon-envelope"></i> Kommandos</label>
+        <ol id="node-input-led-container"></ol>
+    </div>
+
+    <div class="form-row SUBMIT DIMMER_VIRTUAL_RECEIVER">
+        <label for="node-input-dimmer"><i class="icon-envelope"></i> LED</label>
+        <ol id="node-input-dimmer-container"></ol>
+    </div>
+
+    <div class="form-row SUBMIT ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER">
+        <label for="node-input-acoustic"><i class="icon-envelope"></i> Sounds</label>
+        <ol id="node-input-acoustic-container"></ol>
+    </div>
+
+    <div class="form-row SUBMIT ALARM_SWITCH_VIRTUAL_RECEIVER">
+        <label for="node-input-acousticAlarmSelection"><i class=""></i> Akustisch</label>
+        <select id="node-input-acousticAlarmSelection" class="ccu-dropdown">
+            <option value="DISABLE_ACOUSTIC_SIGNAL">Kein akustisches Signal</option>
+            <option value="FREQUENCY_RISING">Freq. steigend</option>
+            <option value="FREQUENCY_FALLING">Freq. fallend</option>
+            <option value="FREQUENCY_RISING_AND_FALLING">Freq. steigend/fallend</option>
+            <option value="FREQUENCY_ALTERNATING_LOW_HIGH">Freq. tief/hoch</option>
+            <option value="FREQUENCY_ALTERNATING_LOW_MID_HIGH">Freq. tief/mittel/hoch</option>
+            <option value="FREQUENCY_HIGHON_OFF">Freq. hoch ein/aus</option>
+            <option value="FREQUENCY_HIGHON_LONGOFF">Freq. hoch ein, lang aus</option>
+            <option value="FREQUENCY_LOWON_OFF_HIGHON_OFF">req. tief ein/aus, hoch ein/aus</option>
+            <option value="FREQUENCY_LOWON_LONGOFF_HIGHON_LONGOFF">Freq. tief ein - lang aus, hoch ein - lang aus</option>
+            <option value="LOW_BATTERY">Batterie leer</option>
+            <option value="DISARMED">Unscharf</option>
+            <option value="INTERNALLY_ARMED">Intern scharf</option>
+            <option value="EXTERNALLY_ARMED">Extern scharf</option>
+            <option value="DELAYED_INTERNALLY_ARMED">Verzögert intern scharf</option>
+            <option value="DELAYED_EXTERNALLY_ARMED">Verzögert extern scharf</option>
+            <option value="EVENT">Alarm Ereignis</option>
+            <option value="ERROR">Fehler</option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT ALARM_SWITCH_VIRTUAL_RECEIVER">
+        <label for="node-input-opticalAlarmSelection"><i class=""></i> Optisch</label>
+        <select id="node-input-opticalAlarmSelection" class="ccu-dropdown">
+            <option value="DISABLE_OPTICAL_SIGNAL">Kein optisches Signal</option>
+            <option value="BLINKING_ALTERNATELY_REPEATING">Abwechselndes, langsames Blinken</option>
+            <option value="BLINKING_BOTH_REPEATING">Gleichzeitigs langsames Blinken</option>
+            <option value="DOUBLE_FLASHING_REPEATING">Gleichzeitiges schnelles Blinken</option>
+            <option value="FLASHING_BOTH_REPEATING">Gleichzeitiges kurzes Blinken</option>
+            <option value="CONFIRMATION_SIGNAL_0">Bestätigungssignal 0 - lang lang</option>
+            <option value="CONFIRMATION_SIGNAL_1">Bestätigungssignal 1 - lang kurz</option>
+            <option value="CONFIRMATION_SIGNAL_2">Bestätigungssignal 2 - lang kurz kurz</option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER DIMMER_VIRTUAL_RECEIVER">
+        <label for="node-input-repetitions"><i class=""></i> Wiederholungen </label>
+        <select id="node-input-repetitions" class="ccu-dropdown">
+            <option value="0">Keine</option>
+            <option value="1">1x</option>
+            <option value="2">2x</option>
+            <option value="3">3x</option>
+            <option value="4">4x</option>
+            <option value="5">5x</option>
+            <option value="6">6x</option>
+            <option value="7">7x</option>
+            <option value="8">8x</option>
+            <option value="9">9x</option>
+            <option value="10">10x</option>
+            <option value="11">11x</option>
+            <option value="12">12x</option>
+            <option value="13">13x</option>
+            <option value="14">14x</option>
+            <option value="15">Unendlich</option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER ">
+        <label for="node-input-soundLevel"><i class=""></i> Lautstärke </label>
+        <input id="node-input-soundLevel" type="text">
+        <input id="node-input-soundLevelType" type="hidden">
+    </div>
+
+    <div class="form-row SUBMIT BSL_DIMMER_VIRTUAL_RECEIVER">
+        <label for="node-input-dimmerColor"><i class=""></i> Farbe </label>
+        <select id="node-input-dimmerColor" class="ccu-dropdown">
+            <option value="0">Aus</option>
+            <option value="1">Blau</option>
+            <option value="2">Grün</option>
+            <option value="3">Türkis</option>
+            <option value="4">Rot</option>
+            <option value="5">Violett</option>
+            <option value="6">Gelb</option>
+            <option value="7">Weiss</option>
+        </select>
+    </div>
+
+    <div class="form-row SUBMIT DIMMER_VIRTUAL_RECEIVER BSL_DIMMER_VIRTUAL_RECEIVER">
+        <label for="node-input-dimmerLevel"><i class=""></i> Helligkeit </label>
+        <input id="node-input-dimmerLevel" type="number" min="0" max="100">
+        <input id="node-input-dimmerLevelType" type="hidden">
+    </div>
+
+    <div class="form-row SUBMIT ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER DIMMER_VIRTUAL_RECEIVER BSL_DIMMER_VIRTUAL_RECEIVER">
+        <label for="node-input-rampTimeUnit"><i class=""></i> Rampenzeit </label>
+        <select id="node-input-rampTimeUnit" style="width: calc(35% - 5px)">
+            <option value="S">Sekunden</option>
+            <option value="M">Minuten</option>
+            <option value="H">Stunden</option>
+        </select>
+        <input id="node-input-rampTimeValue" type="text" style="width: 35%">
+        <input id="node-input-rampTimeValueType" type="hidden">
+    </div>
+
+    <div class="form-row SUBMIT ALARM_SWITCH_VIRTUAL_RECEIVER ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER DIMMER_VIRTUAL_RECEIVER BSL_DIMMER_VIRTUAL_RECEIVER">
+        <label for="node-input-durationUnit"><i class=""></i> Dauer </label>
+        <select id="node-input-durationUnit" style="width: calc(35% - 5px)">
+            <option value="S">Sekunden</option>
+            <option value="M">Minuten</option>
+            <option value="H">Stunden</option>
+        </select>
+        <input id="node-input-durationValue" type="text" style="width: 35%">
+        <input id="node-input-durationValueType" type="hidden">
+    </div>
+</script>
+
+<script type="text/html" data-help-name="ccu-signal" lang="de-DE">
+    <p>Senden von LED- und Tonsignalen an Displaytaster und Funk-Gongs.</p>
+</script>
+
+<script type="text/html" data-help-name="ccu-signal" lang="en-US">
+    <p>Send LED- and Sound-Signals.</p>
+</script>
