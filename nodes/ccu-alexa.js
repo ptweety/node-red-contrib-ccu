@@ -151,14 +151,14 @@ module.exports = function (RED) {
                     if (change) {
                         this.debug(JSON.stringify(payload));
                         this.status({fill: 'green', shape: 'ring', text: JSON.stringify(payload.state).replace(/^{/, '').replace(/}$/, '')});
-                        keys.forEach(key => {
+                        for (const key of keys) {
                             const distinctPayload = {
                                 acknowledge: true,
                                 state: {},
                             };
                             distinctPayload.state[key] = payload.state[key];
                             this.send({payload: distinctPayload});
-                        });
+                        }
                     }
                 } else {
                     this.debug('empty state object');

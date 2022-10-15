@@ -5,7 +5,7 @@
     'use strict';
 
     function clipValueLength(v, l) {
-        return (v.length > l) ? v.substring(0, (l - 3)) + '...' : v;
+        return (v.length > l) ? v.slice(0, Math.max(0, (l - 3))) + '...' : v;
     }
 
     RED.nodes.registerType('ccu-value', {
@@ -41,7 +41,7 @@
 
             const dp = String(this.datapoint).replace(/PRESS_|_STATE|_MODE|ERROR_|OPERATING_|ACTUAL_|^STATE$|^LEVEL$/, '');
 
-            return clipValueLength(String(this.channel).replace(/^[A-Za-z0-9-]+:\d+ /, ''), 30) + ((dp.length > 1 && dp.length < 10) ? ' ' + dp : '') || 'value';
+            return clipValueLength(String(this.channel).replace(/^[A-Za-z\d-]+:\d+ /, ''), 30) + ((dp.length > 1 && dp.length < 10) ? ' ' + dp : '') || 'value';
         },
         labelStyle() {
             return this.name ? 'node_label_italic' : '';
@@ -78,11 +78,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -162,7 +163,7 @@
                 }
 
                 const channels = [];
-                Object.keys(data).forEach(addr => {
+                for (let addr of Object.keys(data)) {
                     if (/:\d+$/.test(addr)) {
                         if (data[addr].name) {
                             addr += ' ' + data[addr].name;
@@ -170,7 +171,8 @@
 
                         channels.push(addr);
                     }
-                });
+                }
+
                 channels.sort((a, b) => a.localeCompare(b));
                 $nodeInputChannel.autocomplete('option', 'source', channels);
 
@@ -283,7 +285,7 @@
                             const url = 'ccu?config=' + nodeId + '&type=ifaces';
                             $.getJSON(url, d => {
                                 const enabledInterfaces = [];
-                                Object.keys(d).forEach(ifId => {
+                                for (const ifId of Object.keys(d)) {
                                     const iface = d[ifId];
                                     if (ifId !== 'ReGaHSS' && iface.enabled) {
                                         enabledInterfaces.push({
@@ -293,7 +295,8 @@
                                             children: (done, item) => loadTreeData('tree', done, item, ifId),
                                         });
                                     }
-                                });
+                                }
+
                                 done(enabledInterfaces);
                             });
                         },
@@ -332,15 +335,17 @@
                     url += '&iface=' + ifId + '&classCh=tree-channel&classDp=tree-dp';
                     $.getJSON(url, devices => {
                         const deviceIDs = [];
-                        Object.keys(devices).forEach(id => {
+                        for (const id of Object.keys(devices)) {
                             deviceIDs.push(devices[id]);
-                        });
+                        }
+
                         deviceIDs.sort((a, b) => a.label.localeCompare(b.label));
-                        deviceIDs.forEach(ch => {
+                        for (const ch of deviceIDs) {
                             if (ch.children) {
                                 ch.children.sort((a, b) => a.label.localeCompare(b.label));
                             }
-                        });
+                        }
+
                         done(deviceIDs);
                     });
                 } else {
@@ -355,11 +360,11 @@
                                     children(done) {
                                         const channels = [];
                                         if (channelList) {
-                                            Object.keys(channelList).forEach(addr => {
+                                            for (const addr of Object.keys(channelList)) {
                                                 if (channelList[addr][type] && channelList[addr][type].includes(lbl)) {
                                                     channels.push(channelList[addr]);
                                                 }
-                                            });
+                                            }
                                         }
 
                                         channels.sort((a, b) => a.label.localeCompare(b.label));
@@ -518,76 +523,4 @@
     <div id="dialog-select-datapoint" title="Select Channel and Datapoint">
         <div id="config-lookup-tree"></div>
     </div>
-</script>
-
-<script type="text/html" data-help-name="ccu-value" lang="de-DE">
-    <p>Geräte steuern und/oder Events von einem Gerät empfangen.</p>
-
-    <h3>Konfiguration</h3>
-
-    <ul>
-        <li><b>CCU:</b> Die zu verwendende CCU-Konfiguration.</li>
-        <li><b>Topic:</b> <code>msg.topic</code></li>
-        <li><b>Interface</b>: Hier wird das Interface gewählt, über welches das gewüschnte Geräte angebunden ist.</li>
-        <li><b>Channel</b>: Der Kanal dessen Datenpunkte verwendet werden sollen. Er besteht aus der Serien- sowie der Kanalnummer. Eine Autovervollständigung hilft bei der Auswahl anhand der Klarnamen.</li>
-        <li><b>Datapoint</b>: Der Datenpunkt des Kanals, auch hier wird über eine Autovervollständigung die Auswahl vereinfacht.</li>
-        <li><b>ON_TIME</b>:
-            Zeit in Sekunden nach der ein Schaltaktor/Dimmer nach dem anschalten wieder ausgeschaltet werden soll.<br>
-            Dabei ist:
-            <ul>
-                <li><code>undefined</code> Keine automatische Ausschaltung</li>
-                <li><code>number</code> Eine feste Verzögerung in Sekunden</li>
-                <li><code>global</code>, <code>flow</code> Die Verzögerung in Sekunden wird aus einer Context-Variablen übernommen</li>
-                <li><code>msg</code> Die Verzögerung in Sekunden wird kann über eine msg property übergeben werden</li>
-            </ul>
-        </li>
-        <li><b>set Mode</b>:
-            Eine Erweiterung für Geräte, die sowohl den rx_mode BURST als auch WAKEUP unterstützen wie z.B.:
-            Batterie-Schaltaktoren oder Rauchmelder mit Sirenenfunktion. Mit dem Parameter kann in diesem Fall angegeben
-            werden, ob der übergebene Wert über BURST oder WAKEUP übertragen werden soll.
-            <ul>
-                <li><b>WAKEUP</b> - Überträgt den Wert sobald sich der entsprechende Empfänger bei der Zentrale meldet.</li>
-                <li><b>BURST</b> - Versucht alle BURST-Empfänger für die Übertragung aufzuwecken was sich negativ auf den DutyCycle und die Batterielaufzeit aller Burst-Empfänger auswirkt.</li>
-            </ul>
-        </li>
-        <li><b>Flags</b>:
-            <ul>
-                <li><b>Nur geänderte Werte ausgeben</b> - Ein Event wird nur dann erzeugt, wenn sich der Wert seit dem letztn Event verändert hat.</li>
-                <li><b>Während WORKING keine Werte ausgeben</b> - Es gibt Aktoren, z.B. Dimmer oder Rolladen, die während einer Rampe (Öffnen/Schließen eines Rollladen, Dimmen einer Lampe) fortwährend den aktuellen Zustand ausgeben. Um nur den End-Status auszugeben kann diese Option benutzt werden. Gebräuchlich auch bei Verwendung mit Dashboard-Nodes um "springende" Slider zu verhindern.</li>
-                <li><b>Beim Start letzten bekannten Wert ausgeben</b> - Wenn Node-RED gestartet wird, dann wird der letzte Wert (sofern in der ReGaHSS bekannt) ausgegeben. Z.B. um beim Start einen korrekten Wert an das Dashboard zu übergeben. <b>Achtung:</b> </li>
-            </ul>
-        </li>
-    </ul>
-
-    <h3>Input</h3>
-
-    <p> Für den Input des Value Node wird <code>msg.payload</code> als der Wert verwendet der in den Datenpunkt geschrieben wird.
-        Die Bestimmung des Datenpunkts sowie des Kanals und der Schnittstellen können hier dynamisch sein. Dazu werden die Eingabefelder leer gelassen und über die eingehende <code>msg</code> gesetzt.
-    </p>
-
-    <b>Option 1</b>: Interface, Channel und Datapoint können in der msg als Properties angegeben werden:
-    <pre><code>
-{
-    "interface": "BidCos-RF",
-    "channel": "OEQ1868878:1",
-    "datapoint": "STATE",
-    "payload": true
-}
-    </code></pre>
-
-    <b>Option 2</b>: Der Datenpunkt kann über <code>msg.topic</code> angegeben werden wobei Interface, Channel und Datapoint mit Punkt getrennt werden:
-    <pre><code>
-{
-    "topic": "BidCos-RF.OEQ1868878:1.STATE",
-    "payload": true
-}
-    </code></pre>
-
-    <h3>Output</h3>
-
-    <p>Der Value Node gibt nur Events aus, wenn Interface, Channel und Datapoint gesetzt sind.</p>
-</script>
-
-<script type="text/html" data-help-name="ccu-value" lang="en-US">
-    <p>Set and read channel datapoints.</p>
 </script>

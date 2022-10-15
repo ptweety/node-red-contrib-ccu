@@ -107,7 +107,7 @@
                 });
             }
 
-            $nodeInputCcuConfig.on('change', () => {
+            $nodeInputCcuConfig.change(() => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -117,14 +117,14 @@
                 });
             });
 
-            $('#node-input-onEnabled').on('change', () => {
+            $('#node-input-onEnabled').change(() => {
                 if ($('#node-input-onEnabled').is(':checked')) {
                     $('#node-input-on').removeAttr('disabled');
                 } else {
                     $('#node-input-on').attr('disabled', true);
                 }
             });
-            $('#node-input-rampEnabled').on('change', () => {
+            $('#node-input-rampEnabled').change(() => {
                 if ($('#node-input-rampEnabled').is(':checked')) {
                     $('#node-input-ramp').removeAttr('disabled');
                 } else {
@@ -215,7 +215,7 @@
                 }
             }
 
-            $nodeInputIface.on('change', () => {
+            $nodeInputIface.change(() => {
                 console.log('$nodeInputIface change');
                 $('.BURST').hide();
                 loadConfig();

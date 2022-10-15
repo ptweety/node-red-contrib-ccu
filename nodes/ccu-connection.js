@@ -1,3 +1,4 @@
+/* eslint-disable max-params, max-depth */
 const os = require('node:os');
 const {promises: dns} = require('node:dns');
 const path = require('node:path');
@@ -52,13 +53,14 @@ module.exports = function (RED) {
     });
 
     const networkInterfaces = os.networkInterfaces();
-    Object.keys(networkInterfaces).forEach(name => {
-        networkInterfaces[name].forEach(addr => {
+    for (const name of Object.keys(networkInterfaces)) {
+        for (const addr of networkInterfaces[name]) {
             if (addr.family === 'IPv4') {
                 ccu.network.listen.push(addr.address);
             }
-        });
-    });
+        }
+    }
+
     ccu.network.listen.push('0.0.0.0');
 
     RED.httpAdmin.get('/ccu', RED.auth.needsPermission('ccu.read'), (request, response) => {
@@ -73,12 +75,13 @@ module.exports = function (RED) {
 
             switch (request.query.type) {
                 case 'ifaces': {
-                    Object.keys(config.ifaceTypes).forEach(iface => {
+                    for (const iface of Object.keys(config.ifaceTypes)) {
                         object[iface] = {
                             enabled: Boolean(config.ifaceTypes[iface].enabled),
                             connected: Boolean(config.ifaceStatus[iface]),
                         };
-                    });
+                    }
+
                     response.status(200).send(JSON.stringify(object));
                     break;
                 }
@@ -86,7 +89,7 @@ module.exports = function (RED) {
                 case 'channels': {
                     const devices = config.metadata.devices[request.query.iface];
                     if (devices) {
-                        Object.keys(devices).forEach(addr => {
+                        for (const addr of Object.keys(devices)) {
                             if (/:\d+$/.test(addr)) {
                                 const psKey = config.paramsetName(request.query.iface, devices[addr], 'VALUES');
                                 if (config.paramsetDescriptions[psKey]) {
@@ -97,7 +100,7 @@ module.exports = function (RED) {
                                     };
                                 }
                             }
-                        });
+                        }
                     }
 
                     response.status(200).send(JSON.stringify(object));
@@ -110,7 +113,7 @@ module.exports = function (RED) {
                             return;
                         }
 
-                        Object.keys(devices).forEach(addr => {
+                        for (const addr of Object.keys(devices)) {
                             if (/:\d+$/.test(addr)) {
                                 const psKey = config.paramsetName(iface, devices[addr], 'VALUES');
                                 if (config.paramsetDescriptions[psKey]) {
@@ -118,7 +121,7 @@ module.exports = function (RED) {
                                     const dps = [];
                                     const chName = config.channelNames[addr];
 
-                                    Object.keys(config.paramsetDescriptions[psKey]).forEach(dp => {
+                                    for (const dp of Object.keys(config.paramsetDescriptions[psKey])) {
                                         dps.push({
                                             id: iface + '.' + addr + '.' + dp,
                                             iface,
@@ -127,7 +130,8 @@ module.exports = function (RED) {
                                             icon: 'fa fa-tag fa-fw',
                                             class: request.query.classDp,
                                         });
-                                    });
+                                    }
+
                                     dps.sort((a, b) => a.label.localeCompare(b.label));
                                     const channel = {
                                         id: iface + '.' + addr,
@@ -142,7 +146,7 @@ module.exports = function (RED) {
                                     callback(iface, devID, channel, addr);
                                 }
                             }
-                        });
+                        }
                     };
 
                     if (request.query.iface) {
@@ -169,7 +173,7 @@ module.exports = function (RED) {
                             object[devID].children.push(channel);
                         });
                     } else {
-                        Object.keys(config.metadata.devices).forEach(iface => {
+                        for (const iface of Object.keys(config.metadata.devices)) {
                             const devices = config.metadata.devices[iface];
                             processChannels(iface, devices, (iface, devID, channel, chID) => {
                                 if (!channel.children || channel.children.length === 0) {
@@ -178,7 +182,7 @@ module.exports = function (RED) {
 
                                 object[chID] = channel;
                             });
-                        });
+                        }
                     }
 
                     response.status(200).send(JSON.stringify(object));
@@ -208,7 +212,7 @@ module.exports = function (RED) {
                 case 'signal': {
                     const devices = config.metadata.devices[request.query.iface];
                     if (devices) {
-                        Object.keys(devices).forEach(addr => {
+                        for (const addr of Object.keys(devices)) {
                             if ([
                                 'SIGNAL_CHIME',
                                 'SIGNAL_LED',
@@ -234,7 +238,7 @@ module.exports = function (RED) {
                                     deviceType: devices[addr].PARENT_TYPE,
                                 };
                             }
-                        });
+                        }
                     }
 
                     response.status(200).send(JSON.stringify(object));
@@ -244,7 +248,7 @@ module.exports = function (RED) {
                 case 'display': {
                     const devices = config.metadata.devices[request.query.iface];
                     if (devices) {
-                        Object.keys(devices).forEach(addr => {
+                        for (const addr of Object.keys(devices)) {
                             if (
                                 (addr.endsWith(':3') && /HM-Dis-EP-WM55/.test(devices[addr].PARENT_TYPE))
                                 || ((addr.endsWith(':1') || addr.endsWith(':2')) && /HM-Dis-WM55/.test(devices[addr].PARENT_TYPE))
@@ -254,7 +258,7 @@ module.exports = function (RED) {
                                     type: devices[addr].PARENT_TYPE,
                                 };
                             }
-                        });
+                        }
                     }
 
                     response.status(200).send(JSON.stringify(object));
@@ -538,13 +542,13 @@ module.exports = function (RED) {
             });
 
             this.enabledIfaces = [];
-            Object.keys(this.ifaceTypes).forEach(iface => {
+            for (const iface of Object.keys(this.ifaceTypes)) {
                 const enabled = config[this.ifaceTypes[iface].conf + 'Enabled'];
                 if (enabled) {
                     this.enabledIfaces.push(iface);
                     this.ifaceStatus[iface] = null;
                 }
-            });
+            }
 
             if (config.regaEnabled) {
                 this.getRegaData()
@@ -669,11 +673,11 @@ module.exports = function (RED) {
                 }
 
                 this.ifaceStatus[iface] = !this.serverError[iface] && connected;
-                Object.keys(this.users).forEach(id => {
+                for (const id of Object.keys(this.users)) {
                     if (typeof this.users[id].setStatus === 'function') {
                         this.users[id].setStatus({ifaceStatus: this.ifaceStatus});
                     }
-                });
+                }
             }
         }
 
@@ -851,10 +855,10 @@ module.exports = function (RED) {
             this.cancelRegaPoll = true;
             clearTimeout(this.regaPollTimeout);
 
-            Object.keys(this.rpcPingTimer).forEach(iface => {
+            for (const iface of Object.keys(this.rpcPingTimer)) {
                 this.logger.debug('clear rpcPingTimer', iface);
                 clearTimeout(this.rpcPingTimer[iface]);
-            });
+            }
 
             this.saveRegadata();
             this.saveValues();
@@ -905,9 +909,9 @@ module.exports = function (RED) {
                     if (!error && objects && objects.stderrGroups === 'null') {
                         try {
                             const {groups} = JSON.parse(objects.stdoutGroups);
-                            groups.forEach(group => {
+                            for (const group of groups) {
                                 this.groups[group.id] = group;
-                            });
+                            }
                         } catch {}
                     }
 
@@ -941,7 +945,7 @@ module.exports = function (RED) {
                         reject(new Error('rega getValues ' + error.message));
                     } else {
                         const d = new Date();
-                        response.forEach(dp => {
+                        for (const dp of response) {
                             const ts = (new Date(dp.ts + ' UTC+' + (d.getTimezoneOffset() / -60))).getTime();
                             const [iface, channel, datapoint] = dp.name.split('.');
                             if (this.enabledIfaces.includes(iface) && datapoint) {
@@ -955,7 +959,8 @@ module.exports = function (RED) {
                                     this.callCallbacks(message);
                                 }
                             }
-                        });
+                        }
+
                         this.cachedValuesReceived = true;
                         this.saveValues();
                         resolve();
@@ -981,11 +986,12 @@ module.exports = function (RED) {
                             this.channelNames = {};
                         }
 
-                        response.forEach(ch => {
+                        for (const ch of response) {
                             this.regaChannels.push(ch);
                             this.regaIdChannel[ch.id] = ch.address;
                             this.channelNames[ch.address] = ch.name;
-                        });
+                        }
+
                         resolve();
                     }
                 });
@@ -1008,9 +1014,9 @@ module.exports = function (RED) {
                             this.channelRooms = {};
                         }
 
-                        response.forEach(room => {
+                        for (const room of response) {
                             this.rooms.push(room.name);
-                            room.channels.forEach(chId => {
+                            for (const chId of room.channels) {
                                 const regaChannel = this.getEntry(this.regaChannels, 'id', chId);
                                 const address = regaChannel && regaChannel.address;
                                 if (address) {
@@ -1020,8 +1026,9 @@ module.exports = function (RED) {
                                         this.channelRooms[address] = [room.name];
                                     }
                                 }
-                            });
-                        });
+                            }
+                        }
+
                         resolve();
                     }
                 });
@@ -1044,9 +1051,9 @@ module.exports = function (RED) {
                             this.channelFunctions = {};
                         }
 
-                        response.forEach(func => {
+                        for (const func of response) {
                             this.functions.push(func.name);
-                            func.channels.forEach(chId => {
+                            for (const chId of func.channels) {
                                 const regaChannel = this.getEntry(this.regaChannels, 'id', chId);
                                 const address = regaChannel && regaChannel.address;
                                 if (address) {
@@ -1056,8 +1063,9 @@ module.exports = function (RED) {
                                         this.channelFunctions[address] = [func.name];
                                     }
                                 }
-                            });
-                        });
+                            }
+                        }
+
                         resolve();
                     }
                 });
@@ -1303,7 +1311,7 @@ module.exports = function (RED) {
                     cache: isNew,
                 });
 
-                Object.keys(this.sysvarCallbacks).forEach(key => {
+                for (const key of Object.keys(this.sysvarCallbacks)) {
                     const {filter, callback} = this.sysvarCallbacks[key];
                     let match = !filter.name || filter.name === sysvar.name;
                     if (this.sysvar[sysvar.name].cache && !filter.cache) {
@@ -1319,7 +1327,7 @@ module.exports = function (RED) {
                     if (match) {
                         callback(RED.util.cloneMessage(this.sysvar[sysvar.name]));
                     }
-                });
+                }
             }
         }
 
@@ -1337,14 +1345,19 @@ module.exports = function (RED) {
                         this.setIfaceStatus('ReGaHSS', false);
                     } else {
                         const d = new Date();
-                        response.forEach(sysvar => {
+                        for (const sysvar of response) {
                             //this.logger.trace(JSON.stringify(sysvar));
                             sysvar.ts = sysvar.ts ? (new Date(sysvar.ts + ' UTC+' + (d.getTimezoneOffset() / -60))).getTime() : d.getTime();
                             this.updateRegaVariable(sysvar);
-                        });
+                        }
+
                         if (!this.hasRegaVariables) {
                             this.hasRegaVariables = true;
-                            Object.keys(this.setVariableQueueTimeout).forEach(name => clearTimeout(this.setVariableQueueTimeout[name]));
+                            for (const name of Object.keys(this.setVariableQueueTimeout)) {
+                                clearTimeout(this.setVariableQueueTimeout[name]);
+                            }
+
+                            // eslint-disable-next-line unicorn/no-array-reduce
                             Object.keys(this.setVariableQueue).reduce((p, name) =>
                                 p.then(_ => this.setVariable(name, this.setVariableQueue[name])),
                             Promise.resolve(),
@@ -1372,7 +1385,7 @@ module.exports = function (RED) {
                         this.setIfaceStatus('ReGaHSS', false);
                     } else if (response && Array.isArray(response)) {
                         const d = new Date();
-                        response.forEach(prg => {
+                        for (const prg of response) {
                             prg.type = 'PROGRAM';
                             prg.ts = (new Date(prg.ts + ' UTC+' + (d.getTimezoneOffset() / -60))).getTime();
                             if (!this.program[prg.name]) {
@@ -1381,7 +1394,7 @@ module.exports = function (RED) {
 
                             if (this.program[prg.name].fromFile) {
                                 delete this.program[prg.name].fromFile;
-                                return;
+                                continue;
                             }
 
                             if (this.program[prg.name].active !== prg.active || this.program[prg.name].ts !== prg.ts) {
@@ -1398,14 +1411,15 @@ module.exports = function (RED) {
                                     ts: prg.ts,
                                     tsPrevious: this.program[prg.name].ts,
                                 };
-                                Object.keys(this.programCallbacks).forEach(key => {
+                                for (const key of Object.keys(this.programCallbacks)) {
                                     const {filter, callback} = this.programCallbacks[key];
                                     if (!filter.name || filter.name === prg.name) {
                                         callback(this.program[prg.name]);
                                     }
-                                });
+                                }
                             }
-                        });
+                        }
+
                         resolve();
                     }
                 });
@@ -1417,7 +1431,7 @@ module.exports = function (RED) {
          * @param config
          */
         initIfaces(config) {
-            Object.keys(this.ifaceTypes).forEach(iface => {
+            for (const iface of Object.keys(this.ifaceTypes)) {
                 const enabled = config[this.ifaceTypes[iface].conf + 'Enabled'];
                 this.ifaceTypes[iface].enabled = enabled;
                 if (enabled) {
@@ -1437,7 +1451,8 @@ module.exports = function (RED) {
                         })
                         .catch(() => {});
                 }
-            });
+            }
+
             this.logger.info('Interfaces:', this.enabledIfaces.join(', '));
         }
 
@@ -1458,6 +1473,7 @@ module.exports = function (RED) {
                 }
 
                 if (auth) {
+                    // eslint-disable-next-line camelcase
                     clientOptions.basic_auth = {user, pass};
                 }
 
@@ -1471,11 +1487,12 @@ module.exports = function (RED) {
 
                 this.logger.debug('rpc client created', iface, JSON.stringify(clientOptions));
                 if (this.methodCallQueue[iface]) {
-                    this.methodCallQueue[iface].forEach(c => {
+                    for (const c of this.methodCallQueue[iface]) {
                         this.methodCall(iface, c[0], c[1])
                             .then(c[2])
                             .catch(c[3]);
-                    });
+                    }
+
                     delete this.methodCallQueue[iface];
                 }
 
@@ -1526,11 +1543,11 @@ module.exports = function (RED) {
         getLinks(iface, address, receiver) {
             const links = [];
             if (this.links[iface]) {
-                this.links[iface].forEach(link => {
+                for (const link of this.links[iface]) {
                     if (link[receiver ? 'RECEIVER' : 'SENDER'] === address) {
                         links.push(link[receiver ? 'SENDER' : 'RECEIVER']);
                     }
-                });
+                }
             }
 
             return links;
@@ -1550,20 +1567,20 @@ module.exports = function (RED) {
 
                     const knownDevices = [];
                     let change = false;
-                    devices.forEach(device => {
+                    for (const device of devices) {
                         knownDevices.push(device.ADDRESS);
                         if (!this.metadata.devices[iface][device.ADDRESS]) {
                             this.newDevice(iface, device);
                             change = true;
                         }
-                    });
+                    }
 
-                    Object.keys(this.metadata.devices[iface]).forEach(addr => {
+                    for (const addr of Object.keys(this.metadata.devices[iface])) {
                         if (!knownDevices.includes(addr)) {
                             this.deleteDevice(iface, addr);
                             change = true;
                         }
-                    });
+                    }
 
                     if (change) {
                         this.saveMetadata();
@@ -1614,7 +1631,7 @@ module.exports = function (RED) {
         rpcClose() {
             this.logger.debug('rpcClose');
             const calls = [];
-            Object.keys(this.clients).forEach(iface => {
+            for (const iface of Object.keys(this.clients)) {
                 if (this.ifaceTypes[iface].init) {
                     this.logger.debug('queue de-init ' + iface + ' ' + this.initUrl(iface));
                     calls.push(() =>
@@ -1632,7 +1649,7 @@ module.exports = function (RED) {
                         }),
                     );
                 }
-            });
+            }
 
             this.logger.debug('queue binrpc server closing');
             calls.push(() =>
@@ -1681,6 +1698,7 @@ module.exports = function (RED) {
             );
 
             this.logger.debug('shutdown tasks: ' + calls.length);
+            // eslint-disable-next-line unicorn/no-array-reduce
             return calls.reduce((p, task) => p.then(task), Promise.resolve());
         }
 
@@ -1717,7 +1735,7 @@ module.exports = function (RED) {
                     this.serverError[iface] = error.message;
                 });
 
-                Object.keys(this.rpcMethods).forEach(method => {
+                for (let method of Object.keys(this.rpcMethods)) {
                     this.servers[protocol].on(method, (error, parameters, callback) => {
                         if (error) {
                             this.logger.error('rpc <', protocol, method, error);
@@ -1735,7 +1753,8 @@ module.exports = function (RED) {
                             callback(null, '');
                         }
                     });
-                });
+                }
+
                 this.servers[protocol].on('NotFound', (method, parameters) => {
                     this.logger.error('rpc <', protocol, 'method', method, 'not found:', JSON.stringify(parameters));
                 });
@@ -1809,7 +1828,7 @@ module.exports = function (RED) {
          */
         paramsetQueuePush(iface, device) {
             if (device && device.PARAMSETS) {
-                device.PARAMSETS.forEach(paramset => {
+                for (const paramset of device.PARAMSETS) {
                     const name = this.paramsetName(iface, device, paramset);
                     if (!this.paramsetDescriptions[name]) {
                         this.paramsetQueue.push({
@@ -1819,7 +1838,7 @@ module.exports = function (RED) {
                             paramset,
                         });
                     }
-                });
+                }
             }
 
             clearTimeout(this.getParamsetTimeout);
@@ -1959,11 +1978,11 @@ module.exports = function (RED) {
         listDevices(iface) {
             const result = [];
             if (this.metadata.devices[iface]) {
-                Object.keys(this.metadata.devices[iface]).forEach(addr => {
+                for (const addr of Object.keys(this.metadata.devices[iface])) {
                     const dev = this.metadata.devices[iface][addr];
                     if (dev.TYPE === 'HmIP-RCV-50' || dev.PARENT_TYPE === 'HmIP-RCV-50') {
                         // Würgaround for Firmware 3.43.15
-                        return;
+                        continue;
                     }
 
                     if (dev.TYPE === 'MULTI_MODE_INPUT_TRANSMITTER') {
@@ -1972,7 +1991,7 @@ module.exports = function (RED) {
 
                     this.paramsetQueuePush(iface, this.metadata.devices[iface][addr]);
                     result.push(this.listDevicesAnswer(iface, this.metadata.devices[iface][addr]));
-                });
+                }
             }
 
             return result;
@@ -2013,7 +2032,7 @@ module.exports = function (RED) {
                         TEAM_TAG: device.TEAM_TAG,
                         TYPE: device.TYPE,
                     };
-                    Object.keys(d).forEach(k => {
+                    for (const k of Object.keys(d)) {
                         if (typeof d[k] === 'undefined') {
                             delete d[k];
                         }
@@ -2022,7 +2041,7 @@ module.exports = function (RED) {
                             // Würgaround https://github.com/eq-3/occu/issues/83
                             delete d[k];
                         }
-                    });
+                    }
 
                     return d;
                 default:
@@ -2083,9 +2102,9 @@ module.exports = function (RED) {
                     const [idInit, devices] = parameters;
                     const iface = this.getIfaceFromIdInit(idInit);
 
-                    devices.forEach(device => {
+                    for (const device of devices) {
                         this.newDevice(iface, device);
-                    });
+                    }
 
                     this.logger.debug('    >', iface, 'newDevices ""');
                     callback(null, '');
@@ -2096,9 +2115,9 @@ module.exports = function (RED) {
                     const [idInit, devices] = parameters;
                     const iface = this.getIfaceFromIdInit(idInit);
 
-                    devices.forEach(device => {
+                    for (const device of devices) {
                         this.deleteDevice(iface, device);
-                    });
+                    }
 
                     this.logger.debug('    >', iface, 'deleteDevices ""');
                     callback(null, '');
@@ -2146,7 +2165,7 @@ module.exports = function (RED) {
                     let direction;
                     let pong = true;
                     if (isIterable(parameters[0])) {
-                        parameters[0].forEach(call => {
+                        for (const call of parameters[0]) {
                             if (call && call.methodName === 'event') {
                                 queue.push(call);
                                 if (isIterable(call.params)) {
@@ -2155,20 +2174,38 @@ module.exports = function (RED) {
                                         pong = false;
                                     }
 
-                                    if (datapoint === 'WORKING' || datapoint === 'WORKING_SLATS') {
-                                        working = value;
-                                    } else if (datapoint === 'PROCESS') {
-                                        working = Boolean(value);
-                                    } else if (datapoint === 'DIRECTION') {
-                                        direction = value;
-                                    } else if (datapoint === 'ACTIVITY_STATE') {
-                                        if (value === 3) {
-                                            direction = 0;
-                                        } else if (value === 0) {
-                                            direction = 3;
-                                        } else {
-                                            direction = value;
+                                    switch (datapoint) {
+                                        case 'WORKING':
+                                        case 'WORKING_SLATS': {
+                                            working = value;
+
+                                            break;
                                         }
+
+                                        case 'PROCESS': {
+                                            working = Boolean(value);
+
+                                            break;
+                                        }
+
+                                        case 'DIRECTION': {
+                                            direction = value;
+
+                                            break;
+                                        }
+
+                                        case 'ACTIVITY_STATE': {
+                                            if (value === 3) {
+                                                direction = 0;
+                                            } else if (value === 0) {
+                                                direction = 3;
+                                            } else {
+                                                direction = value;
+                                            }
+
+                                            break;
+                                        }
+                                    // No default
                                     }
 
                                     iface = this.getIfaceFromIdInit(idInit);
@@ -2183,10 +2220,11 @@ module.exports = function (RED) {
                                     this.logger.error('rpc <', call.methodName, 'params not iterable', JSON.stringify(call.params));
                                 }
                             }
-                        });
-                        queue.forEach(call => {
+                        }
+
+                        for (const call of queue) {
                             this.publishEvent(call.params, working, direction);
-                        });
+                        }
                     }
 
                     this.logger.debug('    >', iface, 'system.multicall', JSON.stringify(result));
@@ -2330,7 +2368,7 @@ module.exports = function (RED) {
             this.callbacks[id] = {filter, callback};
 
             if (filter.cache && this.cachedValuesReceived) {
-                Object.keys(this.values).forEach(dp => {
+                for (const dp of Object.keys(this.values)) {
                     const message = {...this.values[dp]};
                     message.cache = true;
                     message.change = false;
@@ -2343,7 +2381,7 @@ module.exports = function (RED) {
                     }
 
                     this.callCallback(message, id);
-                });
+                }
             }
 
             return id;
@@ -2359,13 +2397,13 @@ module.exports = function (RED) {
                 this.logger.trace('unsubscribe', id);
                 delete this.callbacks[id];
 
-                Object.keys(this.callbackBlacklists).forEach(dp => {
+                for (const dp of Object.keys(this.callbackBlacklists)) {
                     this.callbackBlacklists[dp].delete(id);
-                });
+                }
 
-                Object.keys(this.callbackWhitelists).forEach(dp => {
+                for (const dp of Object.keys(this.callbackWhitelists)) {
                     this.callbackWhitelists[dp].delete(id);
-                });
+                }
 
                 return true;
             }
@@ -2386,13 +2424,13 @@ module.exports = function (RED) {
             }
 
             const messageLower = {};
-            Object.keys(message).forEach(k => {
+            for (const k of Object.keys(message)) {
                 messageLower[k.toLowerCase()] = message[k];
-            });
+            }
 
             const match = topic.match(/\${[^}]+}/g);
             if (match) {
-                match.forEach(v => {
+                for (const v of match) {
                     const key = v.slice(2, 2 + v.length - 3);
                     const rx = new RegExp('\\${' + key + '}', 'g');
                     let rkey = key.toLowerCase();
@@ -2401,7 +2439,7 @@ module.exports = function (RED) {
                     }
 
                     topic = topic.replace(rx, typeof messageLower[rkey] === 'undefined' ? '' : messageLower[rkey]);
-                });
+                }
             }
 
             return topic;
@@ -2627,11 +2665,11 @@ module.exports = function (RED) {
                         if (filter[attr] instanceof RegExp) {
                             match = false;
                             this.logger.trace('cb test regex array', id, attr, filter[attr], message[attr]);
-                            message[attr].forEach(item => {
+                            for (const item of message[attr]) {
                                 if (filter[attr].test(item)) {
                                     match = true;
                                 }
-                            });
+                            }
                         } else if (!message[attr].includes(filter[attr])) {
                             this.logger.trace('cb mismatch array', id, attr, filter[attr], message[attr]);
                             match = false;
@@ -2674,14 +2712,14 @@ module.exports = function (RED) {
                 this.callbackWhitelists[message.datapointName] = new Set();
             }
 
-            Object.keys(this.callbacks).forEach(key => {
+            for (const key of Object.keys(this.callbacks)) {
                 if (this.callbackBlacklists[message.datapointName].has(key)) {
                     //this.logger.trace('blacklistet ' + key + ' ' + msg.datapointName);
-                    return;
+                    continue;
                 }
 
                 this.callCallback(message, key);
-            });
+            }
         }
 
         /**

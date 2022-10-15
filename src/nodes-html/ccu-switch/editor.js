@@ -213,7 +213,7 @@
                 });
             }
 
-            $nodeInputCcuConfig.on('change', () => {
+            $nodeInputCcuConfig.change(() => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -276,13 +276,13 @@
                 if (c) {
                     c.datapoints.sort((a, b) => a.localeCompare(b));
                     $nodeInputDatapoint.autocomplete('option', 'source', c.datapoints);
-                    if (c.datapoints.indexOf($nodeInputDatapoint.val()) === -1) {
+                    if (!c.datapoints.includes($nodeInputDatapoint.val())) {
                         $nodeInputDatapoint.val('').autocomplete('search');
                     }
                 }
             }
 
-            $nodeInputIface.on('change', () => {
+            $nodeInputIface.change(() => {
                 console.log('$nodeInputIface change');
                 if ($nodeInputIface.val() === 'ReGaHSS') {
                     $('.form-row.datapoint').hide();
@@ -322,19 +322,49 @@
                 }
 
                 selectField.width(selectWidth);
-                if ((type === 'btwn') || (type === 'index')) {
-                    btwnField1.typedInput('width', (newWidth - selectWidth - 70));
-                    btwnField2.typedInput('width', (newWidth - selectWidth - 70));
-                } else if ((type === 'head') || (type === 'tail')) {
-                    ruleNumberField.typedInput('width', (newWidth - selectWidth - 70));
-                } else if (type === 'jsonata_exp') {
-                    expField.typedInput('width', (newWidth - selectWidth - 70));
-                } else if (type === 'istype') {
-                    typeField.typedInput('width', (newWidth - selectWidth - 70));
-                } else if (type === 'true' || type === 'false' || type === 'null' || type === 'nnull' || type === 'empty' || type === 'nempty' || type === 'else') {
-                    // valueField.hide();
-                } else {
-                    valueField.typedInput('width', (newWidth - selectWidth - 70));
+                switch (type) {
+                    case 'btwn':
+                    case 'index': {
+                        btwnField1.typedInput('width', (newWidth - selectWidth - 70));
+                        btwnField2.typedInput('width', (newWidth - selectWidth - 70));
+
+                        break;
+                    }
+
+                    case 'head':
+                    case 'tail': {
+                        ruleNumberField.typedInput('width', (newWidth - selectWidth - 70));
+
+                        break;
+                    }
+
+                    case 'jsonata_exp': {
+                        expField.typedInput('width', (newWidth - selectWidth - 70));
+
+                        break;
+                    }
+
+                    case 'istype': {
+                        typeField.typedInput('width', (newWidth - selectWidth - 70));
+
+                        break;
+                    }
+
+                    case 'true':
+                    case 'false':
+                    case 'null':
+                    case 'nnull':
+                    case 'empty':
+                    case 'nempty':
+                    case 'else': {
+                        // valueField.hide();
+
+                        break;
+                    }
+
+                    default: {
+                        valueField.typedInput('width', (newWidth - selectWidth - 70));
+                    }
                 }
             }
 
@@ -405,44 +435,60 @@
                     finalspan.append(' &#8594; <span class="node-input-rule-index">' + (i + 1) + '</span> ');
                     const caseSensitive = $('<input/>', {id: 'node-input-rule-case-' + i, class: 'node-input-rule-case', type: 'checkbox', style: 'width:auto;vertical-align:top'}).appendTo(row2);
                     $('<label/>', {for: 'node-input-rule-case-' + i, style: 'margin-left: 3px;'}).text(caseLabel).appendTo(row2);
-                    selectField.on('change', () => {
+                    selectField.change(() => {
                         const type = selectField.val();
-                        if ((type === 'btwn') || (type === 'index')) {
-                            valueField.typedInput('hide');
-                            expValueField.typedInput('hide');
-                            numberValueField.typedInput('hide');
-                            typeValueField.typedInput('hide');
-                            btwnValueField.typedInput('show');
-                        } else if ((type === 'head') || (type === 'tail')) {
-                            btwnValueField.typedInput('hide');
-                            btwnValue2Field.typedInput('hide');
-                            expValueField.typedInput('hide');
-                            numberValueField.typedInput('show');
-                            typeValueField.typedInput('hide');
-                            valueField.typedInput('hide');
-                        } else if (type === 'jsonata_exp') {
-                            btwnValueField.typedInput('hide');
-                            btwnValue2Field.typedInput('hide');
-                            expValueField.typedInput('show');
-                            numberValueField.typedInput('hide');
-                            typeValueField.typedInput('hide');
-                            valueField.typedInput('hide');
-                        } else {
-                            btwnValueField.typedInput('hide');
-                            expValueField.typedInput('hide');
-                            numberValueField.typedInput('hide');
-                            typeValueField.typedInput('hide');
-                            valueField.typedInput('hide');
-                            if (type === 'true' || type === 'false' || type === 'null' || type === 'nnull' || type === 'empty' || type === 'nempty' || type === 'else') {
+                        switch (type) {
+                            case 'btwn':
+                            case 'index': {
                                 valueField.typedInput('hide');
+                                expValueField.typedInput('hide');
+                                numberValueField.typedInput('hide');
                                 typeValueField.typedInput('hide');
-                            } else
-                            if (type === 'istype') {
+                                btwnValueField.typedInput('show');
+
+                                break;
+                            }
+
+                            case 'head':
+                            case 'tail': {
+                                btwnValueField.typedInput('hide');
+                                btwnValue2Field.typedInput('hide');
+                                expValueField.typedInput('hide');
+                                numberValueField.typedInput('show');
+                                typeValueField.typedInput('hide');
                                 valueField.typedInput('hide');
-                                typeValueField.typedInput('show');
-                            } else {
+
+                                break;
+                            }
+
+                            case 'jsonata_exp': {
+                                btwnValueField.typedInput('hide');
+                                btwnValue2Field.typedInput('hide');
+                                expValueField.typedInput('show');
+                                numberValueField.typedInput('hide');
                                 typeValueField.typedInput('hide');
-                                valueField.typedInput('show');
+                                valueField.typedInput('hide');
+
+                                break;
+                            }
+
+                            default: {
+                                btwnValueField.typedInput('hide');
+                                expValueField.typedInput('hide');
+                                numberValueField.typedInput('hide');
+                                typeValueField.typedInput('hide');
+                                valueField.typedInput('hide');
+                                if (type === 'true' || type === 'false' || type === 'null' || type === 'nnull' || type === 'empty' || type === 'nempty' || type === 'else') {
+                                    valueField.typedInput('hide');
+                                    typeValueField.typedInput('hide');
+                                } else
+                                if (type === 'istype') {
+                                    valueField.typedInput('hide');
+                                    typeValueField.typedInput('show');
+                                } else {
+                                    typeValueField.typedInput('hide');
+                                    valueField.typedInput('show');
+                                }
                             }
                         }
 
@@ -461,23 +507,43 @@
                         resizeRule(container);
                     });
                     selectField.val(rule.t);
-                    if ((rule.t === 'btwn') || (rule.t === 'index')) {
-                        btwnValueField.typedInput('value', rule.v);
-                        btwnValueField.typedInput('type', rule.vt || 'num');
-                        btwnValue2Field.typedInput('value', rule.v2);
-                        btwnValue2Field.typedInput('type', rule.v2t || 'num');
-                    } else if ((rule.t === 'head') || (rule.t === 'tail')) {
-                        numberValueField.typedInput('value', rule.v);
-                        numberValueField.typedInput('type', rule.vt || 'num');
-                    } else if (rule.t === 'istype') {
-                        typeValueField.typedInput('value', rule.vt);
-                        typeValueField.typedInput('type', rule.vt);
-                    } else if (rule.t === 'jsonata_exp') {
-                        expValueField.typedInput('value', rule.v);
-                        expValueField.typedInput('type', rule.vt || 'jsonata');
-                    } else if (typeof rule.v !== 'undefined') {
-                        valueField.typedInput('value', rule.v);
-                        valueField.typedInput('type', rule.vt || 'str');
+                    switch (rule.t) {
+                        case 'btwn':
+                        case 'index': {
+                            btwnValueField.typedInput('value', rule.v);
+                            btwnValueField.typedInput('type', rule.vt || 'num');
+                            btwnValue2Field.typedInput('value', rule.v2);
+                            btwnValue2Field.typedInput('type', rule.v2t || 'num');
+
+                            break;
+                        }
+
+                        case 'head':
+                        case 'tail': {
+                            numberValueField.typedInput('value', rule.v);
+                            numberValueField.typedInput('type', rule.vt || 'num');
+
+                            break;
+                        }
+
+                        case 'istype': {
+                            typeValueField.typedInput('value', rule.vt);
+                            typeValueField.typedInput('type', rule.vt);
+
+                            break;
+                        }
+
+                        case 'jsonata_exp': {
+                            expValueField.typedInput('value', rule.v);
+                            expValueField.typedInput('type', rule.vt || 'jsonata');
+
+                            break;
+                        }
+
+                        default: if (typeof rule.v !== 'undefined') {
+                            valueField.typedInput('value', rule.v);
+                            valueField.typedInput('type', rule.vt || 'str');
+                        }
                     }
 
                     if (rule.case) {
@@ -486,7 +552,7 @@
                         caseSensitive.prop('checked', false);
                     }
 
-                    selectField.on('change');
+                    selectField.change();
 
                     const currentOutputs = JSON.parse(outputCount.val() || '{}');
                     currentOutputs[hasProperty(opt, 'i') ? opt.i : opt._i] = i;
@@ -509,10 +575,10 @@
                     outputCount.val(JSON.stringify(currentOutputs));
                 },
                 resizeItem: resizeRule,
-                sortItems(rules) {
+                sortItems(items) {
                     const currentOutputs = JSON.parse(outputCount.val() || '{}');
-                    var rules = $('#node-input-rule-container').editableList('items');
-                    rules.each(function (i) {
+                    // var rules = $('#node-input-rule-container').editableList('items');
+                    items.each(function (i) {
                         $(this).find('.node-input-rule-index').html(i + 1);
                         const data = $(this).data('data');
                         currentOutputs[hasProperty(data, 'i') ? data.i : data._i] = i;
@@ -744,23 +810,43 @@
                 const type = rule.find('select').val();
                 const r = {t: type};
                 if (!(type === 'true' || type === 'false' || type === 'null' || type === 'nnull' || type === 'empty' || type === 'nempty' || type === 'else')) {
-                    if ((type === 'btwn') || (type === 'index')) {
-                        r.v = rule.find('.node-input-rule-btwn-value').typedInput('value');
-                        r.vt = rule.find('.node-input-rule-btwn-value').typedInput('type');
-                        r.v2 = rule.find('.node-input-rule-btwn-value2').typedInput('value');
-                        r.v2t = rule.find('.node-input-rule-btwn-value2').typedInput('type');
-                    } else if ((type === 'head') || (type === 'tail')) {
-                        r.v = rule.find('.node-input-rule-num-value').typedInput('value');
-                        r.vt = rule.find('.node-input-rule-num-value').typedInput('type');
-                    } else if (type === 'istype') {
-                        r.v = rule.find('.node-input-rule-type-value').typedInput('type');
-                        r.vt = rule.find('.node-input-rule-type-value').typedInput('type');
-                    } else if (type === 'jsonata_exp') {
-                        r.v = rule.find('.node-input-rule-exp-value').typedInput('value');
-                        r.vt = rule.find('.node-input-rule-exp-value').typedInput('type');
-                    } else {
-                        r.v = rule.find('.node-input-rule-value').typedInput('value');
-                        r.vt = rule.find('.node-input-rule-value').typedInput('type');
+                    switch (type) {
+                        case 'btwn':
+                        case 'index': {
+                            r.v = rule.find('.node-input-rule-btwn-value').typedInput('value');
+                            r.vt = rule.find('.node-input-rule-btwn-value').typedInput('type');
+                            r.v2 = rule.find('.node-input-rule-btwn-value2').typedInput('value');
+                            r.v2t = rule.find('.node-input-rule-btwn-value2').typedInput('type');
+
+                            break;
+                        }
+
+                        case 'head':
+                        case 'tail': {
+                            r.v = rule.find('.node-input-rule-num-value').typedInput('value');
+                            r.vt = rule.find('.node-input-rule-num-value').typedInput('type');
+
+                            break;
+                        }
+
+                        case 'istype': {
+                            r.v = rule.find('.node-input-rule-type-value').typedInput('type');
+                            r.vt = rule.find('.node-input-rule-type-value').typedInput('type');
+
+                            break;
+                        }
+
+                        case 'jsonata_exp': {
+                            r.v = rule.find('.node-input-rule-exp-value').typedInput('value');
+                            r.vt = rule.find('.node-input-rule-exp-value').typedInput('type');
+
+                            break;
+                        }
+
+                        default: {
+                            r.v = rule.find('.node-input-rule-value').typedInput('value');
+                            r.vt = rule.find('.node-input-rule-value').typedInput('type');
+                        }
                     }
 
                     if (type === 'regex') {
@@ -780,7 +866,7 @@
             }
 
             const editorRow = $('#dialog-form>div.node-input-rule-container-row');
-            height -= (Number.parseInt(editorRow.css('marginTop')) + Number.parseInt(editorRow.css('marginBottom')));
+            height -= (Number.parseInt(editorRow.css('marginTop'), 10) + Number.parseInt(editorRow.css('marginBottom'), 10));
             height += 16;
             $('#node-input-rule-container').editableList('height', height);
         },

@@ -85,7 +85,7 @@
                     $input.autocomplete('search');
                 });
 
-                $this.on('change', (type, value) => {
+                $this.change((type, value) => {
                     if (value === 're') {
                         $input.autocomplete('disable');
                     } else {
@@ -125,7 +125,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.on('change', () => {
+            $nodeInputCcuConfig.change(() => {
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
                     $nodeInputIface.removeAttr('disabled');
@@ -199,17 +199,17 @@
                 }
             }
 
-            $('#node-input-iface').on('change', autocomplete);
-            $('#node-input-room').on('change', autocomplete);
-            $('#node-input-function').on('change', autocomplete);
-            $('#node-input-device').on('change', autocomplete);
-            $('#node-input-deviceName').on('change', autocomplete);
-            $('#node-input-deviceType').on('change', autocomplete);
-            $('#node-input-channel').on('change', autocomplete);
-            $('#node-input-channelName').on('change', autocomplete);
-            $('#node-input-channelType').on('change', autocomplete);
-            $('#node-input-channelIndex').on('change', autocomplete);
-            $('#node-input-datapoint').on('change', autocomplete);
+            $('#node-input-iface').change(autocomplete);
+            $('#node-input-room').change(autocomplete);
+            $('#node-input-function').change(autocomplete);
+            $('#node-input-device').change(autocomplete);
+            $('#node-input-deviceName').change(autocomplete);
+            $('#node-input-deviceType').change(autocomplete);
+            $('#node-input-channel').change(autocomplete);
+            $('#node-input-channelName').change(autocomplete);
+            $('#node-input-channelType').change(autocomplete);
+            $('#node-input-channelIndex').change(autocomplete);
+            $('#node-input-datapoint').change(autocomplete);
 
             function paramsetName(iface, device, paramset) {
                 let cType = '';

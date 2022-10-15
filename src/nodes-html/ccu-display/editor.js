@@ -80,7 +80,7 @@
 
                 const nodeDisableI = $nodeDisableI.innerHTML.replaceAll('X', i);
                 $nodeLineX.insertAdjacentHTML('afterend', '<div class="form-row SUBMIT HM-Dis-WM55 ' + extraClass + '">' + nodeDisableI + '</div>');
-                $('#node-input-disable' + i).on('change', () => {
+                $('#node-input-disable' + i).change(() => {
                     const dis = $('#node-input-disable' + i)[0].checked;
                     $('#node-input-icon' + i).prop('disabled', dis);
                     $('#node-input-color' + i).prop('disabled', dis);
@@ -153,7 +153,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.on('change', () => {
+            $nodeInputCcuConfig.change(() => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -162,7 +162,7 @@
                 });
             });
 
-            $nodeInputIface.on('change', () => {
+            $nodeInputIface.change(() => {
                 if (ifacesLoaded) {
                     loadConfig();
                 }
@@ -208,7 +208,7 @@
                 $nodeInputChannel.autocomplete('option', 'source', channels);
             }
 
-            $nodeInputChannel.on('change', () => {
+            $nodeInputChannel.change(() => {
                 const channel = $nodeInputChannel.val();
                 if (data && data[channel]) {
                     $nodeInputChannelType.val(data[channel]);
@@ -217,7 +217,7 @@
 
             $('.SUBMIT').hide();
             $('.SUBMIT.' + $nodeInputChannelType.val()).show();
-            $nodeInputChannelType.on('change', () => {
+            $nodeInputChannelType.change(() => {
                 $('.SUBMIT').hide();
                 $('.SUBMIT.' + $nodeInputChannelType.val()).show();
             });

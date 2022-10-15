@@ -67,7 +67,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.on('change', () => {
+            $nodeInputCcuConfig.change(() => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -83,7 +83,7 @@
                 minLength: 0,
             });
 
-            $('#node-input-iface').on('change', () => {
+            $('#node-input-iface').change(() => {
                 if (ifacesLoaded) {
                     console.log('#node-input-iface change');
                     autocompleteMethods();

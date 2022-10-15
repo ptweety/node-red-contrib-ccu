@@ -146,7 +146,7 @@
                 });
             }
 
-            $nodeInputCcuConfig.on('change', () => {
+            $nodeInputCcuConfig.change(() => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -214,7 +214,7 @@
                 }
             }
 
-            $nodeInputIface.on('change', () => {
+            $nodeInputIface.change(() => {
                 console.log('$nodeInputIface change');
                 if ($nodeInputIface.val() === 'ReGaHSS') {
                     $('.form-row.datapoint').hide();

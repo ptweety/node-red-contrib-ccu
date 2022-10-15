@@ -52,11 +52,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -108,7 +109,7 @@
                 }
 
                 const channels = [];
-                Object.keys(data).forEach(addr => {
+                for (let addr of Object.keys(data)) {
                     if (/:\d+$/.test(addr)) {
                         if (data[addr].name) {
                             addr += ' ' + data[addr].name;
@@ -116,7 +117,8 @@
 
                         channels.push(addr);
                     }
-                });
+                }
+
                 channels.sort((a, b) => a.localeCompare(b));
                 $nodeInputChannel.autocomplete('option', 'source', channels);
 
@@ -171,14 +173,4 @@
         <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
-</script>
-
-<script type="text/html" data-template-name="ccu-alexa">
-    <p>Homematic Geräte mit node-red-contrib-alexa-smart-home verbinden. Am Eingang den Node "alexa smart home v3"
-    anschließen, am Ausgang "alexa smart home v3 state".</p>
-</script>
-
-<script type="text/html" data-help-name="ccu-alexa" lang="en-US">
-    <p>Connect Homematic Devices with node-red-contrib-alexa-smart-home. Connect a Node "alexa smart home v3" to the
-    input and "alexa smart home v3 state" to the output.</p>
 </script>

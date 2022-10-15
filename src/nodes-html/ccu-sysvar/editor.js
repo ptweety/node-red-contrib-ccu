@@ -60,7 +60,7 @@
 
             getConf(this.ccuConfig);
 
-            $('#node-input-ccuConfig').on('change', () => {
+            $('#node-input-ccuConfig').change(() => {
                 getConf($('#node-input-ccuConfig').val());
             });
         },

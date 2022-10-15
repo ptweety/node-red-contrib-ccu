@@ -120,9 +120,9 @@ module.exports = function (RED) {
                     ß: '0x5F',
                 };
                 const result = [];
-                string.split('').forEach(c => {
+                for (const c of string) {
                     result.push(charcodes[c] || ('0x' + c.codePointAt(0).toString(16).toUpperCase()));
-                });
+                }
 
                 return ',0x12,' + result.slice(0, 12).join(',');
             }

@@ -23,7 +23,7 @@ module.exports = function (RED) {
 
             this.ccu.register(this);
 
-            [
+            for (const attr of [
                 'rooms',
                 'functions',
                 'device',
@@ -35,9 +35,9 @@ module.exports = function (RED) {
                 'channelIndex',
                 'datapoint',
 
-            ].forEach(attr => {
+            ]) {
                 if (!config[attr]) {
-                    return;
+                    continue;
                 }
 
                 if (config[attr + 'Rx'] === 're') {
@@ -45,7 +45,8 @@ module.exports = function (RED) {
                 } else {
                     filter[attr] = config[attr];
                 }
-            });
+            }
+
             this.idSubscription = this.ccu.subscribe(filter, message => {
                 message.topic = this.ccu.topicReplace(config.topic, message);
                 this.send(message);

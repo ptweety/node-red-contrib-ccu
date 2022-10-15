@@ -53,10 +53,10 @@ module.exports = function (RED) {
 
             if (this.topicCounters) {
                 setTimeout(() => {
-                    this.ccu.enabledIfaces.forEach(iface => {
+                    for (const iface of this.ccu.enabledIfaces) {
                         this.send({topic: this.ccu.topicReplace(this.topicCounters, {iface, rxtx: 'rx'}), payload: '0', retain: true});
                         this.send({topic: this.ccu.topicReplace(this.topicCounters, {iface, rxtx: 'tx'}), payload: '0', retain: true});
-                    });
+                    }
                 }, 25_000);
                 setInterval(() => {
                     this.checkCounters('rxCounters');
@@ -75,14 +75,14 @@ module.exports = function (RED) {
         }
 
         checkCounters(c) {
-            Object.keys(this.ccu[c]).forEach(iface => {
+            for (const iface of Object.keys(this.ccu[c])) {
                 if (this.ccu[c][iface] !== this[c][iface]) {
                     this[c][iface] = this.ccu[c][iface];
                     const topic = this.ccu.topicReplace(this.topicCounters, {iface, rxtx: c.slice(0, 2)});
                     const payload = this[c][iface];
                     this.send({topic, payload, retain: true});
                 }
-            });
+            }
         }
 
         setStatus(data) {
@@ -161,7 +161,7 @@ module.exports = function (RED) {
 
             let command;
             let filter;
-            Object.keys(topicList).forEach(key => {
+            for (const key of Object.keys(topicList)) {
                 if (!command) {
                     const parts = topicList[key].split('/');
                     const patternArray = [];
@@ -183,7 +183,7 @@ module.exports = function (RED) {
                         filter = Object.assign.apply({}, placeholders.map((v, i) => ({[v]: match[i]})));
                     }
                 }
-            });
+            }
 
             if (command && typeof this[command] === 'function') {
                 this[command](filter, payload);
@@ -307,7 +307,7 @@ module.exports = function (RED) {
 
             const paramset = {};
 
-            Object.keys(payload).forEach(parameter => {
+            for (const parameter of Object.keys(payload)) {
                 if (paramsetDescription && paramsetDescription[parameter]) {
                     if (!(paramsetDescription[parameter].OPERATIONS) && 2) {
                         this.error('param ' + parameter + ' not writeable');
@@ -318,7 +318,7 @@ module.exports = function (RED) {
                     this.warn('unknown paramset/param ' + filter.paramset + ' ' + parameter);
                     paramset[parameter] = payload[parameter];
                 }
-            });
+            }
 
             this.ccu.methodCall(iface, 'putParamset', [filter.channel, filter.paramset, paramset])
                 .catch(error => this.error(error.message));

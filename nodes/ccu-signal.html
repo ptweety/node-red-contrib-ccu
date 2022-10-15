@@ -174,11 +174,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -252,7 +253,7 @@
             function autoCompleteChannel() {
                 const channels = [];
                 if (data) {
-                    Object.keys(data).forEach(addr => {
+                    for (let addr of Object.keys(data)) {
                         if (/:\d+$/.test(addr)) {
                             if (data[addr].name) {
                                 addr += ' ' + data[addr].name;
@@ -260,7 +261,7 @@
 
                             channels.push(addr);
                         }
-                    });
+                    }
                 }
 
                 console.log('autoCompleteChannel()', channels.length);
@@ -307,10 +308,10 @@
                     }
 
                     const select = $('<select class="number led" value="' + data.cmd + '"/>').appendTo(container);
-                    Object.keys(ccuSignalColors).forEach(name => {
+                    for (const name of Object.keys(ccuSignalColors)) {
                         $('<option value="' + ccuSignalColors[name] + '"' + (ccuSignalColors[name] === Number.parseInt(data.cmd, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(select);
-                    });
+                    }
                 },
             });
 
@@ -324,15 +325,16 @@
                     }
 
                     const select = $('<select class="number color" style="width: calc(50% - 8px);" value="' + data.color + '"/>').appendTo(container);
-                    Object.keys(ccuDimmerColors).forEach(name => {
+                    for (const name of Object.keys(ccuDimmerColors)) {
                         $('<option value="' + ccuDimmerColors[name] + '"' + (ccuDimmerColors[name] === Number.parseInt(data.color, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(select);
-                    });
+                    }
+
                     const ontime = $(`<select class="number ontime" style="width: calc(50% - 8px); margin-left: 6px;" value="${data.ontime}"></select>`).appendTo(container);
-                    Object.keys(ccuOnTime).forEach(name => {
+                    for (const name of Object.keys(ccuOnTime)) {
                         $('<option value="' + ccuOnTime[name] + '"' + (ccuOnTime[name] === Number.parseInt(data.ontime, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(ontime);
-                    });
+                    }
                 },
             });
 
@@ -346,49 +348,75 @@
                     }
 
                     const select = $('<select class="number sound" value="' + data.sound + '"/>').appendTo(container);
-                    Object.keys(ccuSound).forEach(name => {
+                    for (const name of Object.keys(ccuSound)) {
                         $('<option value="' + ccuSound[name] + '"' + (ccuSound[name] === Number.parseInt(data.sound, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(select);
-                    });
+                    }
                 },
             });
 
             $('#node-input-key-container').css('min-height', '300px').css('min-width', '450px').editableList({});
 
-            if (this.channelType === 'SIGNAL_CHIME') {
-                /*
-                const [volume, repeat, length, ...commands] = this.chime.split(',');
-                $('#node-input-volume').val(Math.round(volume * 100));
-                $('#node-input-repeat').val(repeat);
-                $('#node-input-length').val(length);
-                */
+            switch (this.channelType) {
+                case 'SIGNAL_CHIME': {
+                    /*
+                    const [volume, repeat, length, ...commands] = this.chime.split(',');
+                    $('#node-input-volume').val(Math.round(volume * 100));
+                    $('#node-input-repeat').val(repeat);
+                    $('#node-input-length').val(length);
+                    */
 
-                this.chime.split(',').forEach(cmd => {
-                    $('#node-input-chime-container').editableList('addItem', {cmd});
-                });
-            } else if (this.channelType === 'SIGNAL_LED') {
-                /*
-                const [, repeat, length, ...commands] = this.led.split(',');
-                $('#node-input-repeat').val(repeat);
-                $('#node-input-length').val(length);
-                */
-                this.led.split(',').forEach(cmd => {
-                    $('#node-input-led-container').editableList('addItem', {cmd});
-                });
-            } else if (this.channelType === 'ALARM_SWITCH_VIRTUAL_RECEIVER') {
-                // ...
-            } else if (this.channelType === 'ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER') {
-                this.soundList.forEach(item => {
-                    $('#node-input-acoustic-container').editableList('addItem', item);
-                });
-            } else if (this.channelType === 'DIMMER_VIRTUAL_RECEIVER') {
-                this.dimmerList.forEach(item => {
-                    $('#node-input-dimmer-container').editableList('addItem', item);
-                });
-            } else if (this.channelType === 'BSL_DIMMER_VIRTUAL_RECEIVER') {
-                // ...
-            } else {
-                console.error('unknown channelType', this.channelType);
+                    for (const cmd of this.chime.split(',')) {
+                        $('#node-input-chime-container').editableList('addItem', {cmd});
+                    }
+
+                    break;
+                }
+
+                case 'SIGNAL_LED': {
+                    /*
+                    const [, repeat, length, ...commands] = this.led.split(',');
+                    $('#node-input-repeat').val(repeat);
+                    $('#node-input-length').val(length);
+                    */
+                    for (const cmd of this.led.split(',')) {
+                        $('#node-input-led-container').editableList('addItem', {cmd});
+                    }
+
+                    break;
+                }
+
+                case 'ALARM_SWITCH_VIRTUAL_RECEIVER': {
+                    // ...
+
+                    break;
+                }
+
+                case 'ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER': {
+                    for (const item of this.soundList) {
+                        $('#node-input-acoustic-container').editableList('addItem', item);
+                    }
+
+                    break;
+                }
+
+                case 'DIMMER_VIRTUAL_RECEIVER': {
+                    for (const item of this.dimmerList) {
+                        $('#node-input-dimmer-container').editableList('addItem', item);
+                    }
+
+                    break;
+                }
+
+                case 'BSL_DIMMER_VIRTUAL_RECEIVER': {
+                    // ...
+
+                    break;
+                }
+
+                default: {
+                    console.error('unknown channelType', this.channelType);
+                }
             }
 
             $('.SUBMIT').hide();
@@ -638,12 +666,4 @@
         <input id="node-input-durationValue" type="text" style="width: 35%">
         <input id="node-input-durationValueType" type="hidden">
     </div>
-</script>
-
-<script type="text/html" data-help-name="ccu-signal" lang="de-DE">
-    <p>Senden von LED- und Tonsignalen an Displaytaster und Funk-Gongs.</p>
-</script>
-
-<script type="text/html" data-help-name="ccu-signal" lang="en-US">
-    <p>Send LED- and Sound-Signals.</p>
 </script>

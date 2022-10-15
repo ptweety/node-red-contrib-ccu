@@ -72,11 +72,12 @@ module.exports = function (RED) {
                         REPETITIONS: Number(config.repetitions),
                         OUTPUT_SELECT_SIZE: config.dimmerList.length,
                     };
-                    config.dimmerList.forEach((item, i) => {
+                    for (const [i, item] of config.dimmerList.entries()) {
                         const index = i + 1;
                         parameters['COLOR_LIST_' + index] = Number(item.color);
                         parameters['ON_TIME_LIST_' + index] = Number(item.ontime);
-                    });
+                    }
+
                     return this.ccu.methodCall(config.iface, 'putParamset', [config.channel, 'VALUES', parameters]);
                 }
 
@@ -101,10 +102,11 @@ module.exports = function (RED) {
                         REPETITIONS: Number(config.repetitions),
                         OUTPUT_SELECT_SIZE: config.soundList.length,
                     };
-                    config.soundList.forEach((item, i) => {
+                    for (const [i, item] of config.soundList.entries()) {
                         const index = i + 1;
                         parameters['SOUNDFILE_LIST_' + index] = Number(item.sound);
-                    });
+                    }
+
                     return this.ccu.methodCall(config.iface, 'putParamset', [config.channel, 'VALUES', parameters]);
                 }
 

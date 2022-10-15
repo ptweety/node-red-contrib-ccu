@@ -202,7 +202,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.on('change', () => {
+            $nodeInputCcuConfig.change(() => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -211,13 +211,13 @@
                 });
             });
 
-            $nodeInputIface.on('change', () => {
+            $nodeInputIface.change(() => {
                 if (ifacesLoaded) {
                     loadConfig();
                 }
             });
 
-            $nodeInputChannelType.on('change', () => {
+            $nodeInputChannelType.change(() => {
                 $('.SUBMIT').hide();
                 $('.SUBMIT.' + $nodeInputChannelType.val()).show();
             });
@@ -271,7 +271,7 @@
                 }
             }
 
-            $nodeInputChannel.on('change', () => {
+            $nodeInputChannel.change(() => {
                 const channel = $nodeInputChannel.val();
                 if (data && data[channel]) {
                     $nodeInputChannelType.val(data[channel]);
@@ -356,40 +356,66 @@
 
             $('#node-input-key-container').css('min-height', '300px').css('min-width', '450px').editableList({});
 
-            if (this.channelType === 'SIGNAL_CHIME') {
-                /*
-                const [volume, repeat, length, ...commands] = this.chime.split(',');
-                $('#node-input-volume').val(Math.round(volume * 100));
-                $('#node-input-repeat').val(repeat);
-                $('#node-input-length').val(length);
-                */
+            switch (this.channelType) {
+                case 'SIGNAL_CHIME': {
+                    /*
+                    const [volume, repeat, length, ...commands] = this.chime.split(',');
+                    $('#node-input-volume').val(Math.round(volume * 100));
+                    $('#node-input-repeat').val(repeat);
+                    $('#node-input-length').val(length);
+                    */
 
-                for (const cmd of this.chime.split(',')) {
-                    $('#node-input-chime-container').editableList('addItem', {cmd});
+                    for (const cmd of this.chime.split(',')) {
+                        $('#node-input-chime-container').editableList('addItem', {cmd});
+                    }
+
+                    break;
                 }
-            } else if (this.channelType === 'SIGNAL_LED') {
-                /*
-                const [, repeat, length, ...commands] = this.led.split(',');
-                $('#node-input-repeat').val(repeat);
-                $('#node-input-length').val(length);
-                */
-                for (const cmd of this.led.split(',')) {
-                    $('#node-input-led-container').editableList('addItem', {cmd});
+
+                case 'SIGNAL_LED': {
+                    /*
+                    const [, repeat, length, ...commands] = this.led.split(',');
+                    $('#node-input-repeat').val(repeat);
+                    $('#node-input-length').val(length);
+                    */
+                    for (const cmd of this.led.split(',')) {
+                        $('#node-input-led-container').editableList('addItem', {cmd});
+                    }
+
+                    break;
                 }
-            } else if (this.channelType === 'ALARM_SWITCH_VIRTUAL_RECEIVER') {
-                // ...
-            } else if (this.channelType === 'ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER') {
-                for (const item of this.soundList) {
-                    $('#node-input-acoustic-container').editableList('addItem', item);
+
+                case 'ALARM_SWITCH_VIRTUAL_RECEIVER': {
+                    // ...
+
+                    break;
                 }
-            } else if (this.channelType === 'DIMMER_VIRTUAL_RECEIVER') {
-                for (const item of this.dimmerList) {
-                    $('#node-input-dimmer-container').editableList('addItem', item);
+
+                case 'ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER': {
+                    for (const item of this.soundList) {
+                        $('#node-input-acoustic-container').editableList('addItem', item);
+                    }
+
+                    break;
                 }
-            } else if (this.channelType === 'BSL_DIMMER_VIRTUAL_RECEIVER') {
-                // ...
-            } else {
-                console.error('unknown channelType', this.channelType);
+
+                case 'DIMMER_VIRTUAL_RECEIVER': {
+                    for (const item of this.dimmerList) {
+                        $('#node-input-dimmer-container').editableList('addItem', item);
+                    }
+
+                    break;
+                }
+
+                case 'BSL_DIMMER_VIRTUAL_RECEIVER': {
+                    // ...
+
+                    break;
+                }
+
+                default: {
+                    console.error('unknown channelType', this.channelType);
+                }
             }
 
             $('.SUBMIT').hide();

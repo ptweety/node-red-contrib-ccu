@@ -1,5 +1,5 @@
 <script type="text/javascript">
-/* eslint-disable wrap-iife */
+/* eslint-disable max-depth, wrap-iife */
 
 (function () {
     'use strict';
@@ -47,6 +47,7 @@
             return this.name ? 'node_label_italic' : '';
         },
         oneditprepare() {
+            // eslint-disable-next-line unicorn/no-this-assignment
             const that = this;
             const $nodeInputIface = $('#node-input-iface');
             const $nodeInputCcuConfig = $('#node-input-ccuConfig');
@@ -85,7 +86,7 @@
                     $input.autocomplete('search');
                 });
 
-                $this.on('change', (type, value) => {
+                $this.change((type, value) => {
                     if (value === 're') {
                         $input.autocomplete('disable');
                     } else {
@@ -111,11 +112,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -156,7 +158,7 @@
 
                 console.log(data);
 
-                Object.keys(data.channelRooms).forEach(channel => {
+                for (const channel of Object.keys(data.channelRooms)) {
                     const room = data.channelRooms[channel];
                     const device = channel.split(':')[0];
                     if (data.roomChannels[room]) {
@@ -170,8 +172,9 @@
                     } else if (!data.roomDevices[room].includes(device)) {
                         data.roomDevices[room].push(device);
                     }
-                });
-                Object.keys(data.channelFunctions).forEach(channel => {
+                }
+
+                for (const channel of Object.keys(data.channelFunctions)) {
                     const func = data.channelFunctions[channel];
                     const device = channel.split(':')[0];
                     if (data.functionChannels[func]) {
@@ -185,15 +188,16 @@
                     } else if (!data.functionDevices[func].includes(device)) {
                         data.functionDevices[func].push(device);
                     }
-                });
-                Object.keys(data.channelNames).forEach(channel => {
+                }
+
+                for (const channel of Object.keys(data.channelNames)) {
                     const name = data.channelNames[channel];
                     if (/:\d+$/.test(channel)) {
                         data.nameChannels[name] = channel;
                     } else {
                         data.nameDevices[name] = channel;
                     }
-                });
+                }
             }
 
             $('#node-input-iface').change(autocomplete);
@@ -259,39 +263,39 @@
 
                     if (devices.length === 0) {
                         if (deviceNames.length > 0) {
-                            deviceNames.forEach(deviceName => {
+                            for (const deviceName of deviceNames) {
                                 if (deviceName) {
                                     devices.push(data.nameDevices[deviceName]);
                                 }
-                            });
+                            }
                         } else if (deviceTypes.length > 0) {
-                            deviceTypes.forEach(deviceType => {
+                            for (const deviceType of deviceTypes) {
                                 if (data.metadata.types[iface][deviceType]) {
-                                    data.metadata.types[iface][deviceType].forEach(device => {
+                                    for (const device of data.metadata.types[iface][deviceType]) {
                                         if (device && !devices.includes(device)) {
                                             devices.push(device);
                                         }
-                                    });
+                                    }
                                 }
-                            });
+                            }
                         }
                     }
 
                     if (channels.length === 0) {
                         if (channelNames.length > 0) {
-                            channelNames.forEach(channelName => {
+                            for (const channelName of channelNames) {
                                 channels.push(data.nameChannels[channelName]);
-                            });
+                            }
                         } else if (channelTypes.length > 0) {
-                            channelTypes.forEach(channelType => {
+                            for (const channelType of channelTypes) {
                                 if (data.metadata.types[iface][channelType]) {
-                                    data.metadata.types[iface][channelType].forEach(channel => {
+                                    for (const channel of data.metadata.types[iface][channelType]) {
                                         if (channel && !channels.includes(channel)) {
                                             channels.push(channel);
                                         }
-                                    });
+                                    }
                                 }
-                            });
+                            }
                         }
                     }
 
@@ -302,7 +306,7 @@
                         let channelCheck = false;
 
                         if (channels && channels.length > 0) {
-                            channels.forEach(channel => {
+                            for (const channel of channels) {
                                 if (data.metadata.devices[iface][channel]) {
                                     const psName = paramsetName(iface, data.metadata.devices[iface][channel], 'VALUES');
                                     if (Object.keys(data.paramsetDescriptions[psName]).includes(datapoint)) {
@@ -311,26 +315,27 @@
                                 } else {
                                     channelCheck = true;
                                 }
-                            });
+                            }
+
                             deviceCheck = true;
                         } else {
                             if (devices && devices.length > 0) {
-                                devices.forEach(device => {
+                                for (const device of devices) {
                                     if (data.metadata.devices[iface][device]) {
-                                        data.metadata.devices[iface][device].CHILDREN.forEach(channel => {
+                                        for (const channel of data.metadata.devices[iface][device].CHILDREN) {
                                             const psName = paramsetName(iface, data.metadata.devices[iface][channel], 'VALUES');
                                             if (data.paramsetDescriptions[psName]) {
-                                                Object.keys(data.paramsetDescriptions[psName]).forEach(dp => {
+                                                for (const dp of Object.keys(data.paramsetDescriptions[psName])) {
                                                     if (datapoint === dp) {
                                                         deviceCheck = true;
                                                     }
-                                                });
+                                                }
                                             }
-                                        });
+                                        }
                                     } else {
                                         deviceCheck = true;
                                     }
-                                });
+                                }
                             } else {
                                 deviceCheck = true;
                             }
@@ -351,31 +356,31 @@
                         let deviceCheck = false;
 
                         if (rooms.length > 0) {
-                            rooms.forEach(room => {
+                            for (const room of rooms) {
                                 if (data.roomChannels[room].includes(channel)) {
                                     roomCheck = true;
                                 }
-                            });
+                            }
                         } else {
                             roomCheck = true;
                         }
 
                         if (funcs.length > 0) {
-                            funcs.forEach(func => {
+                            for (const func of funcs) {
                                 if (data.functionChannels[func].includes(channel)) {
                                     functionCheck = true;
                                 }
-                            });
+                            }
                         } else {
                             functionCheck = true;
                         }
-    
+
                         if (devices.length > 0) {
-                            devices.forEach(device => {
+                            for (const device of devices) {
                                 if (channel.startsWith(device)) {
                                     deviceCheck = true;
                                 }
-                            });
+                            }
                         } else {
                             deviceCheck = true;
                         }
@@ -392,7 +397,7 @@
                         let functionCheck = false;
 
                         if (rooms.length > 0) {
-                            rooms.forEach(room => {
+                            for (const room of rooms) {
                                 if (data.roomDevices[room].includes(device)) {
                                     roomCheck = true;
                                 }
@@ -400,13 +405,13 @@
                                 roomCheck = roomCheck
                                     || data.metadata.devices[iface][device].CHILDREN
                                         .some(v => data.roomDevices[room].includes(v));
-                            });
+                            }
                         } else {
                             roomCheck = true;
                         }
 
                         if (funcs.length > 0) {
-                            funcs.forEach(func => {
+                            for (const func of funcs) {
                                 if (data.functionDevices[func].includes(device)) {
                                     functionCheck = true;
                                 }
@@ -414,7 +419,7 @@
                                 functionCheck = functionCheck
                                     || data.metadata.devices[iface][device].CHILDREN
                                         .some(v => data.functionDevices[func].includes(v));
-                            });
+                            }
                         } else {
                             functionCheck = true;
                         }
@@ -422,10 +427,10 @@
                         return roomCheck && functionCheck;
                     }
 
-                    Object.keys(data.metadata.devices[iface]).forEach(dev => {
+                    for (const dev of Object.keys(data.metadata.devices[iface])) {
                         if (/:\d+$/.test(dev)) {
                             if (!checkChannel(dev)) {
-                                return;
+                                continue;
                             }
 
                             lists.channel.push(dev);
@@ -440,15 +445,15 @@
 
                             const psName = paramsetName(iface, data.metadata.devices[iface][dev], 'VALUES');
                             if (data.paramsetDescriptions[psName]) {
-                                Object.keys(data.paramsetDescriptions[psName]).forEach(dp => {
+                                for (const dp of Object.keys(data.paramsetDescriptions[psName])) {
                                     if (dp && !lists.datapoint.includes(dp) && checkDatapoint(dp)) {
                                         lists.datapoint.push(dp);
                                     }
-                                });
+                                }
                             }
                         } else {
                             if (!checkDevice(dev)) {
-                                return;
+                                continue;
                             }
 
                             lists.device.push(dev);
@@ -456,32 +461,32 @@
                             if (!lists.deviceType.includes(data.metadata.devices[iface][dev].TYPE)) {
                                 lists.deviceType.push(data.metadata.devices[iface][dev].TYPE);
 
-                                data.metadata.devices[iface][dev].CHILDREN.forEach(channel => {
+                                for (const channel of data.metadata.devices[iface][dev].CHILDREN) {
                                     const psName = paramsetName(iface, data.metadata.devices[iface][channel], 'VALUES');
                                     if (data.paramsetDescriptions[psName]) {
-                                        Object.keys(data.paramsetDescriptions[psName]).forEach(dp => {
+                                        for (const dp of Object.keys(data.paramsetDescriptions[psName])) {
                                             if (!lists.datapoint.includes(dp) && checkDatapoint(dp)) {
                                                 lists.datapoint.push(dp);
                                             }
-                                        });
+                                        }
                                     }
-                                });
+                                }
                             }
                         }
-                    });
+                    }
                 }
 
                 if (iface) {
                     composeLists(iface);
                 } else {
-                    Object.keys(data.metadata.devices).forEach(iface => {
+                    for (const iface of Object.keys(data.metadata.devices)) {
                         composeLists(iface);
-                    });
+                    }
                 }
 
-                Object.keys(lists).forEach(key => {
+                for (const key of Object.keys(lists)) {
                     lists[key].sort((a, b) => a.localeCompare(b));
-                });
+                }
 
                 $('#node-input-rooms').parent().find('.red-ui-typedInput-input').autocomplete('option', 'source', data.rooms);
                 $('#node-input-functions').parent().find('.red-ui-typedInput-input').autocomplete('option', 'source', data.functions);
@@ -617,37 +622,4 @@
         <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
-</script>
-
-<script type="text/html" data-help-name="ccu-rpc-event" lang="de-DE">
-    <p>Gibt RPC Events aus.</p>
-    <h3>Konfiguration</h3>
-
-    <ul>
-        <li><b>CCU</b>: Die zu verwendende CCU-Konfiguration.</li>
-        <li><b>topic</b>: <code>msg.topic</code> ausgehender Nachrichten. Kann mit Platzhaltern konfiguriert werden.</li>
-        <li><b>interface</b>: Die Schnittstelle über welche die gewüschten Geräte angebunden sind. <code>*</code> erlaubt Events aller verbundenen Schnittstellen.</li>
-        <li><b>room</b>: Raum Filter. Beispiel: <code>Wohnzimmer</code>.</li>
-        <li><b>function</b>: Gewerk Filter. Beispiel: <code>Taster</code></li>
-        <li><b>device</b>: Die Seriennummer der Homematic Komponente. Beispiel: <code>OEQ1662328</code></li>
-        <li><b>deviceName</b>: Der in der CCU vergebene Name der Homematic Komponente. Beispiel: <code>Rauchmelder Arbeitszimmer</code>; alle Rauchemelder über RegEx: <code>Rauchmelder.*</code></li>
-        <li><b>deviceType</b>: Die Typen-Bezeichnung der Homematic Komponente. Beispiel: <code>HM-Sec-SD-2</code></li>
-        <li><b>channel</b>: Die Kanaladresse bestehend aus Serien- und Kanalnummer. Beispiel: <code>OEQ1245312:4</code></li>
-        <li><b>channelName</b>: Der in der CCU vergebene Kanalname. Beispiel: <code>Bad Lichte Decke PIR</code></li>
-        <li><b>channelType</b>: Der Typ des Kanals. Beispiel: <code>VIRTUAL_KEY</code> oder <code>DIMMER</code></li>
-        <li><b>channelIndex</b>: Der Index des Kanals. Beispiel: <code>2</code>
-        <li><b>datapoint</b>: Der Datenpunkt des Kanals. Beispiel: <code>PRESS_SHORT</code> oder <code>ACTUAL_TEMPERATURE</code>.</li>
-        <li><b>Nur geänderte Werte ausgeben</b> - Ein Event wird nur dann erzeugt, wenn sich der Wert seit dem letztn Event verändert hat.</li>
-        <li><b>Während WORKING keine Werte ausgeben</b> - Es gibt Aktoren, z.B. Dimmer oder Rolladen, die während einer Rampe (Öffnen/Schließen eines Rollladen, Dimmen einer Lampe) fortwährend den aktuellen Zustand ausgeben. Um nur den End-Status auszugeben kann diese Option benutzt werden. Gebräuchlich auch bei Verwendung mit Dashboard-Nodes um "springende" Slider zu verhindern.</li>
-        <li><b>Beim Start letzten bekannten Wert ausgeben</b> - Wenn Node-RED gestartet wird, dann wird der letzte Wert (sofern in der ReGaHSS bekannt) ausgegeben. Z.B. um beim Start einen korrekten Wert an das Dashboard zu übergeben. <b>Achtung:</b> Wird durch die ausgegebene Nachricht im weiteren Verlauf des Flows ein Homematic Wert gesetzt wirkt sich jedes (Full-)Deployment negativ auf den DutyCycle aus.</li>
-    </ul>
-
-    <h3>Output</h3>
-    <!-- TODO -->
-
-    <!-- TODO Funktionsweise Filter erläutern -->
-</script>
-
-<script type="text/html" data-help-name="ccu-rpc-event" lang="en-US">
-    <p>Outputs RPC events.</p>
 </script>

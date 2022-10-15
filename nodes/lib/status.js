@@ -3,11 +3,12 @@ module.exports = (that, data) => {
     if (!that.iface) {
         if (data.ifaceStatus) {
             let status = 0;
-            Object.keys(data.ifaceStatus).forEach(s => {
+            for (const s of Object.keys(data.ifaceStatus)) {
                 if (data.ifaceStatus[s]) {
                     status += 1;
                 }
-            });
+            }
+
             if (status < 1) {
                 that.status({fill: 'red', shape: 'dot', text: 'disconnected'});
                 that.currentStatus = 'red';

@@ -37,9 +37,10 @@ module.exports = function (RED) {
                 } else if (method === 'putParamset') {
                     let [address, paramset, values] = parameters;
                     values = values || {};
-                    Object.keys(values).forEach(parameter => {
+                    for (const parameter of Object.keys(values)) {
                         values[parameter] = this.ccu.paramCast(iface, address, paramset, parameter, values[parameter]);
-                    });
+                    }
+
                     parameters[2] = values;
                 }
 

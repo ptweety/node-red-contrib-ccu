@@ -93,7 +93,7 @@
                     minLength: 0,
                 });
 
-                $nodeConfigInputHost.on('change', () => {
+                $nodeConfigInputHost.change(() => {
                     if (!$nodeConfigInputHost.val().endsWith($nodeConfigInputName.val())) {
                         $nodeConfigInputName.val($nodeConfigInputHost.val());
                     }
