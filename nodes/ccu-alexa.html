@@ -1,6 +1,10 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ccu-alexa', {
+/* eslint-disable wrap-iife */
 
+(function () {
+    'use strict';
+
+    RED.nodes.registerType('ccu-alexa', {
         category: 'ccu',
         defaults: {
             name: {value: ''},
@@ -129,9 +133,10 @@
 
         oneditsave() {},
     });
+}());
 </script>
 
-<script type="text/x-red" data-template-name="ccu-alexa">
+<script type="text/html" data-template-name="ccu-alexa">
     <style>
         label.ccu-checkbox {
             display: block !important;
@@ -142,6 +147,7 @@
             margin-top: -3px !important;
         }
     </style>
+
     <div class="form-row">
         <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
         <input type="text" id="node-input-ccuConfig">
@@ -153,7 +159,7 @@
             <select id="node-input-iface" style="width:calc(100% - 40px);" disabled>
                 <option></option>
             </select>
-       </div>
+        </div>
     </div>
 
     <div class="form-row">
@@ -161,21 +167,18 @@
         <input type="text" id="node-input-channel">
     </div>
 
-
     <div class="form-row">
         <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
-
-
 </script>
 
-<script type="text/x-red" data-template-name="ccu-alexa">
+<script type="text/html" data-template-name="ccu-alexa">
     <p>Homematic Geräte mit node-red-contrib-alexa-smart-home verbinden. Am Eingang den Node "alexa smart home v3"
     anschließen, am Ausgang "alexa smart home v3 state".</p>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-alexa" lang="en-US">
+<script type="text/html" data-help-name="ccu-alexa" lang="en-US">
     <p>Connect Homematic Devices with node-red-contrib-alexa-smart-home. Connect a Node "alexa smart home v3" to the
     input and "alexa smart home v3 state" to the output.</p>
 </script>

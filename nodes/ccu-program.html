@@ -1,6 +1,10 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ccu-program', {
+/* eslint-disable wrap-iife */
 
+(function () {
+    'use strict';
+
+    RED.nodes.registerType('ccu-program', {
         category: 'ccu',
         defaults: {
             name: {value: ''},
@@ -54,9 +58,10 @@
             }
         },
     });
+}());
 </script>
 
-<script type="text/x-red" data-template-name="ccu-program">
+<script type="text/html" data-template-name="ccu-program">
     <style>
         label.ccu-checkbox {
             display: block !important;
@@ -70,25 +75,30 @@
             width: 70%;
         }
     </style>
+
     <div class="form-row">
         <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
         <input type="text" id="node-input-ccuConfig">
     </div>
+
     <div class="form-row">
         <label for="node-input-topic"><i class="icon-tasks"></i> Topic</label>
         <input type="text" id="node-input-topic">
     </div>
+
     <div class="form-row">
         <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
         <select id="select-input-name" style="display:none" class="ccu-dropdown"></select>
     </div>
+
     <div class="form-tips" data-i18n="ccu-program.tip"></div>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-program" lang="de-DE">
+<script type="text/html" data-help-name="ccu-program" lang="de-DE">
     <p>Führt ein ReGaHSS Programm aus.</p>
     <h3>Inputs</h3>
+
     <dl class="message-properties">
         <dt>payload
             <span class="property-type">*</span>
@@ -99,23 +109,26 @@
             Programm ausgeführt.
         </dd>
     </dl>
+
     <h3>Outputs</h3>
-     <ol class="node-ports">
-         <li>Output
-             <dl class="message-properties">
-                 <dt>payload <span class="property-type">string</span></dt>
-                 <dd>
-                   Im Payload ist der Zeitstempel der letzten Programmausführung (Attribut <code>ts</code>) sowie
-                   die Information ob ein Programm aktiv oder inaktiv ist (Attribut <code>active</code>) enthalten.
-                 </dd>
-             </dl>
-         </li>
-     </ol>
+
+    <ol class="node-ports">
+        <li>Output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">string</span></dt>
+                <dd>
+                    Im Payload ist der Zeitstempel der letzten Programmausführung (Attribut <code>ts</code>) sowie
+                    die Information ob ein Programm aktiv oder inaktiv ist (Attribut <code>active</code>) enthalten.
+                </dd>
+            </dl>
+        </li>
+    </ol>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-program" lang="en-US">
+<script type="text/html" data-help-name="ccu-program" lang="en-US">
     <p>Executes a ReGaHSS program.</p>
     <h3>Inputs</h3>
+
     <dl class="message-properties">
         <dt>payload
             <span class="property-type">*</span>
@@ -125,16 +138,18 @@
             other cases the program will be executed.
         </dd>
     </dl>
+
     <h3>Outputs</h3>
-     <ol class="node-ports">
-         <li>Output
-             <dl class="message-properties">
-                 <dt>payload <span class="property-type">string</span></dt>
-                 <dd>
+
+    <ol class="node-ports">
+        <li>Output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">string</span></dt>
+                <dd>
                     The payload contains a timestamp of the last program run (property <code>ts</code> and the
                     information if the program is activated (property <code>active</code>).
-                 </dd>
-             </dl>
-         </li>
-     </ol>
+                </dd>
+            </dl>
+        </li>
+    </ol>
 </script>

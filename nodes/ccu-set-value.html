@@ -1,6 +1,10 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ccu-set-value', {
+/* eslint-disable wrap-iife */
 
+(function () {
+    'use strict';
+
+    RED.nodes.registerType('ccu-set-value', {
         category: 'ccu',
         defaults: {
             name: {value: ''},
@@ -506,9 +510,10 @@
             this.force = $('#node-input-force-dropdown').val() === 'true';
         },
     });
+}());
 </script>
 
-<script type="text/x-red" data-template-name="ccu-set-value">
+<script type="text/html" data-template-name="ccu-set-value">
     <style>
         label.ccu-checkbox {
             display: block !important;
@@ -607,7 +612,7 @@
 
 
 
-<script type="text/x-red" data-help-name="ccu-set-value" lang="de-DE">
+<script type="text/html" data-help-name="ccu-set-value" lang="de-DE">
     <p>Ansteuerung von mehreren Geräten auf einmal.</p>
     <h3>Konfiguration</h3>
     <ul>
@@ -622,6 +627,6 @@
 
 </script>
 
-<script type="text/x-red" data-help-name="ccu-set-value" lang="en-US">
+<script type="text/html" data-help-name="ccu-set-value" lang="en-US">
     <p>Control multiple devices at once.</p>
 </script>

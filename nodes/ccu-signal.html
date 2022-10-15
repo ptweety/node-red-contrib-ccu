@@ -1,4 +1,9 @@
 <script type="text/javascript">
+/* eslint-disable wrap-iife */
+
+(function () {
+    'use strict';
+
     const ccuSignalColors = {
         Pause: 2,
         Rot: 17,
@@ -444,9 +449,10 @@
             this.repetitions = Number.parseInt(this.repetitions, 10);
         },
     });
+}());
 </script>
 
-<script type="text/x-red" data-template-name="ccu-signal">
+<script type="text/html" data-template-name="ccu-signal">
     <style>
         label.ccu-checkbox {
             display: block !important;
@@ -470,14 +476,17 @@
         <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
         <input type="text" id="node-input-ccuConfig">
     </div>
+
     <div class="form-row">
         <label for="node-input-iface"><i class="fa fa-empire"></i> Interface</label>
         <select id="node-input-iface" class="ccu-dropdown" disabled></select>
     </div>
+
     <div class="form-row">
         <label for="node-input-channel"><i class="icon-tags"></i> Kanal</label>
         <input type="text" id="node-input-channel">
     </div>
+
     <div class="form-row">
         <label for="node-input-channelType"><i class="icon-tags"></i> Typ</label>
         <select id="node-input-channelType" class="ccu-dropdown">
@@ -580,7 +589,6 @@
             <option value="14">14x</option>
             <option value="15">Unendlich</option>
         </select>
-
     </div>
 
     <div class="form-row SUBMIT ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER ">
@@ -609,7 +617,6 @@
         <input id="node-input-dimmerLevelType" type="hidden">
     </div>
 
-
     <div class="form-row SUBMIT ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER DIMMER_VIRTUAL_RECEIVER BSL_DIMMER_VIRTUAL_RECEIVER">
         <label for="node-input-rampTimeUnit"><i class=""></i> Rampenzeit </label>
         <select id="node-input-rampTimeUnit" style="width: calc(35% - 5px)">
@@ -621,7 +628,6 @@
         <input id="node-input-rampTimeValueType" type="hidden">
     </div>
 
-
     <div class="form-row SUBMIT ALARM_SWITCH_VIRTUAL_RECEIVER ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER DIMMER_VIRTUAL_RECEIVER BSL_DIMMER_VIRTUAL_RECEIVER">
         <label for="node-input-durationUnit"><i class=""></i> Dauer </label>
         <select id="node-input-durationUnit" style="width: calc(35% - 5px)">
@@ -632,15 +638,12 @@
         <input id="node-input-durationValue" type="text" style="width: 35%">
         <input id="node-input-durationValueType" type="hidden">
     </div>
-
-
-
 </script>
 
-<script type="text/x-red" data-help-name="ccu-signal" lang="de-DE">
+<script type="text/html" data-help-name="ccu-signal" lang="de-DE">
     <p>Senden von LED- und Tonsignalen an Displaytaster und Funk-Gongs.</p>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-signal" lang="en-US">
+<script type="text/html" data-help-name="ccu-signal" lang="en-US">
     <p>Send LED- and Sound-Signals.</p>
 </script>

@@ -1,6 +1,10 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ccu-mqtt', {
+/* eslint-disable wrap-iife */
 
+(function () {
+    'use strict';
+
+    RED.nodes.registerType('ccu-mqtt', {
         category: 'ccu',
         defaults: {
             name: {value: ''},
@@ -40,9 +44,10 @@
             console.log(this);
         },
     });
+}());
 </script>
 
-<script type="text/x-red" data-template-name="ccu-mqtt">
+<script type="text/html" data-template-name="ccu-mqtt">
     <style>
         label.ccu-checkbox {
             display: block !important;
@@ -56,16 +61,19 @@
             width: 70%;
         }
     </style>
+
     <div class="form-row">
         <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
+
     <div class="form-row">
         <label for="node-input-ccuConfig"><i class="icon-global"></i> CCU</label>
         <input type="text" id="node-input-ccuConfig">
     </div>
+
     <div class="form-row">
-     <label for="node-input-change"></label>
+        <label for="node-input-change"></label>
         <div style="width: 70%; display: inline-block; vertical-align: text-top;">
             <label class="ccu-checkbox">
                 <input type="checkbox" id="node-input-cache">
@@ -77,26 +85,32 @@
     <div class="form-row">
         <b>Topic Configuration</b>
     </div>
+
     <div class="form-row">
         <label for="node-input-topicOutputEvent">Event</label>
         <input type="text" id="node-input-topicOutputEvent">
     </div>
+
     <div class="form-row">
         <label for="node-input-topicInputSetValue">setValue</label>
         <input type="text" id="node-input-topicInputSetValue">
     </div>
+
     <div class="form-row">
         <label for="node-input-topicOutputSysvar">Sysvar/Program Change</label>
         <input type="text" id="node-input-topicOutputSysvar">
     </div>
+
     <div class="form-row">
         <label for="node-input-topicInputSysvar">Sysvar/Program Set</label>
         <input type="text" id="node-input-topicInputSysvar">
     </div>
+
     <div class="form-row">
         <label for="node-input-topicInputPutParam">putParam</label>
         <input type="text" id="node-input-topicInputPutParam">
     </div>
+
     <div class="form-row">
         <label for="node-input-topicInputPutParamset">putParamset</label>
         <input type="text" id="node-input-topicInputPutParamset">
@@ -119,6 +133,7 @@
     <div class="form-row">
         <b>Payload Configuration</b>
     </div>
+
     <div class="form-row">
         <label for="node-input-payloadOutput">Output Payload</label>
         <select id="node-input-payloadOutput" class="ccu-dropdown">
@@ -128,6 +143,7 @@
         </select>
     </div>
 
+    <!--
     <style>
         .ccu-checkbox {
             width: auto !important;
@@ -138,12 +154,13 @@
             margin-top: -3px;
         }
     </style>
+    -->
 </script>
 
-<script type="text/x-red" data-help-name="ccu-mqtt" lang="de-DE">
+<script type="text/html" data-help-name="ccu-mqtt" lang="de-DE">
     <p>Vereinfacht die Anbindung einer CCU an MQTT.</p>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-mqtt" lang="en-US">
+<script type="text/html" data-help-name="ccu-mqtt" lang="en-US">
     <p>Ease the connection of a CCU to MQTT.</p>
 </script>

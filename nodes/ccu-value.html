@@ -1,10 +1,14 @@
 <script type="text/javascript">
+/* eslint-disable wrap-iife */
+
+(function () {
+    'use strict';
+
     function clipValueLength(v, l) {
         return (v.length > l) ? v.substring(0, (l - 3)) + '...' : v;
     }
 
     RED.nodes.registerType('ccu-value', {
-
         category: 'ccu',
         defaults: {
             name: {value: ''},
@@ -389,9 +393,10 @@
             }
         },
     });
+}());
 </script>
 
-<script type="text/x-red" data-template-name="ccu-value">
+<script type="text/html" data-template-name="ccu-value">
     <style>
         label.ccu-checkbox {
             display: block !important;
@@ -402,14 +407,17 @@
             margin-top: -3px !important;
         }
     </style>
+
     <div class="form-row">
         <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
         <input type="text" id="node-input-ccuConfig">
     </div>
-     <div class="form-row">
+
+    <div class="form-row">
         <label for="node-input-topic"><i class="icon-tasks"></i> Topic</label>
         <input type="text" id="node-input-topic">
     </div>
+
     <div class="form-row">
         <label for="node-input-iface"><i class="fa fa-empire"></i> Interface</label>
         <div style="display: inline-block; position: relative; width: 70%;">
@@ -417,16 +425,19 @@
                 <option></option>
             </select>
             <a id="config-lookup-btn" class="editor-button red-ui-button" style="width: 35px; position: absolute; right: 0px;" disabled><i id="config-lookup-icon" class="fa fa-search"></i></a>
-       </div>
+        </div>
     </div>
+
     <div class="form-row">
         <label for="node-input-channel"><i class="icon-tags"></i> channel</label>
         <input type="text" id="node-input-channel">
     </div>
+
     <div class="form-row">
         <label for="node-input-datapoint"><i class="icon-tag"></i> datapoint</label>
         <input type="text" id="node-input-datapoint">
     </div>
+
     <div class="form-row RAMP_TIME" style="display:none">
         <label for="node-input-ramp"><i class="icon-tag"></i> RAMP_TIME</label>
         <input style="width: 70%;" id="node-input-ramp">
@@ -445,7 +456,7 @@
             <option value=''>default</option>
             <option>BURST</option>
             <option>WAKEUP</option>
-       </select>
+        </select>
     </div>
 
     <div class="form-row">
@@ -492,25 +503,28 @@
             <span data-i18n="ccu-value.tip3"></span>
             <code>msg.topic</code>
             <span data-i18n="ccu-value.tip4"></span>
-            <pre><code>{
+            <pre><code>
+{
     "topic": "BidCos-RF.EEQ0000007:1.LEVEL",
     "payload": 0.7
-}</code></pre>
+}
+            </code></pre>
         </p>
         <p>
             <span data-i18n="ccu-value.tip5"></span>
         </p>
     </div>
+
     <div id="dialog-select-datapoint" title="Select Channel and Datapoint">
         <div id="config-lookup-tree"></div>
     </div>
 </script>
 
-
-
-<script type="text/x-red" data-help-name="ccu-value" lang="de-DE">
+<script type="text/html" data-help-name="ccu-value" lang="de-DE">
     <p>Geräte steuern und/oder Events von einem Gerät empfangen.</p>
+
     <h3>Konfiguration</h3>
+
     <ul>
         <li><b>CCU:</b> Die zu verwendende CCU-Konfiguration.</li>
         <li><b>Topic:</b> <code>msg.topic</code></li>
@@ -526,7 +540,6 @@
                 <li><code>global</code>, <code>flow</code> Die Verzögerung in Sekunden wird aus einer Context-Variablen übernommen</li>
                 <li><code>msg</code> Die Verzögerung in Sekunden wird kann über eine msg property übergeben werden</li>
             </ul>
-
         </li>
         <li><b>set Mode</b>:
             Eine Erweiterung für Geräte, die sowohl den rx_mode BURST als auch WAKEUP unterstützen wie z.B.:
@@ -543,40 +556,38 @@
                 <li><b>Während WORKING keine Werte ausgeben</b> - Es gibt Aktoren, z.B. Dimmer oder Rolladen, die während einer Rampe (Öffnen/Schließen eines Rollladen, Dimmen einer Lampe) fortwährend den aktuellen Zustand ausgeben. Um nur den End-Status auszugeben kann diese Option benutzt werden. Gebräuchlich auch bei Verwendung mit Dashboard-Nodes um "springende" Slider zu verhindern.</li>
                 <li><b>Beim Start letzten bekannten Wert ausgeben</b> - Wenn Node-RED gestartet wird, dann wird der letzte Wert (sofern in der ReGaHSS bekannt) ausgegeben. Z.B. um beim Start einen korrekten Wert an das Dashboard zu übergeben. <b>Achtung:</b> </li>
             </ul>
-
         </li>
     </ul>
 
     <h3>Input</h3>
-    <p>
-        Für den Input des Value Node wird <code>msg.payload</code> als der Wert verwendet der in den Datenpunkt geschrieben wird.
 
+    <p> Für den Input des Value Node wird <code>msg.payload</code> als der Wert verwendet der in den Datenpunkt geschrieben wird.
         Die Bestimmung des Datenpunkts sowie des Kanals und der Schnittstellen können hier dynamisch sein. Dazu werden die Eingabefelder leer gelassen und über die eingehende <code>msg</code> gesetzt.
     </p>
+
     <b>Option 1</b>: Interface, Channel und Datapoint können in der msg als Properties angegeben werden:
-    <code>
-<pre>{
-  "interface": "BidCos-RF",
-  "channel": "OEQ1868878:1",
-  "datapoint": "STATE",
-  "payload": true
-}</pre>
-    </code>
+    <pre><code>
+{
+    "interface": "BidCos-RF",
+    "channel": "OEQ1868878:1",
+    "datapoint": "STATE",
+    "payload": true
+}
+    </code></pre>
 
     <b>Option 2</b>: Der Datenpunkt kann über <code>msg.topic</code> angegeben werden wobei Interface, Channel und Datapoint mit Punkt getrennt werden:
-    <code>
-<pre>{
-  "topic": "BidCos-RF.OEQ1868878:1.STATE",
-  "payload": true
-}</pre>
-    </code>
-
+    <pre><code>
+{
+    "topic": "BidCos-RF.OEQ1868878:1.STATE",
+    "payload": true
+}
+    </code></pre>
 
     <h3>Output</h3>
-    <p>Der Value Node gibt nur Events aus, wenn Interface, Channel und Datapoint gesetzt sind.</p>
 
+    <p>Der Value Node gibt nur Events aus, wenn Interface, Channel und Datapoint gesetzt sind.</p>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-value" lang="en-US">
+<script type="text/html" data-help-name="ccu-value" lang="en-US">
     <p>Set and read channel datapoints.</p>
 </script>

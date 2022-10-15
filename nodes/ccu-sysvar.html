@@ -1,6 +1,10 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ccu-sysvar', {
+/* eslint-disable wrap-iife */
 
+(function () {
+    'use strict';
+
+    RED.nodes.registerType('ccu-sysvar', {
         category: 'ccu',
         defaults: {
             name: {value: ''},
@@ -66,10 +70,10 @@
             }
         },
     });
-
+}());
 </script>
 
-<script type="text/x-red" data-template-name="ccu-sysvar">
+<script type="text/html" data-template-name="ccu-sysvar">
     <style>
         label.ccu-checkbox {
             display: block !important;
@@ -83,24 +87,28 @@
             width: 70%;
         }
     </style>
+
     <div class="form-row">
         <label for="node-input-ccuConfig"><i class="icon-globe"></i> CCU</label>
         <input type="text" id="node-input-ccuConfig">
     </div>
+
     <div class="form-row">
         <label for="node-input-topic"><i class="icon-tasks"></i> Topic</label>
         <input type="text" id="node-input-topic">
     </div>
+
     <div class="form-row">
         <label for="node-input-name"><i class="icon-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
         <select id="select-input-name" style="display:none" class="ccu-dropdown">
         </select>
     </div>
+
     <div class="form-row">
         <label for="node-input-change"><i class="icon-bookmark"></i> </label>
         <div style="width: 70%; display: inline-block; vertical-align: text-top;">
-             <label class="ccu-checkbox" for="node-input-change">
+            <label class="ccu-checkbox" for="node-input-change">
                 <input type="checkbox" id="node-input-change">
                 <span data-i18n="ccu-sysvar.change"></span>
             </label>
@@ -110,12 +118,15 @@
             </label>
         </div>
     </div>
+
     <div class="form-tips" data-i18n="ccu-sysvar.tip"></div>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-sysvar" lang="de-DE">
+<script type="text/html" data-help-name="ccu-sysvar" lang="de-DE">
     <p>Setzen und lesen von ReGaHSS Systemvariablen.</p>
+
     <h3>Inputs</h3>
+
     <dl class="message-properties">
         <dt>payload
             <span class="property-type">*</span>
@@ -124,12 +135,13 @@
             Der Wert der der Systemvariablen zugewiesen werden soll.
         </dd>
     </dl>
-    <h3>Outputs</h3>
-     <ol class="node-ports">
-         <li>Output
 
-               <code>msg</code> Beispiel:<br>
-               <pre><code>
+    <h3>Outputs</h3>
+
+    <ol class="node-ports">
+        <li>Output
+            <code>msg</code> Beispiel:<br>
+            <pre><code>
 {
 	"ccu": "localhost",
 	"iface": "ReGaHSS",
@@ -145,14 +157,16 @@
 	"id": 950,
 	"topic": "ReGaHSS/Anwesenheit"
 }
-               </code></pre>
-         </li>
-     </ol>
+            </code></pre>
+        </li>
+    </ol>
 </script>
 
-<script type="text/x-red" data-help-name="ccu-sysvar" lang="en-US">
+<script type="text/html" data-help-name="ccu-sysvar" lang="en-US">
     <p>Set and read ReGaHSS system variables.</p>
-        <h3>Inputs</h3>
+
+    <h3>Inputs</h3>
+
     <dl class="message-properties">
         <dt>payload
             <span class="property-type">*</span>
