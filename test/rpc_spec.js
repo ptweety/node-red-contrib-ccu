@@ -1,5 +1,5 @@
+/* eslint-disable no-template-curly-in-string, no-unused-vars, unicorn/filename-case, max-nested-callbacks */
 /* global describe, it, after, before, afterEach */
-/* eslint-disable no-template-curly-in-string, no-unused-vars */
 
 const fs = require('fs');
 const path = require('path');

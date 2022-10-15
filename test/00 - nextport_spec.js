@@ -1,5 +1,5 @@
+/* eslint-disable no-unused-vars, unicorn/filename-case */
 /* global describe, it, after, before, afterEach */
-/* eslint-disable no-unused-vars */
 
 const should = require('should');
 const HmSim = require('hm-simulator/sim');

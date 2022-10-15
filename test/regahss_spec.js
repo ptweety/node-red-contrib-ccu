@@ -1,5 +1,5 @@
+/* eslint-disable no-template-curly-in-string, no-unused-vars, unicorn/filename-case */
 /* global describe, it, after, before, afterEach */
-/* eslint-disable no-template-curly-in-string, no-unused-vars */
 
 const fs = require('fs');
 const path = require('path');
@@ -262,12 +262,13 @@ describe('regahss flow1', () => {
                 });
                 done();
             });
-            hmSim.regaSim.variables.forEach((v, i) => {
+            for (const [i, v] of hmSim.regaSim.variables.entries()) {
                 if (v.name === 'Anwesenheit') {
                     hmSim.regaSim.variables[i].val = false;
                     hmSim.regaSim.variables[i].ts = hmSim.regaSim.ts();
                 }
-            });
+            }
+
             np.receive({});
         });
 
@@ -285,11 +286,12 @@ describe('regahss flow1', () => {
                 });
                 done();
             });
-            hmSim.regaSim.variables.forEach((v, i) => {
+            for (const [i, v] of hmSim.regaSim.variables.entries()) {
                 if (v.name === 'Anwesenheit') {
                     hmSim.regaSim.variables[i].ts = hmSim.regaSim.ts();
                 }
-            });
+            }
+
             np.receive({});
         });
     });
@@ -379,12 +381,13 @@ describe('regahss flow2', () => {
                 });
                 done();
             });
-            hmSim.regaSim.variables.forEach((v, i) => {
+            for (const [i, v] of hmSim.regaSim.variables.entries()) {
                 if (v.name === 'Anwesenheit') {
                     hmSim.regaSim.variables[i].val = false;
                     hmSim.regaSim.variables[i].ts = hmSim.regaSim.ts();
                 }
-            });
+            }
+
             np.receive({});
         });
 
@@ -399,11 +402,12 @@ describe('regahss flow2', () => {
                 nh.removeListener('input', unexcpectedMessage);
                 done();
             }, 3000);
-            hmSim.regaSim.variables.forEach((v, i) => {
+            for (const [i, v] of hmSim.regaSim.variables.entries()) {
                 if (v.name === 'Anwesenheit') {
                     hmSim.regaSim.variables[i].ts = hmSim.regaSim.ts();
                 }
-            });
+            }
+
             np.receive({});
         });
     });
@@ -486,12 +490,12 @@ describe('regahss flow3', () => {
                 });
                 done();
             });
-            hmSim.regaSim.variables.forEach((v, i) => {
+            for (const [i, v] of hmSim.regaSim.variables.entries()) {
                 if (v.name === 'Anwesenheit') {
                     hmSim.regaSim.variables[i].val = true;
                     hmSim.regaSim.variables[i].ts = hmSim.regaSim.ts();
                 }
-            });
+            }
         });
         it('should send message with change', function (done) {
             this.timeout(10_000);
@@ -507,12 +511,12 @@ describe('regahss flow3', () => {
                 });
                 done();
             });
-            hmSim.regaSim.variables.forEach((v, i) => {
+            for (const [i, v] of hmSim.regaSim.variables.entries()) {
                 if (v.name === 'Anwesenheit') {
                     hmSim.regaSim.variables[i].val = false;
                     hmSim.regaSim.variables[i].ts = hmSim.regaSim.ts();
                 }
-            });
+            }
         });
     });
 
