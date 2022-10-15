@@ -64,7 +64,7 @@
     "devDependencies": {
         "auto-changelog": "^2.4.0",
         "eslint-plugin-html": "^7.1.0",
-        "eslint-plugin-promise": "^6.0.1",
+        "eslint-plugin-promise": "^6.1.0",
         "hm-simulator": "^0.1.1",
         "husky": "^8.0.1",
         "mocha": "^10.0.0",
@@ -125,12 +125,12 @@
     },
     "xo": {
         "space": 4,
+        "envs": ["node", "jquery", "mocha","es2020"],
         "plugins": [
             "html",
             "promise"
         ],
-        "global": [
-            "$",
+        "globals": [
             "RED"
         ],
         "extensions": [
@@ -177,8 +177,6 @@
         },
         "ignore": [
             ".node-red/**/*",
-            "nodes/ccu-switch.js",
-            "nodes/ccu-switch.html",
             "paramsets-join.js"
         ]
     }
