@@ -51,11 +51,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -79,7 +80,7 @@
                 });
             }
 
-            $nodeInputCcuConfig.change(() => {
+            $nodeInputCcuConfig.on('change', () => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -107,7 +108,7 @@
                 }
 
                 const channels = [];
-                Object.keys(data).forEach(addr => {
+                for (let addr of Object.keys(data)) {
                     if (/:\d+$/.test(addr)) {
                         if (data[addr].name) {
                             addr += ' ' + data[addr].name;
@@ -115,7 +116,8 @@
 
                         channels.push(addr);
                     }
-                });
+                }
+
                 channels.sort((a, b) => a.localeCompare(b));
                 $nodeInputChannel.autocomplete('option', 'source', channels);
 
@@ -124,7 +126,7 @@
                 }
             }
 
-            $nodeInputIface.change(() => {
+            $nodeInputIface.on('change', () => {
                 console.log('$nodeInputIface change');
                 loadConfig();
             });

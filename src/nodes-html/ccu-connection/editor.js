@@ -55,17 +55,17 @@
                 $('#node-config-input-queuePause').val(250);
             }
 
-            RED.settings.context.stores.forEach(store => {
+            for (const store of RED.settings.context.stores) {
                 $nodeInputContextStore.append('<option value="' + store + '"' + (this.contextStore === store ? ' selected' : '') + '>' + store + '</option>');
-            });
+            }
 
             $nodeConfigInputHost.on('focus', () => $nodeConfigInputHost.autocomplete('search', ''));
 
             $.getJSON('ccu', data => {
                 const discovered = [];
-                data.discover.forEach(ccu => {
+                for (const ccu of data.discover) {
                     discovered.push(ccu.address + ' ' + ccu.serial);
-                });
+                }
 
                 $nodeConfigInputHost.autocomplete({
                     source: discovered,
@@ -77,7 +77,7 @@
                         $nodeConfigInputHost.val(address);
                         $nodeConfigInputName.val(serial);
 
-                        data.discover.forEach(ccu => {
+                        for (const ccu of data.discover) {
                             if (ccu.address === address) {
                                 $('#node-config-input-regaEnabled').prop('checked', ccu.interfaces.ReGaHSS);
                                 $('#node-config-input-bcrfEnabled').prop('checked', ccu.interfaces['BidCos-RF']);
@@ -87,7 +87,7 @@
                                 $('#node-config-input-jackEnabled').prop('checked', ccu.interfaces['CCU-Jack']);
                                 $('#node-config-input-cuxdEnabled').prop('checked', ccu.interfaces.CuXD);
                             }
-                        });
+                        }
                     },
                     delay: 0,
                     minLength: 0,
@@ -99,9 +99,9 @@
                     }
                 });
 
-                data.listen.forEach(addr => {
+                for (const addr of data.listen) {
                     $nodeConfigInputRpcServerHost.append('<option>' + addr + '</option>');
-                });
+                }
 
                 $nodeConfigInputRpcServerHost.val(this.rpcServerHost || data.listen[1]);
 
@@ -124,8 +124,8 @@
 
     /* eslint-disable no-unused-vars, no-undef, no-alert */
     function TLSSSL() {
-        if (document.getElementById('node-config-input-authentication').checked && !document.getElementById('node-config-input-tls').checked) {
-            document.getElementById('node-config-input-tls').checked = true;
+        if (document.querySelector('#node-config-input-authentication').checked && !document.querySelector('#node-config-input-tls').checked) {
+            document.querySelector('#node-config-input-tls').checked = true;
             alert('Authentication activated. \nWithout TLS/SSL your credentials would be sent unencrypted!');
         }
     }

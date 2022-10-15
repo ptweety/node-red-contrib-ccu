@@ -44,9 +44,10 @@
                     $.getJSON('ccu?type=sysvar&config=' + nodeId, data => {
                         $('#select-input-name').html('<option value=""></option>');
                         if (data) {
-                            Object.keys(data).forEach(name => {
+                            for (const name of Object.keys(data)) {
                                 $('#select-input-name').append('<option value="' + name + '"' + (name === cname ? ' selected' : '') + '>' + name + '</option>');
-                            });
+                            }
+
                             $('#node-input-name').hide();
                             $('#select-input-name').show();
                         } else {
@@ -59,7 +60,7 @@
 
             getConf(this.ccuConfig);
 
-            $('#node-input-ccuConfig').change(() => {
+            $('#node-input-ccuConfig').on('change', () => {
                 getConf($('#node-input-ccuConfig').val());
             });
         },

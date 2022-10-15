@@ -31,6 +31,7 @@
             return this.name ? 'node_label_italic' : '';
         },
         oneditprepare() {
+            // eslint-disable-next-line unicorn/no-this-assignment
             const node = this;
 
             const $nodeSetProp = $('#node-input-setProp');
@@ -76,12 +77,18 @@
             const sysvarProperties = ['value', 'valueEnum', 'ts', 'lc'];
             const datapointProperties = ['value', 'ts', 'lc', 'working', 'direction', 'all'];
 
-            sysvarProperties.forEach(value => $nodeInputSysvarProperty.append(
-                $('<option></option>').val(value).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + value)),
-            ));
-            datapointProperties.forEach(value => $nodeInputDatapointProperty.append(
-                $('<option></option>').val(value).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + value)),
-            ));
+            for (const value of sysvarProperties) {
+                $nodeInputSysvarProperty.append(
+                    $('<option></option>').val(value).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + value)),
+                );
+            }
+
+            for (const value of datapointProperties) {
+                $nodeInputDatapointProperty.append(
+                    $('<option></option>').val(value).text(node._('node-red-contrib-ccu/ccu-connection:common.label.' + value)),
+                );
+            }
+
             $nodeInputSysvarProperty.val(node.sysvarProperty || sysvarProperties[0]);
             $nodeInputDatapointProperty.val(node.datapointProperty || datapointProperties[0]);
 
@@ -98,11 +105,11 @@
                 const nodeId = $nodeInputCcuConfig.val();
                 if (nodeId !== '_ADD_') {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
-                    $.getJSON(url, d => {
+                    $.getJSON(url, data => {
                         $nodeInputIface.append('<option></option>');
-                        Object.keys(d).forEach(i => {
-                            $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === node.iface ? ' selected' : '') + '>' + i + '</option>');
-                        });
+                        for (const iFace of Object.keys(data)) {
+                            $nodeInputIface.append('<option' + (data[iFace].enabled ? '' : ' disabled') + (iFace === node.iface ? ' selected' : '') + '>' + iFace + '</option>');
+                        }
 
                         $nodeInputIface.removeAttr('disabled');
                         $configLookupBtn.removeAttr('disabled');
@@ -116,9 +123,9 @@
                     $.getJSON('ccu?type=sysvar&config=' + nodeId, data => {
                         $nodeInputSysvar.html('<option></option>');
                         if (data) {
-                            Object.keys(data).forEach(name => {
+                            for (const name of Object.keys(data)) {
                                 $nodeInputSysvar.append('<option value="' + name + '"' + (name === node.sysvar ? ' selected' : '') + '>' + name + '</option>');
-                            });
+                            }
                         }
                     });
                 }
@@ -139,7 +146,7 @@
                 });
             }
 
-            $nodeInputCcuConfig.change(() => {
+            $nodeInputCcuConfig.on('change', () => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -177,7 +184,7 @@
                 }
 
                 const channels = [];
-                Object.keys(data).forEach(addr => {
+                for (let addr of Object.keys(data)) {
                     if (/:\d+$/.test(addr)) {
                         if (data[addr].name) {
                             addr += ' ' + data[addr].name;
@@ -185,7 +192,8 @@
 
                         channels.push(addr);
                     }
-                });
+                }
+
                 channels.sort((a, b) => a.localeCompare(b));
                 $nodeInputChannel.autocomplete('option', 'source', channels);
 
@@ -206,7 +214,7 @@
                 }
             }
 
-            $nodeInputIface.change(() => {
+            $nodeInputIface.on('change', () => {
                 console.log('$nodeInputIface change');
                 if ($nodeInputIface.val() === 'ReGaHSS') {
                     $('.form-row.datapoint').hide();
@@ -250,7 +258,7 @@
                             const url = 'ccu?config=' + nodeId + '&type=ifaces';
                             $.getJSON(url, d => {
                                 const enabledInterfaces = [];
-                                Object.keys(d).forEach(ifId => {
+                                for (const ifId of Object.keys(d)) {
                                     const iface = d[ifId];
                                     if (ifId !== 'ReGaHSS' && iface.enabled) {
                                         enabledInterfaces.push({
@@ -260,7 +268,8 @@
                                             children: (done, item) => loadTreeData('tree', done, item, ifId),
                                         });
                                     }
-                                });
+                                }
+
                                 done(enabledInterfaces);
                             });
                         },
@@ -300,16 +309,16 @@
                     channelArray = [];
                     const url = 'ccu?config=' + $nodeInputCcuConfig.val() + '&type=tree';
                     $.getJSON(url, data => {
-                        Object.keys(data).forEach(addr => {
+                        for (const addr of Object.keys(data)) {
                             channelArray.push(data[addr]);
                             if (data[addr].children) {
-                                data[addr].children.forEach(dp => {
+                                for (const dp of data[addr].children) {
                                     if (!dp.children) {
                                         dp.children = getDPProp(dp);
                                     }
-                                });
+                                }
                             }
-                        });
+                        }
                     });
                 }
             });
@@ -317,7 +326,7 @@
             function getDPProp(dp) {
                 const result = [];
 
-                datapointProperties.forEach(property => {
+                for (const property of datapointProperties) {
                     result.push({
                         id: dp.id + '.' + property,
                         label: node._('node-red-contrib-ccu/ccu-connection:common.label.' + property),
@@ -327,7 +336,7 @@
                         datapoint: dp.label,
                         property,
                     });
-                });
+                }
 
                 return result;
             }
@@ -344,45 +353,50 @@
                     url += '&iface=' + ifId;
                     $.getJSON(url, devices => {
                         const deviceIDs = [];
-                        Object.keys(devices).forEach(id => {
+                        for (const id of Object.keys(devices)) {
                             const dev = devices[id];
-                            dev.children.forEach(ch => {
+                            for (const ch of dev.children) {
                                 if (ch.children) {
                                     ch.children.sort((a, b) => a.label.localeCompare(b.label));
-                                    ch.children.forEach(dp => {
+                                    for (const dp of ch.children) {
+                                        // eslint-disable-next-line max-depth
                                         if (!dp.children) {
                                             dp.children = getDPProp(dp);
                                         }
-                                    });
+                                    }
                                 }
-                            });
+                            }
+
                             deviceIDs.push(dev);
-                        });
+                        }
+
                         deviceIDs.sort((a, b) => a.label.localeCompare(b.label));
                         done(deviceIDs);
                     });
                 } else if (type === 'sysvar') {
                     $.getJSON(url, d => {
                         const sysVars = [];
-                        Object.keys(d).forEach(id => {
+                        for (const id of Object.keys(d)) {
                             sysVars.push({
                                 id,
                                 label: id,
                                 icon: 'fa fa-tags fa-fw',
                                 children(done) {
                                     const result = [];
-                                    sysvarProperties.forEach(property => {
+                                    for (const property of sysvarProperties) {
                                         result.push({
                                             label: node._('node-red-contrib-ccu/ccu-connection:common.label.' + property),
                                             icon: 'fa fa-tag fa-fw',
                                             sysvar: id,
                                             property,
                                         });
-                                    });
+                                    }
+
                                     done(result);
                                 },
                             });
-                        });
+                        }
+
                         done(sysVars);
                     });
                 } else {
@@ -397,11 +411,11 @@
                                     children(done) {
                                         const channels = [];
                                         if (channelArray) {
-                                            channelArray.forEach(ch => {
+                                            for (const ch of channelArray) {
                                                 if (ch[type] && ch[type].includes(lbl)) {
                                                     channels.push(ch);
                                                 }
-                                            });
+                                            }
                                         }
 
                                         channels.sort((a, b) => a.label.localeCompare(b.label));

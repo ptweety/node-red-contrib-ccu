@@ -55,9 +55,10 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -66,7 +67,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.change(() => {
+            $nodeInputCcuConfig.on('change', () => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -82,7 +83,7 @@
                 minLength: 0,
             });
 
-            $('#node-input-iface').change(() => {
+            $('#node-input-iface').on('change', () => {
                 if (ifacesLoaded) {
                     console.log('#node-input-iface change');
                     autocompleteMethods();

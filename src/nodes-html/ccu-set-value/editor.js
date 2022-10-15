@@ -1,4 +1,4 @@
-/* eslint-disable wrap-iife */
+/* eslint-disable max-depth, wrap-iife */
 
 (function () {
     'use strict';
@@ -44,6 +44,7 @@
             return this.name ? 'node_label_italic' : '';
         },
         oneditprepare() {
+            // eslint-disable-next-line unicorn/no-this-assignment
             const that = this;
             const $nodeInputIface = $('#node-input-iface');
             const $nodeInputCcuConfig = $('#node-input-ccuConfig');
@@ -110,11 +111,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -123,7 +125,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.change(() => {
+            $nodeInputCcuConfig.on('change', () => {
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
                     $nodeInputIface.removeAttr('disabled');
@@ -155,7 +157,7 @@
 
                 console.log(data);
 
-                Object.keys(data.channelRooms).forEach(channel => {
+                for (const channel of Object.keys(data.channelRooms)) {
                     const room = data.channelRooms[channel];
                     const device = channel.split(':')[0];
                     if (data.roomChannels[room]) {
@@ -169,8 +171,9 @@
                     } else if (!data.roomDevices[room].includes(device)) {
                         data.roomDevices[room].push(device);
                     }
-                });
-                Object.keys(data.channelFunctions).forEach(channel => {
+                }
+
+                for (const channel of Object.keys(data.channelFunctions)) {
                     const func = data.channelFunctions[channel];
                     const device = channel.split(':')[0];
                     if (data.functionChannels[func]) {
@@ -184,28 +187,29 @@
                     } else if (!data.functionDevices[func].includes(device)) {
                         data.functionDevices[func].push(device);
                     }
-                });
-                Object.keys(data.channelNames).forEach(channel => {
+                }
+
+                for (const channel of Object.keys(data.channelNames)) {
                     const name = data.channelNames[channel];
                     if (/:\d+$/.test(channel)) {
                         data.nameChannels[name] = channel;
                     } else {
                         data.nameDevices[name] = channel;
                     }
-                });
+                }
             }
 
-            $('#node-input-iface').change(autocomplete);
-            $('#node-input-room').change(autocomplete);
-            $('#node-input-function').change(autocomplete);
-            $('#node-input-device').change(autocomplete);
-            $('#node-input-deviceName').change(autocomplete);
-            $('#node-input-deviceType').change(autocomplete);
-            $('#node-input-channel').change(autocomplete);
-            $('#node-input-channelName').change(autocomplete);
-            $('#node-input-channelType').change(autocomplete);
-            $('#node-input-channelIndex').change(autocomplete);
-            $('#node-input-datapoint').change(autocomplete);
+            $('#node-input-iface').on('change', autocomplete);
+            $('#node-input-room').on('change', autocomplete);
+            $('#node-input-function').on('change', autocomplete);
+            $('#node-input-device').on('change', autocomplete);
+            $('#node-input-deviceName').on('change', autocomplete);
+            $('#node-input-deviceType').on('change', autocomplete);
+            $('#node-input-channel').on('change', autocomplete);
+            $('#node-input-channelName').on('change', autocomplete);
+            $('#node-input-channelType').on('change', autocomplete);
+            $('#node-input-channelIndex').on('change', autocomplete);
+            $('#node-input-datapoint').on('change', autocomplete);
 
             function paramsetName(iface, device, paramset) {
                 let cType = '';
@@ -259,39 +263,39 @@
 
                     if (devices.length === 0) {
                         if (deviceNames.length > 0) {
-                            deviceNames.forEach(deviceName => {
+                            for (const deviceName of deviceNames) {
                                 if (deviceName) {
                                     devices.push(data.nameDevices[deviceName]);
                                 }
-                            });
+                            }
                         } else if (deviceTypes.length > 0) {
-                            deviceTypes.forEach(deviceType => {
+                            for (const deviceType of deviceTypes) {
                                 if (data.metadata.types[iface][deviceType]) {
-                                    data.metadata.types[iface][deviceType].forEach(device => {
+                                    for (const device of data.metadata.types[iface][deviceType]) {
                                         if (device && !devices.includes(device)) {
                                             devices.push(device);
                                         }
-                                    });
+                                    }
                                 }
-                            });
+                            }
                         }
                     }
 
                     if (channels.length === 0) {
                         if (channelNames.length > 0) {
-                            channelNames.forEach(channelName => {
+                            for (const channelName of channelNames) {
                                 channels.push(data.nameChannels[channelName]);
-                            });
+                            }
                         } else if (channelTypes.length > 0) {
-                            channelTypes.forEach(channelType => {
+                            for (const channelType of channelTypes) {
                                 if (data.metadata.types[iface][channelType]) {
-                                    data.metadata.types[iface][channelType].forEach(channel => {
+                                    for (const channel of data.metadata.types[iface][channelType]) {
                                         if (channel && !channels.includes(channel)) {
                                             channels.push(channel);
                                         }
-                                    });
+                                    }
                                 }
-                            });
+                            }
                         }
                     }
 
@@ -302,7 +306,7 @@
                         let channelCheck = false;
 
                         if (channels && channels.length > 0) {
-                            channels.forEach(channel => {
+                            for (const channel of channels) {
                                 if (data.metadata.devices[iface][channel]) {
                                     const psName = paramsetName(iface, data.metadata.devices[iface][channel], 'VALUES');
                                     if (Object.keys(data.paramsetDescriptions[psName]).includes(datapoint)) {
@@ -311,26 +315,27 @@
                                 } else {
                                     channelCheck = true;
                                 }
-                            });
+                            }
+
                             deviceCheck = true;
                         } else {
                             if (devices && devices.length > 0) {
-                                devices.forEach(device => {
+                                for (const device of devices) {
                                     if (data.metadata.devices[iface][device]) {
-                                        data.metadata.devices[iface][device].CHILDREN.forEach(channel => {
+                                        for (const channel of data.metadata.devices[iface][device].CHILDREN) {
                                             const psName = paramsetName(iface, data.metadata.devices[iface][channel], 'VALUES');
                                             if (data.paramsetDescriptions[psName]) {
-                                                Object.keys(data.paramsetDescriptions[psName]).forEach(dp => {
+                                                for (const dp of Object.keys(data.paramsetDescriptions[psName])) {
                                                     if (datapoint === dp) {
                                                         deviceCheck = true;
                                                     }
-                                                });
+                                                }
                                             }
-                                        });
+                                        }
                                     } else {
                                         deviceCheck = true;
                                     }
-                                });
+                                }
                             } else {
                                 deviceCheck = true;
                             }
@@ -351,31 +356,31 @@
                         let deviceCheck = false;
 
                         if (rooms.length > 0) {
-                            rooms.forEach(room => {
+                            for (const room of rooms) {
                                 if (data.roomChannels[room].includes(channel)) {
                                     roomCheck = true;
                                 }
-                            });
+                            }
                         } else {
                             roomCheck = true;
                         }
 
                         if (funcs.length > 0) {
-                            funcs.forEach(func => {
+                            for (const func of funcs) {
                                 if (data.functionChannels[func].includes(channel)) {
                                     functionCheck = true;
                                 }
-                            });
+                            }
                         } else {
                             functionCheck = true;
                         }
 
                         if (devices.length > 0) {
-                            devices.forEach(device => {
+                            for (const device of devices) {
                                 if (channel.startsWith(device)) {
                                     deviceCheck = true;
                                 }
-                            });
+                            }
                         } else {
                             deviceCheck = true;
                         }
@@ -392,7 +397,7 @@
                         let functionCheck = false;
 
                         if (rooms.length > 0) {
-                            rooms.forEach(room => {
+                            for (const room of rooms) {
                                 if (data.roomDevices[room].includes(device)) {
                                     roomCheck = true;
                                 }
@@ -400,13 +405,13 @@
                                 roomCheck = roomCheck
                                     || data.metadata.devices[iface][device].CHILDREN
                                         .some(v => data.roomDevices[room].includes(v));
-                            });
+                            }
                         } else {
                             roomCheck = true;
                         }
 
                         if (funcs.length > 0) {
-                            funcs.forEach(func => {
+                            for (const func of funcs) {
                                 if (data.functionDevices[func].includes(device)) {
                                     functionCheck = true;
                                 }
@@ -414,7 +419,7 @@
                                 functionCheck = functionCheck
                                     || data.metadata.devices[iface][device].CHILDREN
                                         .some(v => data.functionDevices[func].includes(v));
-                            });
+                            }
                         } else {
                             functionCheck = true;
                         }
@@ -422,10 +427,10 @@
                         return roomCheck && functionCheck;
                     }
 
-                    Object.keys(data.metadata.devices[iface]).forEach(dev => {
+                    for (const dev of Object.keys(data.metadata.devices[iface])) {
                         if (/:\d+$/.test(dev)) {
                             if (!checkChannel(dev)) {
-                                return;
+                                continue;
                             }
 
                             lists.channel.push(dev);
@@ -440,15 +445,15 @@
 
                             const psName = paramsetName(iface, data.metadata.devices[iface][dev], 'VALUES');
                             if (data.paramsetDescriptions[psName]) {
-                                Object.keys(data.paramsetDescriptions[psName]).forEach(dp => {
+                                for (const dp of Object.keys(data.paramsetDescriptions[psName])) {
                                     if (dp && !lists.datapoint.includes(dp) && checkDatapoint(dp)) {
                                         lists.datapoint.push(dp);
                                     }
-                                });
+                                }
                             }
                         } else {
                             if (!checkDevice(dev)) {
-                                return;
+                                continue;
                             }
 
                             lists.device.push(dev);
@@ -456,38 +461,38 @@
                             if (!lists.deviceType.includes(data.metadata.devices[iface][dev].TYPE)) {
                                 lists.deviceType.push(data.metadata.devices[iface][dev].TYPE);
 
-                                data.metadata.devices[iface][dev].CHILDREN.forEach(channel => {
+                                for (const channel of data.metadata.devices[iface][dev].CHILDREN) {
                                     const psName = paramsetName(iface, data.metadata.devices[iface][channel], 'VALUES');
                                     if (data.paramsetDescriptions[psName]) {
-                                        Object.keys(data.paramsetDescriptions[psName]).forEach(dp => {
+                                        for (const dp of Object.keys(data.paramsetDescriptions[psName])) {
                                             if (!lists.datapoint.includes(dp) && checkDatapoint(dp)) {
                                                 lists.datapoint.push(dp);
                                             }
-                                        });
+                                        }
                                     }
-                                });
+                                }
                             }
                         }
-                    });
+                    }
                 }
 
                 if (iface) {
                     composeLists(iface);
                 } else {
-                    Object.keys(data.metadata.devices).forEach(iface => {
+                    for (const iface of Object.keys(data.metadata.devices)) {
                         composeLists(iface);
-                    });
+                    }
                 }
 
                 console.log('lists', lists);
 
-                Object.keys(lists).forEach(key => {
+                for (const key of Object.keys(lists)) {
                     if (key === 'channelIndex') {
                         lists[key].sort((a, b) => Number(a) > Number(b));
                     } else {
                         lists[key].sort((a, b) => a.localeCompare(b));
                     }
-                });
+                }
 
                 $('#node-input-rooms').parent().find('.red-ui-typedInput-input').autocomplete('option', 'source', data.rooms);
                 $('#node-input-functions').parent().find('.red-ui-typedInput-input').autocomplete('option', 'source', data.functions);

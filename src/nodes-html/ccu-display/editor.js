@@ -124,11 +124,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -152,7 +153,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.change(() => {
+            $nodeInputCcuConfig.on('change', () => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -161,7 +162,7 @@
                 });
             });
 
-            $nodeInputIface.change(() => {
+            $nodeInputIface.on('change', () => {
                 if (ifacesLoaded) {
                     loadConfig();
                 }
@@ -192,7 +193,7 @@
             function autoCompleteChannel() {
                 const channels = [];
                 if (data) {
-                    Object.keys(data).forEach(addr => {
+                    for (let addr of Object.keys(data)) {
                         if (/:\d+$/.test(addr)) {
                             if (data[addr].name) {
                                 addr += ' ' + data[addr].name;
@@ -200,14 +201,14 @@
 
                             channels.push(addr);
                         }
-                    });
+                    }
                 }
 
                 console.log('autoCompleteChannel()', channels.length);
                 $nodeInputChannel.autocomplete('option', 'source', channels);
             }
 
-            $nodeInputChannel.change(() => {
+            $nodeInputChannel.on('change', () => {
                 const channel = $nodeInputChannel.val();
                 if (data && data[channel]) {
                     $nodeInputChannelType.val(data[channel]);
@@ -216,7 +217,7 @@
 
             $('.SUBMIT').hide();
             $('.SUBMIT.' + $nodeInputChannelType.val()).show();
-            $nodeInputChannelType.change(() => {
+            $nodeInputChannelType.on('change', () => {
                 $('.SUBMIT').hide();
                 $('.SUBMIT.' + $nodeInputChannelType.val()).show();
             });

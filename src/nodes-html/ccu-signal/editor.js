@@ -173,11 +173,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -201,7 +202,7 @@
                 }
             }
 
-            $nodeInputCcuConfig.change(() => {
+            $nodeInputCcuConfig.on('change', () => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -210,13 +211,13 @@
                 });
             });
 
-            $nodeInputIface.change(() => {
+            $nodeInputIface.on('change', () => {
                 if (ifacesLoaded) {
                     loadConfig();
                 }
             });
 
-            $nodeInputChannelType.change(() => {
+            $nodeInputChannelType.on('change', () => {
                 $('.SUBMIT').hide();
                 $('.SUBMIT.' + $nodeInputChannelType.val()).show();
             });
@@ -251,7 +252,7 @@
             function autoCompleteChannel() {
                 const channels = [];
                 if (data) {
-                    Object.keys(data).forEach(addr => {
+                    for (let addr of Object.keys(data)) {
                         if (/:\d+$/.test(addr)) {
                             if (data[addr].name) {
                                 addr += ' ' + data[addr].name;
@@ -259,7 +260,7 @@
 
                             channels.push(addr);
                         }
-                    });
+                    }
                 }
 
                 console.log('autoCompleteChannel()', channels.length);
@@ -270,7 +271,7 @@
                 }
             }
 
-            $nodeInputChannel.change(() => {
+            $nodeInputChannel.on('change', () => {
                 const channel = $nodeInputChannel.val();
                 if (data && data[channel]) {
                     $nodeInputChannelType.val(data[channel]);
@@ -306,10 +307,10 @@
                     }
 
                     const select = $('<select class="number led" value="' + data.cmd + '"/>').appendTo(container);
-                    Object.keys(ccuSignalColors).forEach(name => {
+                    for (const name of Object.keys(ccuSignalColors)) {
                         $('<option value="' + ccuSignalColors[name] + '"' + (ccuSignalColors[name] === Number.parseInt(data.cmd, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(select);
-                    });
+                    }
                 },
             });
 
@@ -323,15 +324,16 @@
                     }
 
                     const select = $('<select class="number color" style="width: calc(50% - 8px);" value="' + data.color + '"/>').appendTo(container);
-                    Object.keys(ccuDimmerColors).forEach(name => {
+                    for (const name of Object.keys(ccuDimmerColors)) {
                         $('<option value="' + ccuDimmerColors[name] + '"' + (ccuDimmerColors[name] === Number.parseInt(data.color, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(select);
-                    });
+                    }
+
                     const ontime = $(`<select class="number ontime" style="width: calc(50% - 8px); margin-left: 6px;" value="${data.ontime}"></select>`).appendTo(container);
-                    Object.keys(ccuOnTime).forEach(name => {
+                    for (const name of Object.keys(ccuOnTime)) {
                         $('<option value="' + ccuOnTime[name] + '"' + (ccuOnTime[name] === Number.parseInt(data.ontime, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(ontime);
-                    });
+                    }
                 },
             });
 
@@ -345,10 +347,10 @@
                     }
 
                     const select = $('<select class="number sound" value="' + data.sound + '"/>').appendTo(container);
-                    Object.keys(ccuSound).forEach(name => {
+                    for (const name of Object.keys(ccuSound)) {
                         $('<option value="' + ccuSound[name] + '"' + (ccuSound[name] === Number.parseInt(data.sound, 10) ? ' selected' : '')
                             + '>' + name + '</option>').appendTo(select);
-                    });
+                    }
                 },
             });
 
@@ -362,28 +364,28 @@
                 $('#node-input-length').val(length);
                 */
 
-                this.chime.split(',').forEach(cmd => {
+                for (const cmd of this.chime.split(',')) {
                     $('#node-input-chime-container').editableList('addItem', {cmd});
-                });
+                }
             } else if (this.channelType === 'SIGNAL_LED') {
                 /*
                 const [, repeat, length, ...commands] = this.led.split(',');
                 $('#node-input-repeat').val(repeat);
                 $('#node-input-length').val(length);
                 */
-                this.led.split(',').forEach(cmd => {
+                for (const cmd of this.led.split(',')) {
                     $('#node-input-led-container').editableList('addItem', {cmd});
-                });
+                }
             } else if (this.channelType === 'ALARM_SWITCH_VIRTUAL_RECEIVER') {
                 // ...
             } else if (this.channelType === 'ACOUSTIC_SIGNAL_VIRTUAL_RECEIVER') {
-                this.soundList.forEach(item => {
+                for (const item of this.soundList) {
                     $('#node-input-acoustic-container').editableList('addItem', item);
-                });
+                }
             } else if (this.channelType === 'DIMMER_VIRTUAL_RECEIVER') {
-                this.dimmerList.forEach(item => {
+                for (const item of this.dimmerList) {
                     $('#node-input-dimmer-container').editableList('addItem', item);
-                });
+                }
             } else if (this.channelType === 'BSL_DIMMER_VIRTUAL_RECEIVER') {
                 // ...
             } else {

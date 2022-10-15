@@ -4,7 +4,7 @@
     'use strict';
 
     function clipValueLength(v, l) {
-        return (v.length > l) ? v.substring(0, (l - 3)) + '...' : v;
+        return (v.length > l) ? v.slice(0, Math.max(0, (l - 3))) + '...' : v;
     }
 
     RED.nodes.registerType('ccu-value', {
@@ -40,7 +40,7 @@
 
             const dp = String(this.datapoint).replace(/PRESS_|_STATE|_MODE|ERROR_|OPERATING_|ACTUAL_|^STATE$|^LEVEL$/, '');
 
-            return clipValueLength(String(this.channel).replace(/^[A-Za-z0-9-]+:\d+ /, ''), 30) + ((dp.length > 1 && dp.length < 10) ? ' ' + dp : '') || 'value';
+            return clipValueLength(String(this.channel).replace(/^[A-Za-z\d-]+:\d+ /, ''), 30) + ((dp.length > 1 && dp.length < 10) ? ' ' + dp : '') || 'value';
         },
         labelStyle() {
             return this.name ? 'node_label_italic' : '';
@@ -77,11 +77,12 @@
                 } else {
                     const url = 'ccu?config=' + nodeId + '&type=ifaces';
                     $.getJSON(url, d => {
-                        Object.keys(d).forEach(i => {
+                        for (const i of Object.keys(d)) {
                             if (i !== 'ReGaHSS') {
                                 $nodeInputIface.append('<option' + (d[i].enabled ? '' : ' disabled') + (i === iface ? ' selected' : '') + '>' + i + '</option>');
                             }
-                        });
+                        }
+
                         if (typeof cb === 'function') {
                             cb();
                             ifacesPending = false;
@@ -106,7 +107,7 @@
                 });
             }
 
-            $nodeInputCcuConfig.change(() => {
+            $nodeInputCcuConfig.on('change', () => {
                 console.log('$nodeInputCcuConfig change');
                 loadIfaces(this.iface, () => {
                     ifacesLoaded = true;
@@ -116,14 +117,14 @@
                 });
             });
 
-            $('#node-input-onEnabled').change(() => {
+            $('#node-input-onEnabled').on('change', () => {
                 if ($('#node-input-onEnabled').is(':checked')) {
                     $('#node-input-on').removeAttr('disabled');
                 } else {
                     $('#node-input-on').attr('disabled', true);
                 }
             });
-            $('#node-input-rampEnabled').change(() => {
+            $('#node-input-rampEnabled').on('change', () => {
                 if ($('#node-input-rampEnabled').is(':checked')) {
                     $('#node-input-ramp').removeAttr('disabled');
                 } else {
@@ -161,7 +162,7 @@
                 }
 
                 const channels = [];
-                Object.keys(data).forEach(addr => {
+                for (let addr of Object.keys(data)) {
                     if (/:\d+$/.test(addr)) {
                         if (data[addr].name) {
                             addr += ' ' + data[addr].name;
@@ -169,7 +170,8 @@
 
                         channels.push(addr);
                     }
-                });
+                }
+
                 channels.sort((a, b) => a.localeCompare(b));
                 $nodeInputChannel.autocomplete('option', 'source', channels);
 
@@ -213,7 +215,7 @@
                 }
             }
 
-            $nodeInputIface.change(() => {
+            $nodeInputIface.on('change', () => {
                 console.log('$nodeInputIface change');
                 $('.BURST').hide();
                 loadConfig();
@@ -282,7 +284,7 @@
                             const url = 'ccu?config=' + nodeId + '&type=ifaces';
                             $.getJSON(url, d => {
                                 const enabledInterfaces = [];
-                                Object.keys(d).forEach(ifId => {
+                                for (const ifId of Object.keys(d)) {
                                     const iface = d[ifId];
                                     if (ifId !== 'ReGaHSS' && iface.enabled) {
                                         enabledInterfaces.push({
@@ -292,7 +294,8 @@
                                             children: (done, item) => loadTreeData('tree', done, item, ifId),
                                         });
                                     }
-                                });
+                                }
+
                                 done(enabledInterfaces);
                             });
                         },
@@ -331,15 +334,17 @@
                     url += '&iface=' + ifId + '&classCh=tree-channel&classDp=tree-dp';
                     $.getJSON(url, devices => {
                         const deviceIDs = [];
-                        Object.keys(devices).forEach(id => {
+                        for (const id of Object.keys(devices)) {
                             deviceIDs.push(devices[id]);
-                        });
+                        }
+
                         deviceIDs.sort((a, b) => a.label.localeCompare(b.label));
-                        deviceIDs.forEach(ch => {
+                        for (const ch of deviceIDs) {
                             if (ch.children) {
                                 ch.children.sort((a, b) => a.label.localeCompare(b.label));
                             }
-                        });
+                        }
+
                         done(deviceIDs);
                     });
                 } else {
@@ -354,11 +359,11 @@
                                     children(done) {
                                         const channels = [];
                                         if (channelList) {
-                                            Object.keys(channelList).forEach(addr => {
+                                            for (const addr of Object.keys(channelList)) {
                                                 if (channelList[addr][type] && channelList[addr][type].includes(lbl)) {
                                                     channels.push(channelList[addr]);
                                                 }
-                                            });
+                                            }
                                         }
 
                                         channels.sort((a, b) => a.label.localeCompare(b.label));
