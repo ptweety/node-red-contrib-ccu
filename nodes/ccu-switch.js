@@ -17,12 +17,14 @@
 module.exports = function (RED) {
     'use strict';
 
+    const {Buffer} = require('buffer');
+
     const operators = {
         eq(a, b) {
-            return a == b;
+            return a == b; // eslint-disable-line eqeqeq
         },
         neq(a, b) {
-            return a != b;
+            return a != b; // eslint-disable-line eqeqeq
         },
         lt(a, b) {
             return a < b;
@@ -40,7 +42,7 @@ module.exports = function (RED) {
             return a >= b && a <= c;
         },
         cont(a, b) {
-            return (String(a)).indexOf(b) != -1;
+            return (String(a)).includes(b);
         },
         regex(a, b, c, d) {
             return (String(a)).match(new RegExp(b, d ? 'i' : ''));
@@ -60,32 +62,39 @@ module.exports = function (RED) {
         empty(a) {
             if (typeof a === 'string' || Array.isArray(a) || Buffer.isBuffer(a)) {
                 return a.length === 0;
-            } if (typeof a === 'object' && a !== null) {
+            }
+
+            if (typeof a === 'object' && a !== null) {
                 return Object.keys(a).length === 0;
             }
+
             return false;
         },
         nempty(a) {
             if (typeof a === 'string' || Array.isArray(a) || Buffer.isBuffer(a)) {
-                return a.length !== 0;
-            } if (typeof a === 'object' && a !== null) {
-                return Object.keys(a).length !== 0;
+                return a.length > 0;
             }
+
+            if (typeof a === 'object' && a !== null) {
+                return Object.keys(a).length > 0;
+            }
+
             return false;
         },
-
         istype(a, b) {
             if (b === 'array') {
                 return Array.isArray(a);
             }
+
             if (b === 'buffer') {
                 return Buffer.isBuffer(a);
             }
+
             if (b === 'json') {
                 try {
-                    JSON.parse(a); return true;
-                } // or maybe ??? a !== null; }
-                catch (e) {
+                    JSON.parse(a);
+                    return true;
+                } /* or maybe ??? a !== null; } */ catch {
                     return false;
                 }
             } else if (b === 'null') {
@@ -105,7 +114,7 @@ module.exports = function (RED) {
         index(a, b, c, d, parts) {
             const min = Number(b);
             const max = Number(c);
-            const index = parts.index;
+            const {index} = parts;
             return ((min <= index) && (index <= max));
         },
         jsonata_exp(a, b) {
@@ -113,25 +122,32 @@ module.exports = function (RED) {
         },
         else(a) {
             return a === true;
-        }
+        },
     };
 
     let _maxKeptCount;
 
+    /**
+     * Helper function to test an object has a property
+     * @param {object} object Object to test
+     * @param {string} propertyName Name of property to find
+     * @returns true if object has property `propName`
+     */
+    function hasProperty(object, propertyName) {
+        return Object.prototype.hasOwnProperty.call(object, propertyName);
+    }
+
     function getMaxKeptCount() {
         if (_maxKeptCount === undefined) {
             const name = 'nodeMessageBufferMaxLength';
-            if (RED.settings.hasOwnProperty(name)) {
-                _maxKeptCount = RED.settings[name];
-            } else {
-                _maxKeptCount = 0;
-            }
+            _maxKeptCount = hasProperty(RED.settings, name) ? RED.settings[name] : 0;
         }
+
         return _maxKeptCount;
     }
 
-    function getProperty(node, msg) {
-        return new Promise((resolve, reject) => {
+    function getProperty(node, _) {
+        return new Promise((resolve, _) => {
             if (node.iface === 'ReGaHSS') {
                 resolve(node.ccu.sysvar[node.sysvar] && node.ccu.sysvar[node.sysvar][node.sysvarProperty]);
             } else {
@@ -141,57 +157,74 @@ module.exports = function (RED) {
         });
     }
 
-    function getV1(node, msg, rule, hasParts) {
+    function getV1(node, message, rule, hasParts) {
         return new Promise((resolve, reject) => {
-            if (rule.vt === 'prev') {
-                resolve(node.previousValue);
-            } else if (rule.vt === 'jsonata') {
-                const exp = rule.v;
-                if (rule.t === 'jsonata_exp') {
-                    if (hasParts) {
-                        exp.assign('I', msg.parts.index);
-                        exp.assign('N', msg.parts.count);
-                    }
+            switch (rule.vt) {
+                case 'prev': {
+                    resolve(node.previousValue);
+
+                    break;
                 }
-                RED.util.evaluateJSONataExpression(exp, msg, (err, value) => {
-                    if (err) {
-                        reject(RED._('switch.errors.invalid-expr', {error: err.message}));
-                    } else {
-                        resolve(value);
+
+                case 'jsonata': {
+                    const exp = rule.v;
+                    if (rule.t === 'jsonata_exp' && hasParts) {
+                        exp.assign('I', message.parts.index);
+                        exp.assign('N', message.parts.count);
                     }
-                });
-            } else if (rule.vt === 'json') {
-                resolve('json');
-            } else if (rule.vt === 'null') {
-                resolve('null');
-            } else {
-                RED.util.evaluateNodeProperty(rule.v, rule.vt, node, msg, (err, value) => {
-                    if (err) {
-                        resolve(undefined);
-                    } else {
-                        resolve(value);
-                    }
-                });
+
+                    RED.util.evaluateJSONataExpression(exp, message, (error, value) => {
+                        if (error) {
+                            reject(RED._('switch.errors.invalid-expr', {error: error.message}));
+                        } else {
+                            resolve(value);
+                        }
+                    });
+
+                    break;
+                }
+
+                case 'json': {
+                    resolve('json');
+
+                    break;
+                }
+
+                case 'null': {
+                    resolve('null');
+
+                    break;
+                }
+
+                default: {
+                    RED.util.evaluateNodeProperty(rule.v, rule.vt, node, message, (error, value) => {
+                        if (error) {
+                            resolve(undefined);
+                        } else {
+                            resolve(value);
+                        }
+                    });
+                }
             }
         });
     }
 
-    function getV2(node, msg, rule) {
+    function getV2(node, message, rule) {
         return new Promise((resolve, reject) => {
-            const v2 = rule.v2;
+            const {v2} = rule;
             if (rule.v2t === 'prev') {
                 resolve(node.previousValue);
             } else if (rule.v2t === 'jsonata') {
-                RED.util.evaluateJSONataExpression(rule.v2, msg, (err, value) => {
-                    if (err) {
-                        reject(RED._('switch.errors.invalid-expr', {error: err.message}));
+                RED.util.evaluateJSONataExpression(rule.v2, message, (error, value) => {
+                    if (error) {
+                        reject(RED._('switch.errors.invalid-expr', {error: error.message}));
                     } else {
                         resolve(value);
                     }
                 });
-            } else if (typeof v2 !== 'undefined') {
-                RED.util.evaluateNodeProperty(rule.v2, rule.v2t, node, msg, (err, value) => {
-                    if (err) {
+            } else if (typeof v2 !== 'undefined') { // eslint-disable-line no-negated-condition
+                RED.util.evaluateNodeProperty(rule.v2, rule.v2t, node, message, (error, value) => {
+                    if (error) {
                         resolve(undefined);
                     } else {
                         resolve(value);
@@ -203,50 +236,55 @@ module.exports = function (RED) {
         });
     }
 
-    function applyRule(node, msg, property, state) {
-        return new Promise((resolve, reject) => {
+    function applyRule(node, message, property, state) {
+        return new Promise((resolve, _) => {
             const rule = node.rules[state.currentRule];
-            let v1, v2;
+            let v1;
+            let v2;
 
-            getV1(node, msg, rule, state.hasParts).then(value => {
+            getV1(node, message, rule, state.hasParts).then(value => {
                 v1 = value;
-            }).then(() => getV2(node, msg, rule)).then(value => {
+            }).then(() => getV2(node, message, rule)).then(value => {
                 v2 = value;
             }).then(() => {
-                if (rule.t == 'else') {
+                if (rule.t == 'else') { // eslint-disable-line eqeqeq
                     property = state.elseflag;
                     state.elseflag = true;
                 }
-                if (operators[rule.t](property, v1, v2, rule.case, msg.parts)) {
-                    state.onward.push(msg);
+
+                if (operators[rule.t](property, v1, v2, rule.case, message.parts)) {
+                    state.onward.push(message);
                     state.elseflag = false;
-                    if (node.checkall == 'false') {
+                    if (node.checkall == 'false') { // eslint-disable-line eqeqeq
                         return resolve(false);
                     }
                 } else {
                     state.onward.push(null);
                 }
+
                 resolve(state.currentRule < node.rules.length - 1);
             });
         });
     }
 
-    function applyRules(node, msg, property, state) {
+    function applyRules(node, message, property, state) {
         if (!state) {
             state = {
                 currentRule: 0,
                 elseflag: true,
                 onward: [],
-                hasParts: msg.hasOwnProperty('parts') &&
-                msg.parts.hasOwnProperty('id') &&
-                msg.parts.hasOwnProperty('index')
+                hasParts: hasProperty(message, 'parts')
+                && hasProperty(message.parts, 'id')
+                && hasProperty(message.parts, 'index'),
             };
         }
-        return applyRule(node, msg, property, state).then(hasMore => {
+
+        return applyRule(node, message, property, state).then(hasMore => {
             if (hasMore) {
                 state.currentRule++;
-                return applyRules(node, msg, property, state);
+                return applyRules(node, message, property, state);
             }
+
             node.previousValue = property;
             return state.onward;
         });
@@ -268,55 +306,51 @@ module.exports = function (RED) {
         if (this.propertyType === 'jsonata') {
             try {
                 this.property = RED.util.prepareJSONataExpression(this.property, this);
-            } catch (err) {
-                this.error(RED._('switch.errors.invalid-expr', {error: err.message}));
+            } catch (error) {
+                this.error(RED._('switch.errors.invalid-expr', {error: error.message}));
                 return;
             }
         }
 
         this.checkall = n.checkall || 'true';
         this.previousValue = null;
+        // eslint-disable-next-line unicorn/no-this-assignment
         const node = this;
         let valid = true;
-        const repair = n.repair;
+        const {repair} = n;
         let needsCount = repair;
         for (let i = 0; i < this.rules.length; i += 1) {
             const rule = this.rules[i];
             needsCount = needsCount || ((rule.t === 'tail') || (rule.t === 'jsonata_exp'));
             if (!rule.vt) {
-                if (!isNaN(Number(rule.v))) {
-                    rule.vt = 'num';
-                } else {
-                    rule.vt = 'str';
-                }
+                rule.vt = (Number.isNaN(rule.v)) ? 'str' : 'num';
             }
+
             if (rule.vt === 'num') {
-                if (!isNaN(Number(rule.v))) {
+                if (!(Number.isNaN(rule.v))) {
                     rule.v = Number(rule.v);
                 }
             } else if (rule.vt === 'jsonata') {
                 try {
                     rule.v = RED.util.prepareJSONataExpression(rule.v, node);
-                } catch (err) {
-                    this.error(RED._('switch.errors.invalid-expr', {error: err.message}));
+                } catch (error) {
+                    this.error(RED._('switch.errors.invalid-expr', {error: error.message}));
                     valid = false;
                 }
             }
+
             if (typeof rule.v2 !== 'undefined') {
                 if (!rule.v2t) {
-                    if (!isNaN(Number(rule.v2))) {
-                        rule.v2t = 'num';
-                    } else {
-                        rule.v2t = 'str';
-                    }
+                    rule.v2t = (Number.isNaN(rule.v2)) ? 'str' : 'num';
                 }
+
                 if (rule.v2t === 'num') {
                     rule.v2 = Number(rule.v2);
                 } else if (rule.v2t === 'jsonata') {
                     try {
                         rule.v2 = RED.util.prepareJSONataExpression(rule.v2, node);
-                    } catch (err) {
-                        this.error(RED._('switch.errors.invalid-expr', {error: err.message}));
+                    } catch (error) {
+                        this.error(RED._('switch.errors.invalid-expr', {error: error.message}));
                         valid = false;
                     }
                 }
@@ -333,134 +367,142 @@ module.exports = function (RED) {
         let pendingOut = {};
         let received = {};
 
-        function addMessageToGroup(id, msg, parts) {
+        function addMessageToGroup(id, message, parts) {
             if (!(id in pendingIn)) {
                 pendingIn[id] = {
                     count: undefined,
                     msgs: [],
-                    seq_no: pendingId++
+                    seq_no: pendingId++,
                 };
             }
+
             const group = pendingIn[id];
-            group.msgs.push(msg);
+            group.msgs.push(message);
             pendingCount++;
-            const max_msgs = getMaxKeptCount();
-            if ((max_msgs > 0) && (pendingCount > max_msgs)) {
+            const maxMessages = getMaxKeptCount();
+            if ((maxMessages > 0) && (pendingCount > maxMessages)) {
                 clearPending();
-                node.error(RED._('switch.errors.too-many'), msg);
+                node.error(RED._('switch.errors.too-many'), message);
             }
-            if (parts.hasOwnProperty('count')) {
+
+            if (hasProperty(parts, 'count')) {
                 group.count = parts.count;
             }
+
             return group;
         }
 
-        function addMessageToPending(msg) {
-            const parts = msg.parts;
+        function addMessageToPending(message) {
+            const {parts} = message;
             // We've already checked the msg.parts has the require bits
-            const group = addMessageToGroup(parts.id, msg, parts);
-            const msgs = group.msgs;
-            const count = group.count;
+            const group = addMessageToGroup(parts.id, message, parts);
+            const {msgs} = group;
+            const {count} = group;
             if (count === msgs.length) {
                 // We have a complete group - send the individual parts
-                return msgs.reduce((promise, msg) => {
-                    return promise.then(result => {
-                        msg.parts.count = count;
-                        return processMessage(msg, false);
-                    });
-                }, Promise.resolve()).then(() => {
+                return msgs.reduce((promise, message) => promise.then(() => {
+                    message.parts.count = count;
+                    return processMessage(message, false);
+                })
+                , Promise.resolve()).then(() => {
                     pendingCount -= group.msgs.length;
                     delete pendingIn[parts.id];
                 });
             }
+
             return Promise.resolve();
         }
 
-        function sendGroup(onwards, port_count) {
-            const counts = new Array(port_count).fill(0);
-            for (var i = 0; i < onwards.length; i++) {
-                var onward = onwards[i];
-                for (var j = 0; j < port_count; j++) {
-                    counts[j] += (onward[j] !== null) ? 1 : 0;
+        function sendGroup(onwards, portCount) {
+            const counts = [...portCount].fill(0);
+            for (const onward of onwards) {
+                for (let j = 0; j < portCount; j++) {
+                    counts[j] += (onward[j] === null) ? 0 : 1;
                 }
             }
-            const ids = new Array(port_count);
-            for (var j = 0; j < port_count; j++) {
+
+            const ids = [...portCount];
+            for (let j = 0; j < portCount; j++) {
                 ids[j] = RED.util.generateId();
             }
-            const ports = new Array(port_count);
-            const indexes = new Array(port_count).fill(0);
-            for (var i = 0; i < onwards.length; i++) {
-                var onward = onwards[i];
-                for (var j = 0; j < port_count; j++) {
-                    const msg = onward[j];
-                    if (msg) {
-                        const new_msg = RED.util.cloneMessage(msg);
-                        const parts = new_msg.parts;
+
+            const ports = [...portCount];
+            const indexes = [...portCount].fill(0);
+            for (const onward of onwards) {
+                for (let j = 0; j < portCount; j++) {
+                    const message = onward[j];
+                    if (message) {
+                        const newMessage = RED.util.cloneMessage(message);
+                        const {parts} = newMessage;
                         parts.id = ids[j];
                         parts.index = indexes[j];
                         parts.count = counts[j];
-                        ports[j] = new_msg;
+                        ports[j] = newMessage;
                         indexes[j]++;
                     } else {
                         ports[j] = null;
                     }
                 }
+
                 node.send(ports);
             }
         }
 
-        function sendGroupMessages(onward, msg) {
-            const parts = msg.parts;
+        function sendGroupMessages(onward, message) {
+            const {parts} = message;
             const gid = parts.id;
             received[gid] = ((gid in received) ? received[gid] : 0) + 1;
-            const send_ok = (received[gid] === parts.count);
+            const sendOk = (received[gid] === parts.count);
 
             if (!(gid in pendingOut)) {
                 pendingOut[gid] = {
-                    onwards: []
+                    onwards: [],
                 };
             }
+
             const group = pendingOut[gid];
-            const onwards = group.onwards;
+            const {onwards} = group;
             onwards.push(onward);
             pendingCount++;
-            if (send_ok) {
-                sendGroup(onwards, onward.length, msg);
+            if (sendOk) {
+                sendGroup(onwards, onward.length, message);
                 pendingCount -= onward.length;
                 delete pendingOut[gid];
                 delete received[gid];
             }
-            const max_msgs = getMaxKeptCount();
-            if ((max_msgs > 0) && (pendingCount > max_msgs)) {
+
+            const maxMessages = getMaxKeptCount();
+            if ((maxMessages > 0) && (pendingCount > maxMessages)) {
                 clearPending();
-                node.error(RED._('switch.errors.too-many'), msg);
+                node.error(RED._('switch.errors.too-many'), message);
             }
         }
 
-        function processMessage(msg, checkParts) {
-            const hasParts = msg.hasOwnProperty('parts') &&
-                msg.parts.hasOwnProperty('id') &&
-                msg.parts.hasOwnProperty('index');
+        function processMessage(message, checkParts) {
+            const hasParts = hasProperty(message, 'parts')
+                && hasProperty(message.parts, 'id')
+                && hasProperty(message.parts, 'index');
 
             if (needsCount && checkParts && hasParts) {
-                return addMessageToPending(msg);
+                return addMessageToPending(message);
             }
-            return getProperty(node, msg)
+
+            return getProperty(node, message)
                 .then(property => {
                     node.statusVal = String(property);
                     node.status({text: node.statusVal});
-                    return applyRules(node, msg, property)
+                    return applyRules(node, message, property);
                 })
                 .then(onward => {
-                    node.status({text: node.statusVal + ' (' + onward.map((e,i) => e ? (i + 1) : null).filter(e => e).join(',') + ')'});
+                    // eslint-disable-next-line unicorn/prevent-abbreviations, unicorn/prefer-native-coercion-functions
+                    node.status({text: node.statusVal + ' (' + onward.map((e, i) => e ? (i + 1) : null).filter(e => e).join(',') + ')'});
                     if (!repair || !hasParts) {
                         node.send(onward);
                     } else {
-                        sendGroupMessages(onward, msg);
+                        sendGroupMessages(onward, message);
                     }
-                }).catch(err => {
-                    node.warn(err);
+                }).catch(error => {
+                    node.warn(error);
                 });
         }
 
@@ -474,16 +516,17 @@ module.exports = function (RED) {
 
         const pendingMessages = [];
         let activeMessagePromise = null;
-        var processMessageQueue = function (msg) {
-            if (msg) {
+        const processMessageQueue = function (message) {
+            if (message) {
                 // A new message has arrived - add it to the message queue
-                pendingMessages.push(msg);
+                pendingMessages.push(message);
                 if (activeMessagePromise !== null) {
                     // The node is currently processing a message, so do nothing
                     // more with this message
                     return;
                 }
             }
+
             if (pendingMessages.length === 0) {
                 // There are no more messages to process, clear the active flag
                 // and return
@@ -493,17 +536,17 @@ module.exports = function (RED) {
 
             // There are more messages to process. Get the next message and
             // start processing it. Recurse back in to check for any more
-            const nextMsg = pendingMessages.shift();
-            activeMessagePromise = processMessage(nextMsg, true)
+            const nextMessage = pendingMessages.shift();
+            activeMessagePromise = processMessage(nextMessage, true)
                 .then(processMessageQueue)
-                .catch(err => {
-                    node.error(err, nextMsg);
+                .catch(error => {
+                    node.error(error, nextMessage);
                     return processMessageQueue();
                 });
         };
 
-        this.on('input', msg => {
-            processMessageQueue(msg);
+        this.on('input', message => {
+            processMessageQueue(message);
         });
 
         this.on('close', () => {

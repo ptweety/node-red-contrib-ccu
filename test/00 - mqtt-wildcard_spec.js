@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-/* global describe, it */
 
 const should = require('should');
 const mw = require('../nodes/lib/mqtt-wildcard.js');
