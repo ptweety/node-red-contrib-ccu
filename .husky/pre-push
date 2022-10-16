@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run lintonly && npm run testonly
+#npm run lintonly && npm run testonly
