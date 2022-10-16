@@ -1,6 +1,6 @@
 {
     "name": "@ptweety/node-red-contrib-ccu",
-    "version": "3.6.0",
+    "version": "3.6.1",
     "license": "MIT",
     "main": "none",
     "keywords": [
@@ -125,7 +125,12 @@
     },
     "xo": {
         "space": 4,
-        "envs": ["node", "jquery", "mocha","es2020"],
+        "envs": [
+            "node",
+            "jquery",
+            "mocha",
+            "es2020"
+        ],
         "plugins": [
             "html",
             "promise"

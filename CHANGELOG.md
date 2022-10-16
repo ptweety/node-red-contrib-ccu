@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.6.1](https://github.com/ptweety/node-red-contrib-ccu/compare/v3.6.0...v3.6.1)
+
+- docs: add CONTRIBUTING.md [`80de543`](https://github.com/ptweety/node-red-contrib-ccu/commit/80de54307905e5484c4b419fd228d08c2f64d063)
+- build: disable pre-push hook fpr now [`09a85d9`](https://github.com/ptweety/node-red-contrib-ccu/commit/09a85d9a5548d2c533d91876a84edd66428df78d)
+- fix: linting [`91beffa`](https://github.com/ptweety/node-red-contrib-ccu/commit/91beffad346c98083d463722db5337ceaa8c821a)
+- chore: update packages [`43d4283`](https://github.com/ptweety/node-red-contrib-ccu/commit/43d42833c81cbd17769a7036c86177111ad306f2)
+- fix: linting and rebuild [`04017e4`](https://github.com/ptweety/node-red-contrib-ccu/commit/04017e463e22f261ace69e965aceb480c486019c)
+- refactor: drop help from src/nodes-html [`696b882`](https://github.com/ptweety/node-red-contrib-ccu/commit/696b8829b3238c90dcaea3d13f1a3dba41d21a0b)
+- fix: linting in folder test [`808099b`](https://github.com/ptweety/node-red-contrib-ccu/commit/808099b25fdc791de3bcb44f5176bdac5551b995)
+- fix: linting in folder src/nodes-html [`9a88d5d`](https://github.com/ptweety/node-red-contrib-ccu/commit/9a88d5d8ce77e7aa53eab18965b0884e43b8e7e6)
+- refactor: move help texts to locals folder [`02fee82`](https://github.com/ptweety/node-red-contrib-ccu/commit/02fee8232bc2f25f0006ce0e7d45862e5d5da3a0)
+- build: update nodes/ccu-*.html [`dfd0e98`](https://github.com/ptweety/node-red-contrib-ccu/commit/dfd0e987237ad0ed12ffa08bced67d1f66ffee0e)
+- build: separate js and html parts [`0d2667b`](https://github.com/ptweety/node-red-contrib-ccu/commit/0d2667b21440a7e1b9a82ade2f63ecf930a887b7)
+- build: create build-nodehtml.js [`1b9efa6`](https://github.com/ptweety/node-red-contrib-ccu/commit/1b9efa6b80df2f8cc19cdce92fd98aea2649817b)
+- docs: add MIGRATION.md [`da8e3a2`](https://github.com/ptweety/node-red-contrib-ccu/commit/da8e3a272dc99cd33681bf6c04b7998f0e2a58b7)
+- fix: update auto-changelog (again) [`95aaccf`](https://github.com/ptweety/node-red-contrib-ccu/commit/95aaccff3d727416b02692d4f7910d9e1d220eb6)
+
 #### [v3.6.0](https://github.com/ptweety/node-red-contrib-ccu/compare/v3.5.2...v3.6.0)
 
 > 12 October 2022
