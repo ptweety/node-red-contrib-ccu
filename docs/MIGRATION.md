@@ -60,7 +60,7 @@ From your RedMatic host:
     ```bash
     npm uninstall -g node-red-contrib-ccu
     npm cache verify
-    npm install -g @ptweety/node-red-contrib-ccu
+    npm install -g @ptweety/node-red-contrib-ccu --production
     ```
 
 From the RedMatic Addon-UI;
