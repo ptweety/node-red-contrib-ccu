@@ -103,6 +103,7 @@
     },
     "scripts": {
         "checkgit": "([[ $(git rev-parse --abbrev-ref HEAD) == \"main\" ]] && git diff --exit-code && git diff --cached --exit-code && git diff --exit-code origin/main..main)",
+        "build:nodehtml": "node ./build-nodehtml.js",
         "lintfix": "xo --fix",
         "lintonly": "xo",
         "version": "auto-changelog -p && git add CHANGELOG.md",
