@@ -31,41 +31,7 @@ Within Node-Red:
 
 ## Node-RED as an addon on your CCU / [RedMatic](https://github.com/rdmtc/RedMatic)
 
-**⚠️ WARNING: This section is untested and needs validation**
-
-- You may want to consider an upgrade of your Node-Red installaion within RedMatic: see https://github.com/rdmtc/RedMatic/issues/550#issuecomment-1228423177
-
-From the RedMatic Addon-UI:
-
-1. _Stop_ Node-Red via -> `Stop`
-
-From your RedMatic host:
-
-2. _Login_ via `ssh root@<ip>`
-1. _Backup_ your files. See: https://github.com/rdmtc/RedMatic/wiki/Backup#manuelles-backup
-1. _Navigate_ to the RedMatic installation root
-
-    ```bash
-    cd /usr/local/addons/redmatic/var
-    ```
-
-5. _Setup_ the environment:
-
-    ```bash
-    source /usr/local/addons/redmatic/home/.profile
-    ```
-
-6. **NOW** uninstall the old package and install the new one:
-
-    ```bash
-    npm uninstall -g node-red-contrib-ccu
-    npm cache verify
-    npm install -g @ptweety/node-red-contrib-ccu --production
-    ```
-
-From the RedMatic Addon-UI;
-
-7. _Start_ Node-Red via -> `Start`
+**⚠️ WARNING: This is currently not compatible. Please switch to any other Node-RED installation!**
 
 ## Node-RED in a Docker container
 
