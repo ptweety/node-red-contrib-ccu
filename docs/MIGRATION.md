@@ -31,7 +31,63 @@ Within Node-Red:
 
 ## Node-RED as an addon on your CCU / [RedMatic](https://github.com/rdmtc/RedMatic)
 
-**⚠️ WARNING: This is currently not compatible. Please switch to any other Node-RED installation!**
+**⚠️ WARNING: This section is NOT for the faint-hearted and needs validation**
+
+- You may want to consider an upgrade of your Node-Red installaion within RedMatic: see https://github.com/rdmtc/RedMatic/issues/550#issuecomment-1228423177
+
+From the RedMatic Addon-UI:
+
+1. _Stop_ Node-Red via -> `Stop`
+
+From your RedMatic host:
+
+2. _Login_ via `ssh root@<ip>`
+1. _Backup_ your files. See: https://github.com/rdmtc/RedMatic/wiki/Backup#manuelles-backup
+1. _Navigate_ to the RedMatic installation root
+
+    ```bash
+    cd /usr/local/addons/redmatic/var
+    ```
+
+5. _Setup_ the environment:
+
+    ```bash
+    source /usr/local/addons/redmatic/home/.profile
+    ```
+
+6. **NOW** uninstall the old package and install the new one:
+
+    - First read an understand also: https://github.com/rdmtc/RedMatic/wiki/Node-Installation
+
+    ```bash
+    npm uninstall --no-package-lock --global-style --save-prefix="~" --production node-red-contrib-ccu
+    ```
+
+    ```bash
+    npm install --save --no-package-lock --global-style --save-prefix="~" --production @ptweety/node-red-contrib-ccu
+    ```
+
+    ```bash
+    cd node_modules/
+    ln -s @ptweety/node-red-contrib-ccu/ .
+    ```
+
+    - Maybe also add this line to `package.json`:
+
+    ```
+    {
+        ...
+        "dependencies": {
+            "node-red-contrib-ccu": "file:./node_modules/@ptweety/node-red-contrib-ccu",
+            ...
+        }
+        ...
+    }
+    ```
+
+From the RedMatic Addon-UI;
+
+7. _Start_ Node-Red via -> `Start`
 
 ## Node-RED in a Docker container
 

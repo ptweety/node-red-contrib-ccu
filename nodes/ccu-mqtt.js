@@ -1,4 +1,4 @@
-const path = require('node:path');
+const path = require('path');
 const mw = require('./lib/mqtt-wildcard.js');
 
 const statusHelper = require(path.join(__dirname, '/lib/status.js'));

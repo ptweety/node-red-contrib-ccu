@@ -1,9 +1,9 @@
 /* eslint-disable max-params, max-depth */
-const os = require('node:os');
-const {promises: dns} = require('node:dns');
-const path = require('node:path');
-const fs = require('node:fs');
-const crypto = require('node:crypto');
+const os = require('os');
+const {promises: dns} = require('dns');
+const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
 
 const stringSimilarity = require('string-similarity');
 const Rega = require('homematic-rega');

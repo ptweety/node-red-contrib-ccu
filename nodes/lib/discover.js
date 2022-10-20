@@ -2,9 +2,9 @@
  * Based on https://github.com/hobbyquaker/hm-discover by Sebastian Raff (Hobbyquaker)
  */
 
-const net = require('node:net');
-const dgram = require('node:dgram');
-const buf = require('node:buffer').Buffer;
+const net = require('net');
+const dgram = require('dgram');
+const buf = require('buffer').Buffer;
 
 const checkService = (id, host, port) =>
     new Promise(resolve => {

@@ -2,7 +2,7 @@
  * Based on https://github.com/hobbyquaker/nextport by Sebastian Raff (Hobbyquaker)
  */
 
-const net = require('node:net');
+const net = require('net');
 
 const getPort = (port, address, cb) => {
     if (typeof address === 'function') {
