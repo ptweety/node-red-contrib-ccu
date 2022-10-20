@@ -2,8 +2,20 @@
 
 All notable changes to this project will be documented in this file. Dates are displayed in UTC.
 
+#### [v3.6.2](https://github.com/ptweety/node-red-contrib-ccu/compare/v3.6.1...v3.6.2)
+
+- fix: update require statements [`fa4cfab`](https://github.com/ptweety/node-red-contrib-ccu/commit/fa4cfab9028d8459970ade173c9cf158308140d5)
+- docs: add compatibility warning for RedMatic [`19fc3ce`](https://github.com/ptweety/node-red-contrib-ccu/commit/19fc3ceb3dc5e928b6777231519408db74fe66a2)
+- docs: update MIGRATION.md [`c67d448`](https://github.com/ptweety/node-red-contrib-ccu/commit/c67d448f69ad32ae1a705bb0756813f07b55b50c)
+- build: ensure that nodes/ccu-*.html is updated [`1683e43`](https://github.com/ptweety/node-red-contrib-ccu/commit/1683e435111aa58a93b05eb611fc13a897ac58c7)
+- chore: update packages [`37a7814`](https://github.com/ptweety/node-red-contrib-ccu/commit/37a7814f757b217f9e8c41b0d88b79acbc2b61a6)
+- build: keep npm and github in sync [`648b937`](https://github.com/ptweety/node-red-contrib-ccu/commit/648b937be4c50e3b4863ba35871bdf8b1a73f500)
+
 #### [v3.6.1](https://github.com/ptweety/node-red-contrib-ccu/compare/v3.6.0...v3.6.1)
 
+> 17 October 2022
+
+- chore: bump version to 3.6.1 [`be7eeb4`](https://github.com/ptweety/node-red-contrib-ccu/commit/be7eeb4487bcf9e7a0a6d12c93f31dc99cb3bc11)
 - docs: add CONTRIBUTING.md [`80de543`](https://github.com/ptweety/node-red-contrib-ccu/commit/80de54307905e5484c4b419fd228d08c2f64d063)
 - build: disable pre-push hook fpr now [`09a85d9`](https://github.com/ptweety/node-red-contrib-ccu/commit/09a85d9a5548d2c533d91876a84edd66428df78d)
 - fix: linting [`91beffa`](https://github.com/ptweety/node-red-contrib-ccu/commit/91beffad346c98083d463722db5337ceaa8c821a)
